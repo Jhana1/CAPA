@@ -2,7 +2,7 @@
 #define OCLINT_ABSTRACTASTMATCHERRULE_H
 
 #include <clang/ASTMatchers/ASTMatchFinder.h>
-
+#include <clang/Lex/Lexer.h>
 #include "oclint/AbstractASTVisitorRule.h"
 
 namespace oclint
