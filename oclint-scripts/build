@@ -27,7 +27,7 @@ def clean_module(module_name):
     path.rm_f(build_path)
 
 def build_command(llvm_root, is_release, module_extras, source_path):
-    cmd_build = cmake.builder(source_path)
+    cmd_build = cmake.builder(source_path).append('CMAKE_EXPORT_COMPILE_COMMANDS', 'ON')
     if is_release:
         cmd_build.release_build()
     if environment.is_unix() and not args.use_system_compiler:

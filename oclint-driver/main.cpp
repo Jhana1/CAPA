@@ -201,10 +201,5 @@ int main(int argc, const char **argv)
         return ERROR_WHILE_REPORTING;
     }
 
-    if (numberOfViolationsExceedThreshold(results.get()))
-    {
-        printViolationsExceedThresholdError(results.get());
-        return VIOLATIONS_EXCEED_THRESHOLD;
-    }
     return SUCCESS;
 }

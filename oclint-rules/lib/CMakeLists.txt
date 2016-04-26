@@ -14,7 +14,8 @@ IF (MINGW)
         helper/EnforceHelper.cpp
         helper/SuppressHelper.cpp
         util/ASTUtil.cpp
-        util/StdUtil.cpp)
+        util/StdUtil.cpp
+        util/MyASTUtil.cpp)
     TARGET_LINK_LIBRARIES(OCLintAbstractRule
         OCLintCore
         OCLintRuleSet

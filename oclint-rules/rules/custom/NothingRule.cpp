@@ -2,40 +2,67 @@
 #include "oclint/RuleSet.h"
 #include <iostream>
 #include <cstdarg>
+#include "oclint/util/MyASTUtil.h"
 
 using namespace std;
 using namespace clang;
 using namespace clang::ast_matchers;
 using namespace oclint;
 
+class MapInfo
+{
+public:
+    ASTContext            *mContext;
+    SourceManager         *mSM;
+    const ForStmt         *mLoop;
+    const BinaryOperator  *mAssign;
+    const VarDecl         *mInitVar;
+    const VarDecl         *mIncVar;
+    const VarDecl         *mInBase;
+    const VarDecl         *mInIndex;
+    const VarDecl         *mOutBase;
+    const VarDecl         *mOutIndex;
+    
+    MapInfo(const MatchFinder::MatchResult &Result)
+    {
+        mContext     = Result.Context;
+        mSM          = &Result.Context->getSourceManager();
+        mLoop        = Result.Nodes.getNodeAs<ForStmt>("MapLoop");
+        mAssign      = Result.Nodes.getNodeAs<BinaryOperator>("MapAssign");
+        mInitVar     = Result.Nodes.getNodeAs<VarDecl>("MapInitVar");
+        mIncVar      = Result.Nodes.getNodeAs<VarDecl>("MapIncVar");
+        mInBase      = Result.Nodes.getNodeAs<VarDecl>("MapInBase");
+        mInIndex     = Result.Nodes.getNodeAs<VarDecl>("MapInIndex");
+        mOutBase     = Result.Nodes.getNodeAs<VarDecl>("MapOutBase");
+        mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("MapOutIndex");
+    }
+    
+    bool IsMap()
+    {
+        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
+                  << " OutIndex: " << mOutIndex << std::endl;
+        return areSameVariable(4, mInitVar, mIncVar, mInIndex, mOutIndex);
+    }
+
+    void MapDump()
+    {
+        std::cout << "This is a Map" << std::endl;
+        std::cout << node2str(mLoop, *mSM) << std::endl;
+        
+    }
+};
+
+
+
 class NothingRule : public AbstractASTMatcherRule
 {
 protected:
-    bool areSameVariable(int n, ...)
-    {
-        va_list args;
-        va_start(args,n);
-        VarDecl *tmp = va_arg(args, VarDecl*)->getCanonicalDecl();
-        for (int i = 1; i < n; ++i)
-        {
-            VarDecl* node = va_arg(args, VarDecl*);
-            if (!node || node->getCanonicalDecl() != tmp)
-                return false;
-        }
-        return true; 
-    }
+    
 
-    template <typename T>
-    std::string node2str(const T *node, SourceManager &sm) 
-    {
-        string text = Lexer::getSourceText(CharSourceRange::getTokenRange(node->getSourceRange()), 
-                                           sm, LangOptions(), 0);
-        if (text.at(text.size()-1) == ',')
-            return Lexer::getSourceText(CharSourceRange::getCharRange(node->getSourceRange()), 
-                                        sm, LangOptions(), 0);
-        else
-            return text;
-    }
+   
+
+    static std::vector<MapInfo> mInfo;
+    static std::map<const ForStmt*, bool> mMapStatus;
 public:
     virtual const string name() const override
     {
@@ -57,33 +84,24 @@ public:
         auto Context = Result.Context;
         auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("MapLoop");
         
+        std::cout << MapLoop << std::endl;
         if (MapLoop)
         {
-            MapLoop->dumpColor();
-            auto MapInitVar  = Result.Nodes.getNodeAs<VarDecl>("MapInitVar");
-            auto MapIncVar   = Result.Nodes.getNodeAs<VarDecl>("MapIncVar");
-            auto MapVecBase  = Result.Nodes.getNodeAs<VarDecl>("MapVecBase");
-            auto MapVecIndex = Result.Nodes.getNodeAs<VarDecl>("MapVecIndex");
-            auto MapAssign   = Result.Nodes.getNodeAs<BinaryOperator>("MapVecAssign");
-
-            std::cout << "MapInitVar: " << MapInitVar->getCanonicalDecl() << std::endl;
-            std::cout << "MapIncVar: " << MapIncVar->getCanonicalDecl() << std::endl;
-            std::cout << "MapVecBase: " << MapVecBase->getCanonicalDecl() << std::endl;
-            std::cout << "MapVecIndex: " << MapVecIndex->getCanonicalDecl() << std::endl;
-
-            if (areSameVariable(3, MapInitVar, MapIncVar, MapVecIndex))
+            MapInfo m(Result);
+            if (m.IsMap())
             {
-                std::cout << "Map Detected" << std::endl;
-                std::string out = node2str(MapLoop, Result.Context->getSourceManager());
-                std::cout << out << std::endl;
+                m.MapDump();
             }
+            
         }
-       
+
     }
 
     virtual void setUpMatcher() override
     {
-        auto MapMatcher = 
+        // Matches on For Loops with counter initialised in the init, with an array element
+        // assignment within the body of the loop
+        auto MapMatcher =
         forStmt(
             hasLoopInit(anyOf(
                 declStmt(hasSingleDecl(varDecl(hasInitializer(
@@ -99,54 +117,18 @@ public:
                 hasOperatorName("="),
                 hasLHS(arraySubscriptExpr(
                     hasBase(implicitCastExpr(hasSourceExpression(declRefExpr(to(
-                        varDecl().bind("MapVecBase")))))),
+                        varDecl().bind("MapOutBase")))))),
                     hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("MapVecIndex")))))))).bind("MapVecAssign"))))
-                        .bind("MapLoop");
-        
+                        isInteger())).bind("MapOutIndex"))))))),
+                hasRHS(forEachDescendant(arraySubscriptExpr(hasBase(implicitCastExpr(
+                        hasSourceExpression(declRefExpr(to(varDecl().bind("MapInBase")))))),
+                            hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
+                                isInteger())).bind("MapInIndex")))))))),
+                unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())))))
+                .bind("MapAssign")))).bind("MapLoop");
+
+
         addMatcher(MapMatcher);
-        
-        // Matches on For Loops with counter initialised in the init, with an array element
-        // assignment within the body of the loop
-        auto map1 =            
-        forStmt(
-            hasLoopInit(declStmt(hasSingleDecl(varDecl(
-                hasInitializer(integerLiteral(equals(0)))).bind("initVarName")))),
-            hasIncrement(unaryOperator(
-                hasOperatorName("++"),
-                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("incVarName")))))),
-            hasCondition(binaryOperator(
-                hasOperatorName("<"),
-                hasLHS(ignoringParenImpCasts(declRefExpr(
-                    to(varDecl(hasType(isInteger())).bind("condVarName"))))),
-                hasRHS(expr(hasType(isInteger()))))),
-            hasBody(has(binaryOperator(
-                hasLHS(arraySubscriptExpr(
-                    hasBase(implicitCastExpr(hasSourceExpression(
-                        declRefExpr(to(varDecl().bind("arrBase")))))),
-                    hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("arrIndex"))))))),
-                    hasOperatorName("=")).bind("Arr")))
-        ).bind("forLoop");
-
-        // Matches on For Loops with counter not initialised in the init with an array element
-        // assignment within the body of the loop
-        /*
-        forStmt(
-            hasLoopInit(binaryOerator(
-                hasLHS(ignoringParenImpCasts(declRefExpr(
-                    to(varDecl(hasType(isInteger())).bind("initVarName1"))))))),
-            hasIncrement(unaryOperator(
-                hasOperatorName("++"),
-                hasUnaryOperand(declRefExpr(
-                    to(varDecl(hasType(isInteger())).bind("incVarName1")))))),
-            hasCondition(binaryOperator(
-                hasOperatorName("<"),
-                        hasLHS(ignoringParenImpCasts(declRefExpr(
-        */                    
-        // General Map Matcher
-        
-
     }
 
 };
