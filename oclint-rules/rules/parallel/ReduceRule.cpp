@@ -67,7 +67,7 @@ public:
             hasIncrement(unaryOperator(
                 hasOperatorName("++"),
                 hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("ReduceIncVar")))))),
-            hasBody(hasDescendant(anyOf(
+            hasBody(anyOf(hasDescendant(
                 binaryOperator(anyOf(
                         hasOperatorName("+="),
                         hasOperatorName("-="),
@@ -83,8 +83,8 @@ public:
                     hasRHS(hasDescendant(arraySubscriptExpr(
                         hasBase(hasDescendant(declRefExpr(to(varDecl().bind("ReduceInBase"))))),
                         hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("ReduceInIndex"))))))))
-                    ).bind("ReduceAssignment"),
-                binaryOperator(
+                    ).bind("ReduceAssignment")),
+                hasDescendant(binaryOperator(
                     hasOperatorName("="),
                     hasLHS(declRefExpr(to(varDecl().bind("ReduceAccLHS")))),
                     hasRHS(allOf(
