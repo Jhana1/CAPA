@@ -6,7 +6,7 @@ SET(CMAKE_MODULE_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/../CAPA-core/cmake"
     )
 
-INCLUDE(OCLintConfig)
+INCLUDE(CAPAConfig)
 
 INCLUDE_DIRECTORIES(
     ${CAPA_SOURCE_DIR}/include
@@ -34,9 +34,9 @@ ELSE()
 ENDIF()
 
 TARGET_LINK_LIBRARIES(CAPA-${CAPA_VERSION_RELEASE}
-    OCLintDriver
-    OCLintRuleSet
-    OCLintCore
+    CAPADriver
+    CAPARuleSet
+    CAPACore
     clangStaticAnalyzerFrontend
     clangStaticAnalyzerCheckers
     clangStaticAnalyzerCore

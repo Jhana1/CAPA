@@ -34,7 +34,7 @@ TEST_F(HTMLReporterTest, WriteHead)
     std::ostringstream oss;
     reporter.writeHead(oss);
     EXPECT_THAT(oss.str(), StartsWith("<head>"));
-    EXPECT_THAT(oss.str(), HasSubstr("<title>OCLint Report</title>"));
+    EXPECT_THAT(oss.str(), HasSubstr("<title>CAPA Report</title>"));
     EXPECT_THAT(oss.str(), EndsWith("</head>"));
 }
 
@@ -66,7 +66,7 @@ TEST_F(HTMLReporterTest, WriteFooter)
 {
     std::ostringstream oss;
     reporter.writeFooter(oss, "-test");
-    EXPECT_THAT(oss.str(), HasSubstr("Generated with <a href='http://CAPA.org'>OCLint v-test"));
+    EXPECT_THAT(oss.str(), HasSubstr("Generated with <a href='http://CAPA.org'>CAPA v-test"));
 }
 
 TEST_F(HTMLReporterTest, WriteCompilerErrorOrWarning)

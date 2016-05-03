@@ -6,7 +6,7 @@ SET(CMAKE_MODULE_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/../CAPA-core/cmake"
     )
     
-INCLUDE(OCLintConfig)
+INCLUDE(CAPAConfig)
 
 INCLUDE_DIRECTORIES(
     ${CAPA_SOURCE_DIR}/include

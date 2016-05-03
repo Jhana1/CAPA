@@ -11,7 +11,7 @@ MACRO(build_dynamic_reporter name)
         )
 
     TARGET_LINK_LIBRARIES(${name}Reporter
-        OCLintCore
+        CAPACore
         )
 ENDMACRO(build_dynamic_reporter)
 

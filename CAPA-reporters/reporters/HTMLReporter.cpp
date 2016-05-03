@@ -22,7 +22,7 @@ public:
         out << "<html>";
         writeHead(out);
         out << "<body>";
-        out << "<h1>OCLint Report</h1>";
+        out << "<h1>CAPA Report</h1>";
         out << "<hr />";
         out << "<h2>Summary</h2>";
         writeSummaryTable(out, *results);
@@ -58,7 +58,7 @@ public:
     {
         time_t now = time(nullptr);
         out << "<p>" << ctime(&now)
-            << "| Generated with <a href='http://CAPA.org'>OCLint v" << version << "</a>.</p>";
+            << "| Generated with <a href='http://CAPA.org'>CAPA v" << version << "</a>.</p>";
     }
 
     void writeViolation(std::ostream &out, const Violation &violation)
@@ -121,7 +121,7 @@ public:
     void writeHead(std::ostream &out)
     {
         out << "<head>";
-        out << "<title>OCLint Report</title>";
+        out << "<title>CAPA Report</title>";
         out << "<style type='text/css'>"
             << "                             \
 .priority1, .priority2, .priority3,          \

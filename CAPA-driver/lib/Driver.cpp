@@ -83,7 +83,7 @@ static clang::driver::Driver *newDriver(clang::DiagnosticsEngine *diagnostics,
 {
     clang::driver::Driver *driver =
         new clang::driver::Driver(binaryName, llvm::sys::getDefaultTargetTriple(), *diagnostics);
-    driver->setTitle("OCLint");
+    driver->setTitle("CAPA");
     return driver;
 }
 

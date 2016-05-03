@@ -62,7 +62,7 @@ bool declHasAttribute(
     return false;
 }
 
-bool declHasOCLintAttribute(
+bool declHasCAPAAttribute(
     const clang::Decl *decl,
     const std::string& attributeName,
     std::string* comment) {
@@ -74,7 +74,7 @@ bool baseDeclHasActionAttributeImpl (
     const std::string& action,
     const CAPA::RuleBase& rule,
     std::string* comment) {
-    return declHasOCLintAttribute(decl, action + "[" + rule.attributeName() + "]", comment);
+    return declHasCAPAAttribute(decl, action + "[" + rule.attributeName() + "]", comment);
 }
 
 bool objCMethodDeclHasAttributeFromCategory(

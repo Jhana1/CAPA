@@ -7,18 +7,18 @@ IF (MINGW)
         ${PROFILE_RT_LIBS}
         ${CLANG_LIBRARIES}
         ${REQ_LLVM_LIBRARIES}
-        OCLintAbstractRule
-        OCLintCore
-        OCLintRuleSet
+        CAPAAbstractRule
+        CAPACore
+        CAPARuleSet
     )
 ELSE()
     SET(TEST_LIBS
         test_helper
-        OCLintAbstractRule
-        OCLintHelper
-        OCLintUtil
-        OCLintCore
-        OCLintRuleSet
+        CAPAAbstractRule
+        CAPAHelper
+        CAPAUtil
+        CAPACore
+        CAPARuleSet
         gmock
         gmock_main
         ${PROFILE_RT_LIBS}
@@ -37,7 +37,7 @@ IF (MINGW)
     # Do it once, instead of copying for each test
     file(TO_CMAKE_PATH "${CAPA_BUILD_DIR}" CAPA_BUILD_CMAKE_PATH)
     add_custom_command(TARGET CanaryTest PRE_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_BUILD_CMAKE_PATH}/bin/libOCLintRuleSet.dll" $<TARGET_FILE_DIR:CanaryTest>)
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_BUILD_CMAKE_PATH}/bin/libCAPARuleSet.dll" $<TARGET_FILE_DIR:CanaryTest>)
 ENDIF()
 
 #ADD_SUBDIRECTORY(parallel)

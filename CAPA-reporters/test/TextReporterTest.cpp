@@ -33,14 +33,14 @@ TEST_F(TextReporterTest, WriteHeader)
 {
     std::ostringstream oss;
     reporter.writeHeader(oss);
-    EXPECT_THAT(oss.str(), StrEq("OCLint Report"));
+    EXPECT_THAT(oss.str(), StrEq("CAPA Report"));
 }
 
 TEST_F(TextReporterTest, WriteFooter)
 {
     std::ostringstream oss;
     reporter.writeFooter(oss, "-test");
-    EXPECT_THAT(oss.str(), StrEq("[OCLint (http://CAPA.org) v-test]"));
+    EXPECT_THAT(oss.str(), StrEq("[CAPA (http://CAPA.org) v-test]"));
 }
 
 TEST_F(TextReporterTest, WriteSummary)

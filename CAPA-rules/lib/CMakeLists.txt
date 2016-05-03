@@ -8,7 +8,7 @@ SET (AbstractSource
 )
 
 IF (MINGW)
-    ADD_LIBRARY(OCLintAbstractRule SHARED
+    ADD_LIBRARY(CAPAAbstractRule SHARED
         ${AbstractSource}
         helper/AttributeHelper.cpp
         helper/EnforceHelper.cpp
@@ -16,17 +16,17 @@ IF (MINGW)
         util/ASTUtil.cpp
         util/StdUtil.cpp
         util/MyASTUtil.cpp)
-    TARGET_LINK_LIBRARIES(OCLintAbstractRule
-        OCLintCore
-        OCLintRuleSet
+    TARGET_LINK_LIBRARIES(CAPAAbstractRule
+        CAPACore
+        CAPARuleSet
         ${CLANG_LIBRARIES}
         ${REQ_LLVM_LIBRARIES}
     )
-    SET_TARGET_PROPERTIES(OCLintAbstractRule
+    SET_TARGET_PROPERTIES(CAPAAbstractRule
         PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
     )
 
-    TARGET_LINK_LIBRARIES(OCLintAbstractRule LINK_INTERFACE_LIBRARIES OCLintRuleSet)
+    TARGET_LINK_LIBRARIES(CAPAAbstractRule LINK_INTERFACE_LIBRARIES CAPARuleSet)
 ELSE()
-    ADD_LIBRARY(OCLintAbstractRule ${AbstractSource})
+    ADD_LIBRARY(CAPAAbstractRule ${AbstractSource})
 ENDIF()

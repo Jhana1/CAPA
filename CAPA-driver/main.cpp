@@ -151,17 +151,17 @@ int prepare()
 
 static void CAPAVersionPrinter()
 {
-    cout << "OCLint (http://CAPA.org/):\n";
-    cout << "  OCLint version " << CAPA::Version::identifier() << ".\n";
+    cout << "CAPA (http://CAPA.org/):\n";
+    cout << "  CAPA version " << CAPA::Version::identifier() << ".\n";
     cout << "  Built " << __DATE__ << " (" << __TIME__ << ").\n";
 }
 
-extern llvm::cl::OptionCategory OCLintOptionCategory;
+extern llvm::cl::OptionCategory CAPAOptionCategory;
 
 int main(int argc, const char **argv)
 {
     llvm::cl::AddExtraVersionPrinter(&CAPAVersionPrinter);
-    CommonOptionsParser optionsParser(argc, argv, OCLintOptionCategory);
+    CommonOptionsParser optionsParser(argc, argv, CAPAOptionCategory);
     CAPA::option::process(argv[0]);
 
     int prepareStatus = prepare();

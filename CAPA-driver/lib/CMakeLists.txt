@@ -1,4 +1,4 @@
-ADD_LIBRARY(OCLintDriver
+ADD_LIBRARY(CAPADriver
     CompilerInstance.cpp
     ConfigFile.cpp
     DiagnosticDispatcher.cpp

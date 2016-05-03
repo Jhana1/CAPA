@@ -14,7 +14,7 @@
 bool markedAsSuppress(const clang::Decl *decl, CAPA::RuleBase *rule)
 {
     if(rule) {
-        return declHasOCLintAttribute(decl, "suppress")
+        return declHasCAPAAttribute(decl, "suppress")
             || declHasActionAttribute(decl, "suppress", *rule);
     }
     return false;

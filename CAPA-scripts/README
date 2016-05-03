@@ -2,7 +2,7 @@ Quick Start
 -------------------------------------------------------------------------------
 
 ./make - Delete existing build, check out dependencies, build LLVM/Clang,
-         build OCLint in optimized mode, bundle binaries and libraries
+         build CAPA in optimized mode, bundle binaries and libraries
          together, and finally archive everything at ../build folder
 
 Detail description can be found at

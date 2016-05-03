@@ -12,26 +12,26 @@ MACRO(build_dynamic_rule name)
 
     IF (MINGW)
         TARGET_LINK_LIBRARIES(${name}Rule
-            OCLintAbstractRule
+            CAPAAbstractRule
         )
     ELSE()
-        TARGET_LINK_LIBRARIES(${name}Rule OCLintAbstractRule)
+        TARGET_LINK_LIBRARIES(${name}Rule CAPAAbstractRule)
 
         TARGET_LINK_LIBRARIES(${name}Rule
             clangASTMatchers
         ) # TODO: might be redundant
 
         TARGET_LINK_LIBRARIES(${name}Rule
-            OCLintHelper
-            OCLintUtil
-            OCLintCore
+            CAPAHelper
+            CAPAUtil
+            CAPACore
         )
 
         IF (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
             TARGET_LINK_LIBRARIES(${name}Rule
                 ${CLANG_LIBRARIES}
                 ${REQ_LLVM_LIBRARIES}
-                OCLintRuleSet
+                CAPARuleSet
             )
         ENDIF()
     ENDIF()

@@ -1,5 +1,5 @@
 IF (NOT MINGW)
-    ADD_LIBRARY(OCLintUtil
+    ADD_LIBRARY(CAPAUtil
         ASTUtil.cpp
         StdUtil.cpp
     )

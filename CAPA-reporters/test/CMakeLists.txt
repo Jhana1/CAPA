@@ -5,7 +5,7 @@ MACRO(build_test name)
         ${PROFILE_RT_LIBS}
         ${CLANG_LIBRARIES}
         ${REQ_LLVM_LIBRARIES}
-        OCLintCore
+        CAPACore
         )
 
     ADD_TEST(${name} ${EXECUTABLE_OUTPUT_PATH}/${name})

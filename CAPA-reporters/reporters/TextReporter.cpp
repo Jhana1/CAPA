@@ -20,7 +20,7 @@ public:
         {
             writeCompilerDiagnostics(out, results->allErrors(),
                 "Compiler Errors:\n(please be aware that these errors "
-                "will prevent OCLint from analyzing this source code)");
+                "will prevent CAPA from analyzing this source code)");
         }
         if (results->hasWarnings())
         {
@@ -44,12 +44,12 @@ public:
 
     void writeHeader(std::ostream &out)
     {
-        out << "OCLint Report";
+        out << "CAPA Report";
     }
 
     void writeFooter(std::ostream &out, std::string version)
     {
-        out << "[OCLint (http://CAPA.org) v" << version << "]";
+        out << "[CAPA (http://CAPA.org) v" << version << "]";
     }
 
     void writeSummary(std::ostream &out, Results &results)

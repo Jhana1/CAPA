@@ -6,7 +6,7 @@
 namespace clang { class Decl; }
 namespace CAPA { class RuleBase; }
 
-bool declHasOCLintAttribute(
+bool declHasCAPAAttribute(
     const clang::Decl *decl,
     const std::string& attributeName,
     std::string* comment = nullptr);
