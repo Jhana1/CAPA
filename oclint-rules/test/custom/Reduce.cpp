@@ -17,5 +17,6 @@ int main()
     {
         k /= k + a[i];
     }
+
     return 0;
 }

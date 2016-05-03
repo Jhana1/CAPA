@@ -26,14 +26,14 @@ public:
     {
         mContext     = Result.Context;
         mSM          = &Result.Context->getSourceManager();
-        mLoop        = Result.Nodes.getNodeAs<ForStmt>("MapLoop");
-        mAssign      = Result.Nodes.getNodeAs<BinaryOperator>("MapAssign");
-        mInitVar     = Result.Nodes.getNodeAs<VarDecl>("MapInitVar");
-        mIncVar      = Result.Nodes.getNodeAs<VarDecl>("MapIncVar");
-        mInBase      = Result.Nodes.getNodeAs<VarDecl>("MapInBase");
-        mInIndex     = Result.Nodes.getNodeAs<VarDecl>("MapInIndex");
-        mOutBase     = Result.Nodes.getNodeAs<VarDecl>("MapOutBase");
-        mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("MapOutIndex");
+        mLoop        = Result.Nodes.getNodeAs<ForStmt>("Map");
+        mAssign      = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
+        mInitVar     = Result.Nodes.getNodeAs<VarDecl>("InitVar");
+        mIncVar      = Result.Nodes.getNodeAs<VarDecl>("IncVar");
+        mInBase      = Result.Nodes.getNodeAs<VarDecl>("InBase");
+        mInIndex     = Result.Nodes.getNodeAs<VarDecl>("InIndex");
+        mOutBase     = Result.Nodes.getNodeAs<VarDecl>("OutBase");
+        mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
     }
     
     bool IsMap()
@@ -62,7 +62,7 @@ protected:
 public:
     virtual const string name() const override
     {
-        return "Nothing";
+        return "Map";
     }
 
     virtual int priority() const override
@@ -78,7 +78,7 @@ public:
     virtual void callback(const MatchFinder::MatchResult &Result) override
     {
         auto Context = Result.Context;
-        auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("MapLoop");
+        auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("Map");
         
         std::cout << MapLoop << std::endl;
         if (MapLoop)
@@ -90,7 +90,6 @@ public:
             }
             
         }
-
     }
 
     virtual void setUpMatcher() override
@@ -101,27 +100,27 @@ public:
         forStmt(
             hasLoopInit(anyOf(
                 declStmt(hasSingleDecl(varDecl(hasInitializer(
-                    integerLiteral(anything()))).bind("MapInitVar"))),
+                    integerLiteral(anything()))).bind("InitVar"))),
                 binaryOperator(
                     hasOperatorName("="),
                     hasLHS(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("MapInitVar"))))))),
+                        isInteger())).bind("InitVar"))))))),
             hasIncrement(unaryOperator(
                 hasOperatorName("++"),
-                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("MapIncVar")))))),
-            hasBody(has(binaryOperator(
+                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),
+            hasBody(hasDescendant(binaryOperator(
                 hasOperatorName("="),
                 hasLHS(arraySubscriptExpr(
                     hasBase(implicitCastExpr(hasSourceExpression(declRefExpr(to(
-                        varDecl().bind("MapOutBase")))))),
+                        varDecl().bind("OutBase")))))),
                     hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("MapOutIndex"))))))),
-                hasRHS(forEachDescendant(arraySubscriptExpr(hasBase(implicitCastExpr(
-                        hasSourceExpression(declRefExpr(to(varDecl().bind("MapInBase")))))),
+                        isInteger())).bind("OutIndex"))))))),
+                hasRHS(hasDescendant(arraySubscriptExpr(hasBase(implicitCastExpr(
+                        hasSourceExpression(declRefExpr(to(varDecl().bind("InBase")))))),
                             hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                isInteger())).bind("MapInIndex")))))))),
+                                isInteger())).bind("InIndex")))))))),
                 unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())))))
-                .bind("MapAssign")))).bind("MapLoop");
+                .bind("Assign")))).bind("Map");
 
 
         addMatcher(MapMatcher);
