@@ -61,8 +61,8 @@ class url:
     clang_rt = 'http://llvm.org/svn/llvm-project/compiler-rt/'
     googletest = 'http://googlemock.googlecode.com/svn/trunk/'
 
-    json_compilation_database = 'https://github.com/CAPA/CAPA-json-compilation-database.git'
-    xcodebuild = 'https://github.com/CAPA/CAPA-xcodebuild.git'
+    json_compilation_database = 'https://github.com/jhana1/CAPA-json-compilation-database.git'
+    xcodebuild = 'https://github.com/jhana1/CAPA-xcodebuild.git'
 
     clang_prebuilt_binary_for_darwin = 'http://llvm.org/releases/3.7.0/clang+llvm-3.7.0-x86_64-apple-darwin.tar.xz'
     clang_prebuilt_binary_for_ubuntu_lts = 'http://llvm.org/releases/3.7.0/clang+llvm-3.7.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz'
