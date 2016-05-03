@@ -1,4 +1,4 @@
-# CAPA - C Algorithm Parallelisation Analysis 
+# CAPA - C Algorithm Parallelisation Analyser 
 
 CAPA is a static code analysis tool for identifying possibly parallel algorithm implementations
 within your C codebase that may be re-implemented on GPU hardware.
