@@ -2,6 +2,8 @@
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
 #include <iostream>
+#include <map>
+#include <vector>
 
 using namespace std;
 using namespace clang;
@@ -56,8 +58,7 @@ class MapRule : public AbstractASTMatcherRule
 {
 
 protected:
-    static std::vector<MapInfo> mInfo;
-    static std::map<const ForStmt*, bool> mMapStatus;
+    static std::map<const ForStmt*, MapInfo> mMapStatus;
 
 public:
     virtual const string name() const override
@@ -81,12 +82,21 @@ public:
         auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("Map");
         
         std::cout << MapLoop << std::endl;
+        // Check if the pointer is null, if it is then we don't have a map.
         if (MapLoop)
         {
-            MapInfo m(Result);
-            if (m.IsMap())
+            MapInfo currentMap(Result);
+            // Check if we've had this map before
+            // If we have then it has had 2 callbacks, making it almost certainly not a map
+            
+            if (mMapStatus.find(currentMap.mLoop) != mMapStatus.end())
             {
-                m.MapDump();
+                mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
+            }
+
+            if (currentMap.IsMap())
+            {
+                currentMap.MapDump();
             }
             
         }
@@ -96,6 +106,7 @@ public:
     {
         // Matches on For Loops with counter initialised in the init, with an array element
         // assignment within the body of the loop
+        
         auto MapMatcher =
         forStmt(
             hasLoopInit(anyOf(
@@ -129,3 +140,4 @@ public:
 };
 
 static RuleSet rules(new MapRule());
+std::map<const ForStmt*, MapInfo> MapRule::mMapStatus;

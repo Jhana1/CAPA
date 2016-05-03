@@ -12,6 +12,7 @@ public:
     virtual const string name() const override
     {
         return "Scan";
+        return "f";
     }
 
     virtual int priority() const override
