@@ -1,19 +1,13 @@
-# CAPA - http://CAPA.org
+# CAPA - C Algorithm Parallelisation Analysis 
 
-[![Travis CI Status](https://api.travis-ci.org/CAPA/CAPA.svg?branch=master)](https://travis-ci.org/CAPA/CAPA) [![Coverage Status](https://coveralls.io/repos/github/CAPA/CAPA/badge.svg?branch=master)](https://coveralls.io/github/CAPA/CAPA?branch=master)
+CAPA is a static code analysis tool for identifying possibly parallel algorithm implementations
+within your C codebase that may be re-implemented on GPU hardware.
 
-OCLint is a static code analysis tool for improving quality and reducing defects
-by inspecting C, C++ and Objective-C code.
+It looks for potential speedups including:
 
-It looks for potential problems that aren't visible to compilers, for example:
-
-* Possible bugs - empty if/else/try/catch/finally statements
-* Unused code - unused local variables and parameters
-* Complicated code - high cyclomatic complexity, NPath complexity and high NCSS
-* Redundant code - redundant if statement and useless parentheses
-* Code smells - long method and long parameter list
-* Bad practices - inverted logic and parameter reassignment
+* Map Operations - Neighbour Invariant 1->1 transformations
+* Reduce Operations - Highly Efficient N->1 transformations
+* Scan (Prefix Sum) - N->N transformations 
+* Matrix Multiplication - Quadratic complexity with superior GPU implementations
+* Graph Traversals - Significant speedups in common depth-first traversalst
 * ...
-
-For more information, visit http://CAPA.org
-
