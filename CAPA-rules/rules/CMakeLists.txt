@@ -13,7 +13,6 @@ MACRO(build_dynamic_rule name)
     IF (MINGW)
         TARGET_LINK_LIBRARIES(${name}Rule
             OCLintAbstractRule
-            OCLintMetric
         )
     ELSE()
         TARGET_LINK_LIBRARIES(${name}Rule OCLintAbstractRule)
@@ -23,7 +22,6 @@ MACRO(build_dynamic_rule name)
         ) # TODO: might be redundant
 
         TARGET_LINK_LIBRARIES(${name}Rule
-            OCLintMetric
             OCLintHelper
             OCLintUtil
             OCLintCore

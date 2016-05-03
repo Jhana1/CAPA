@@ -7,7 +7,6 @@ IF (MINGW)
         ${PROFILE_RT_LIBS}
         ${CLANG_LIBRARIES}
         ${REQ_LLVM_LIBRARIES}
-        OCLintMetric
         OCLintAbstractRule
         OCLintCore
         OCLintRuleSet
@@ -16,7 +15,6 @@ ELSE()
     SET(TEST_LIBS
         test_helper
         OCLintAbstractRule
-        OCLintMetric
         OCLintHelper
         OCLintUtil
         OCLintCore
@@ -38,29 +36,8 @@ BUILD_TEST(CanaryTest CanaryTest.cpp)
 IF (MINGW)
     # Do it once, instead of copying for each test
     file(TO_CMAKE_PATH "${CAPA_BUILD_DIR}" CAPA_BUILD_CMAKE_PATH)
-    file(TO_CMAKE_PATH "${CAPA_METRICS_BUILD_DIR}" CAPA_METRICS_CMAKE_PATH)
     add_custom_command(TARGET CanaryTest PRE_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_BUILD_CMAKE_PATH}/bin/libOCLintRuleSet.dll" $<TARGET_FILE_DIR:CanaryTest>)
-    add_custom_command(TARGET CanaryTest PRE_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_METRICS_CMAKE_PATH}/bin/libOCLintMetric.dll" $<TARGET_FILE_DIR:CanaryTest>)
 ENDIF()
 
-ADD_SUBDIRECTORY(abstract)
-ADD_SUBDIRECTORY(helper)
-
-ADD_SUBDIRECTORY(basic)
-ADD_SUBDIRECTORY(cocoa)
-ADD_SUBDIRECTORY(convention)
-ADD_SUBDIRECTORY(design)
-ADD_SUBDIRECTORY(empty)
-ADD_SUBDIRECTORY(migration)
-ADD_SUBDIRECTORY(naming)
-ADD_SUBDIRECTORY(redundant)
-ADD_SUBDIRECTORY(size)
-ADD_SUBDIRECTORY(unused)
-
-ADD_SUBDIRECTORY(custom)
-
-ADD_SUBDIRECTORY(custom)
-
-ADD_SUBDIRECTORY(Parallel)
+#ADD_SUBDIRECTORY(parallel)
