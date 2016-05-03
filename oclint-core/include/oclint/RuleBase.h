@@ -1,11 +1,11 @@
-#ifndef OCLINT_RULEBASE_H
-#define OCLINT_RULEBASE_H
+#ifndef CAPA_RULEBASE_H
+#define CAPA_RULEBASE_H
 
 #include <string>
 
-#include "oclint/RuleCarrier.h"
+#include "CAPA/RuleCarrier.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class RuleBase
@@ -30,6 +30,6 @@ public:
     virtual int priority() const = 0;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

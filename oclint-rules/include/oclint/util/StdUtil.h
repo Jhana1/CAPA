@@ -1,5 +1,5 @@
-#ifndef OCLINT_UTIL_STDUTIL_H
-#define OCLINT_UTIL_STDUTIL_H
+#ifndef CAPA_UTIL_STDUTIL_H
+#define CAPA_UTIL_STDUTIL_H
 
 #include <sstream>
 #include <string>

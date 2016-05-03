@@ -1,8 +1,8 @@
 #include "TestHeaders.h"
 
-#include "oclint/metric/CyclomaticComplexityMetric.h"
+#include "CAPA/metric/CyclomaticComplexityMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 DeclarationMatcher functionDeclMatcher = functionDecl().bind("functionDecl");
 

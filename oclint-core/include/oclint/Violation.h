@@ -1,9 +1,9 @@
-#ifndef OCLINT_VIOLATION_H
-#define OCLINT_VIOLATION_H
+#ifndef CAPA_VIOLATION_H
+#define CAPA_VIOLATION_H
 
 #include <string>
 
-namespace oclint
+namespace CAPA
 {
 
 class RuleBase;
@@ -24,9 +24,9 @@ public:
               int violationEndLine, int violationEndColumn,
               std::string violationMessage = "");
 
-    bool operator==(const oclint::Violation &rhs) const;
+    bool operator==(const CAPA::Violation &rhs) const;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

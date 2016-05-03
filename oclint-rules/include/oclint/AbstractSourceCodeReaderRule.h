@@ -1,9 +1,9 @@
-#ifndef OCLINT_ABSTRACTSOURCECODEREADERRULE_H
-#define OCLINT_ABSTRACTSOURCECODEREADERRULE_H
+#ifndef CAPA_ABSTRACTSOURCECODEREADERRULE_H
+#define CAPA_ABSTRACTSOURCECODEREADERRULE_H
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class AbstractSourceCodeReaderRule : public RuleBase
@@ -20,6 +20,6 @@ public:
     virtual void eachLine(int lineNumber, std::string line) = 0;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

@@ -1,5 +1,5 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
 
 using namespace clang;
 
@@ -33,7 +33,7 @@ static std::string getMessageViolation(const CXXRecordDecl& base, const CXXRecor
  * only check parents of polymorphic classes.
  */
 class BaseClassDestructorShouldBeVirtualOrProtectedRule :
-    public oclint::AbstractASTVisitorRule<BaseClassDestructorShouldBeVirtualOrProtectedRule>
+    public CAPA::AbstractASTVisitorRule<BaseClassDestructorShouldBeVirtualOrProtectedRule>
 {
 public:
     virtual const std::string name() const override
@@ -53,7 +53,7 @@ public:
 
     unsigned int supportedLanguages() const override
     {
-        return oclint::LANG_CXX;
+        return CAPA::LANG_CXX;
     }
 
     bool VisitCXXRecordDecl(const CXXRecordDecl* cxxRecordDecl)
@@ -99,4 +99,4 @@ private:
     }
 };
 
-static oclint::RuleSet rules(new BaseClassDestructorShouldBeVirtualOrProtectedRule());
+static CAPA::RuleSet rules(new BaseClassDestructorShouldBeVirtualOrProtectedRule());

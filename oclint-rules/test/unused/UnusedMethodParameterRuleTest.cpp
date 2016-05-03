@@ -23,12 +23,12 @@ TEST(UnusedMethodParameterRuleTest, MethodWithUnusedParameter)
 
 TEST(UnusedMethodParameterRuleTest, MethodWithUnusedParameterSuppressThisRule)
 {
-    testRuleOnCode(new UnusedMethodParameterRule(), "void aMethod(int a __attribute__((annotate(\"oclint:suppress[unused method parameter]\")))) { }");
+    testRuleOnCode(new UnusedMethodParameterRule(), "void aMethod(int a __attribute__((annotate(\"CAPA:suppress[unused method parameter]\")))) { }");
 }
 
 TEST(UnusedMethodParameterRuleTest, MethodWithUnusedParameterSuppressAll)
 {
-    testRuleOnCode(new UnusedMethodParameterRule(), "void aMethod(int a __attribute__((annotate(\"oclint:suppress\")))) { }");
+    testRuleOnCode(new UnusedMethodParameterRule(), "void aMethod(int a __attribute__((annotate(\"CAPA:suppress\")))) { }");
 }
 
 TEST(UnusedMethodParameterRuleTest, CppParameterHasNoNameShouldBeIgnored)
@@ -57,7 +57,7 @@ TEST(UnusedMethodParameterRuleTest, ObjCMethodWithUnusedParameterSuppressThisRul
 - (void)aMethod:(int)a;         \n\
 @end                            \n\
 @implementation AClass          \n\
-- (void)aMethod:(int) __attribute__((annotate(\"oclint:suppress[unused method parameter]\"))) a {}       \n\
+- (void)aMethod:(int) __attribute__((annotate(\"CAPA:suppress[unused method parameter]\"))) a {}       \n\
 @end");
 }
 
@@ -69,7 +69,7 @@ TEST(UnusedMethodParameterRuleTest, ObjCMethodWithUnusedParameterSuppressAll)
 - (void)aMethod:(int)a;         \n\
 @end                            \n\
 @implementation AClass          \n\
-- (void)aMethod:(int) __attribute__((annotate(\"oclint:suppress\"))) a {}       \n\
+- (void)aMethod:(int) __attribute__((annotate(\"CAPA:suppress\"))) a {}       \n\
 @end");
 }
 
@@ -81,7 +81,7 @@ TEST(UnusedMethodParameterRuleTest, ObjCMethodWithUnusedParameterMultipleSuppres
 - (void)aMethod:(int)a;         \n\
 @end                            \n\
 @implementation AClass          \n\
-- (void)aMethod:(int) __attribute__((annotate(\"oclint:suppress[unused method parameter]\"), annotate(\"oclint:suppress[rule2]\"))) a {}       \n\
+- (void)aMethod:(int) __attribute__((annotate(\"CAPA:suppress[unused method parameter]\"), annotate(\"CAPA:suppress[rule2]\"))) a {}       \n\
 @end");
 }
 
@@ -93,7 +93,7 @@ TEST(UnusedMethodParameterRuleTest, ObjCMethodWithUnusedParameterMultipleSuppres
 - (void)aMethod:(int)a;         \n\
 @end                            \n\
 @implementation AClass          \n\
-- (void)aMethod:(int) __attribute__((annotate(\"oclint:suppress[rule2]\"), annotate(\"oclint:suppress[unused method parameter]\"))) a {}       \n\
+- (void)aMethod:(int) __attribute__((annotate(\"CAPA:suppress[rule2]\"), annotate(\"CAPA:suppress[unused method parameter]\"))) a {}       \n\
 @end");
 }
 
@@ -105,7 +105,7 @@ TEST(UnusedMethodParameterRuleTest, ObjCMethodWithUnusedParameterSupressOther)
 - (void)aMethod:(int)a;         \n\
 @end                            \n\
 @implementation AClass          \n\
-- (void)aMethod:(int) __attribute__((annotate(\"oclint:suppress[rule2]\"))) a {}       \n\
+- (void)aMethod:(int) __attribute__((annotate(\"CAPA:suppress[rule2]\"))) a {}       \n\
 @end",
         0, 7, 18, 7, 75, "The parameter 'a' is unused.");
 }

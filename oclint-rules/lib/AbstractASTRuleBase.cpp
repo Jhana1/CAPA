@@ -1,7 +1,7 @@
-#include "oclint/AbstractASTRuleBase.h"
-#include "oclint/helper/SuppressHelper.h"
+#include "CAPA/AbstractASTRuleBase.h"
+#include "CAPA/helper/SuppressHelper.h"
 
-namespace oclint
+namespace CAPA
 {
 
 /*virtual*/
@@ -84,4 +84,4 @@ bool AbstractASTRuleBase::isLanguageSupported() const
     return false;
 }
 
-} // end namespace oclint
+} // end namespace CAPA

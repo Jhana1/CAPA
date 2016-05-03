@@ -1,10 +1,10 @@
-#include "oclint/RuleSet.h"
+#include "CAPA/RuleSet.h"
 
 #include <vector>
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 static std::vector<RuleBase*>* _rules = nullptr;
 

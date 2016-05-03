@@ -1,8 +1,8 @@
-#include "oclint/RawResults.h"
-#include "oclint/ResultCollector.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/RawResults.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/ViolationSet.h"
 
-namespace oclint {
+namespace CAPA {
 
 RawResults::RawResults(const ResultCollector &resultCollector)
     : AbstractResults(resultCollector)
@@ -37,4 +37,4 @@ const std::vector<Violation>& RawResults::allCheckerBugs() const
     return _resultCollector.getClangStaticCheckerBugSet()->getViolations();
 }
 
-} // end namespace oclint
+} // end namespace CAPA

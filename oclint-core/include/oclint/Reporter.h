@@ -1,9 +1,9 @@
-#ifndef OCLINT_REPORTER_H
-#define OCLINT_REPORTER_H
+#ifndef CAPA_REPORTER_H
+#define CAPA_REPORTER_H
 
 #include <ostream>
 
-namespace oclint
+namespace CAPA
 {
 
 class Results;
@@ -16,6 +16,6 @@ public:
     virtual const std::string name() const = 0;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

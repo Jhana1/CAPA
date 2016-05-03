@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "oclint/RuleConfiguration.h"
+#include "CAPA/RuleConfiguration.h"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 TEST(RuleConfigurationTest, AddConfiguration)
 {

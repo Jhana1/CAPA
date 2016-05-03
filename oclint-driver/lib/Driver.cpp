@@ -44,7 +44,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
  * SOFTWARE.
  */
-#include "oclint/Driver.h"
+#include "CAPA/Driver.h"
 
 #include <unistd.h>
 
@@ -67,14 +67,14 @@
 #include <clang/Tooling/CompilationDatabase.h>
 #include <clang/Tooling/Tooling.h>
 
-#include "oclint/CompilerInstance.h"
-#include "oclint/DiagnosticDispatcher.h"
-#include "oclint/GenericException.h"
-#include "oclint/Logger.h"
-#include "oclint/Options.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/CompilerInstance.h"
+#include "CAPA/DiagnosticDispatcher.h"
+#include "CAPA/GenericException.h"
+#include "CAPA/Logger.h"
+#include "CAPA/Options.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 typedef std::vector<std::pair<std::string, clang::tooling::CompileCommand>> CompileCommandPairs;
 
@@ -100,14 +100,14 @@ static const llvm::opt::ArgStringList *getCC1Arguments(clang::driver::Compilatio
     const clang::driver::JobList &jobList = compilation->getJobs();
     if (jobList.size() != 1 || !clang::isa<clang::driver::Command>(*jobList.begin()))
     {
-        throw oclint::GenericException("one compiler command contains multiple jobs:\n" +
+        throw CAPA::GenericException("one compiler command contains multiple jobs:\n" +
             compilationJobsToString(jobList) + "\n");
     }
 
     const clang::driver::Command &cmd = clang::cast<clang::driver::Command>(*jobList.begin());
     if (llvm::StringRef(cmd.getCreator().getName()) != "clang")
     {
-        throw oclint::GenericException("expected a clang compiler command");
+        throw CAPA::GenericException("expected a clang compiler command");
     }
 
     return &cmd.getArguments();
@@ -168,7 +168,7 @@ static clang::CompilerInvocation *newCompilerInvocation(std::string &mainExecuta
             argv.push_back(commandLine[cmdIndex].c_str());
         }
     }
-    argv.push_back("-D__OCLINT__");
+    argv.push_back("-D__CAPA__");
 
     // create diagnostic engine
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagOpts =
@@ -197,21 +197,21 @@ static clang::FileManager *newFileManager()
     return new clang::FileManager(fileSystemOptions);
 }
 
-static oclint::CompilerInstance *newCompilerInstance(clang::CompilerInvocation *compilerInvocation,
+static CAPA::CompilerInstance *newCompilerInstance(clang::CompilerInvocation *compilerInvocation,
     clang::FileManager *fileManager, bool runClangChecker = false)
 {
-    auto compilerInstance = new oclint::CompilerInstance();
+    auto compilerInstance = new CAPA::CompilerInstance();
     compilerInstance->setInvocation(compilerInvocation);
     compilerInstance->setFileManager(fileManager);
     compilerInstance->createDiagnostics(new DiagnosticDispatcher(runClangChecker));
     if (!compilerInstance->hasDiagnostics())
     {
-        throw oclint::GenericException("cannot create compiler diagnostics");
+        throw CAPA::GenericException("cannot create compiler diagnostics");
     }
     compilerInstance->createSourceManager(*fileManager);
     if (!compilerInstance->hasSourceManager())
     {
-        throw oclint::GenericException("cannot create compiler source manager");
+        throw CAPA::GenericException("cannot create compiler source manager");
     }
     return compilerInstance;
 }
@@ -252,7 +252,7 @@ static std::vector<std::string> adjustArguments(std::vector<std::string> &unadju
     return argAdjuster(unadjustedCmdLine);
 }
 
-static void constructCompilersAndFileManagers(std::vector<oclint::CompilerInstance *> &compilers,
+static void constructCompilersAndFileManagers(std::vector<CAPA::CompilerInstance *> &compilers,
     std::vector<clang::FileManager *> &fileManagers,
     CompileCommandPairs &compileCommands,
     std::string &mainExecutable)
@@ -270,14 +270,14 @@ static void constructCompilersAndFileManagers(std::vector<oclint::CompilerInstan
         LOG_VERBOSE(compileCommand.first.c_str());
         if (chdir(compileCommand.second.Directory.c_str()))
         {
-            throw oclint::GenericException("Cannot change dictionary into \"" +
+            throw CAPA::GenericException("Cannot change dictionary into \"" +
                 compileCommand.second.Directory + "\", "
                 "please make sure the directory exists and you have permission to access!");
         }
         clang::CompilerInvocation *compilerInvocation =
             newCompilerInvocation(mainExecutable, adjustedCmdLine);
         clang::FileManager *fileManager = newFileManager();
-        oclint::CompilerInstance *compiler = newCompilerInstance(compilerInvocation, fileManager);
+        CAPA::CompilerInstance *compiler = newCompilerInstance(compilerInvocation, fileManager);
 
         compiler->start();
         if (!compiler->getDiagnostics().hasErrorOccurred() && compiler->hasASTContext())
@@ -304,7 +304,7 @@ static void invokeClangStaticAnalyzer(
         LOG_VERBOSE(compileCommand.first.c_str());
         if (chdir(compileCommand.second.Directory.c_str()))
         {
-            throw oclint::GenericException("Cannot change dictionary into \"" +
+            throw CAPA::GenericException("Cannot change dictionary into \"" +
                 compileCommand.second.Directory + "\", "
                 "please make sure the directory exists and you have permission to access!");
         }
@@ -313,7 +313,7 @@ static void invokeClangStaticAnalyzer(
         clang::CompilerInvocation *compilerInvocation =
             newCompilerInvocation(mainExecutable, adjustedArguments, true);
         clang::FileManager *fileManager = newFileManager();
-        oclint::CompilerInstance *compiler = newCompilerInstance(compilerInvocation,
+        CAPA::CompilerInstance *compiler = newCompilerInstance(compilerInvocation,
             fileManager, true);
 
         compiler->start();
@@ -333,9 +333,9 @@ static void invokeClangStaticAnalyzer(
 }
 
 static void invoke(CompileCommandPairs &compileCommands,
-    std::string &mainExecutable, oclint::Analyzer &analyzer)
+    std::string &mainExecutable, CAPA::Analyzer &analyzer)
 {
-    std::vector<oclint::CompilerInstance *> compilers;
+    std::vector<CAPA::CompilerInstance *> compilers;
     std::vector<clang::FileManager *> fileManagers;
     constructCompilersAndFileManagers(compilers, fileManagers, compileCommands, mainExecutable);
 
@@ -363,13 +363,13 @@ static void invoke(CompileCommandPairs &compileCommands,
 }
 
 void Driver::run(const clang::tooling::CompilationDatabase &compilationDatabase,
-    llvm::ArrayRef<std::string> sourcePaths, oclint::Analyzer &analyzer)
+    llvm::ArrayRef<std::string> sourcePaths, CAPA::Analyzer &analyzer)
 {
     CompileCommandPairs compileCommands;
     constructCompileCommands(compileCommands, compilationDatabase, sourcePaths);
 
     static int staticSymbol;
-    std::string mainExecutable = llvm::sys::fs::getMainExecutable("oclint", &staticSymbol);
+    std::string mainExecutable = llvm::sys::fs::getMainExecutable("CAPA", &staticSymbol);
 
     if (option::enableGlobalAnalysis())
     {

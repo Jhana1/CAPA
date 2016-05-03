@@ -37,12 +37,12 @@ ENDMACRO(build_test)
 BUILD_TEST(CanaryTest CanaryTest.cpp)
 IF (MINGW)
     # Do it once, instead of copying for each test
-    file(TO_CMAKE_PATH "${OCLINT_BUILD_DIR}" OCLINT_BUILD_CMAKE_PATH)
-    file(TO_CMAKE_PATH "${OCLINT_METRICS_BUILD_DIR}" OCLINT_METRICS_CMAKE_PATH)
+    file(TO_CMAKE_PATH "${CAPA_BUILD_DIR}" CAPA_BUILD_CMAKE_PATH)
+    file(TO_CMAKE_PATH "${CAPA_METRICS_BUILD_DIR}" CAPA_METRICS_CMAKE_PATH)
     add_custom_command(TARGET CanaryTest PRE_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OCLINT_BUILD_CMAKE_PATH}/bin/libOCLintRuleSet.dll" $<TARGET_FILE_DIR:CanaryTest>)
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_BUILD_CMAKE_PATH}/bin/libOCLintRuleSet.dll" $<TARGET_FILE_DIR:CanaryTest>)
     add_custom_command(TARGET CanaryTest PRE_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OCLINT_METRICS_CMAKE_PATH}/bin/libOCLintMetric.dll" $<TARGET_FILE_DIR:CanaryTest>)
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CAPA_METRICS_CMAKE_PATH}/bin/libOCLintMetric.dll" $<TARGET_FILE_DIR:CanaryTest>)
 ENDIF()
 
 ADD_SUBDIRECTORY(abstract)

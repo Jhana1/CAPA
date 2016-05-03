@@ -1,11 +1,11 @@
-#ifndef OCLINT_VIOLATIONSET_H
-#define OCLINT_VIOLATIONSET_H
+#ifndef CAPA_VIOLATIONSET_H
+#define CAPA_VIOLATIONSET_H
 
 #include <vector>
 
-#include "oclint/Violation.h"
+#include "CAPA/Violation.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class ViolationSet
@@ -23,6 +23,6 @@ public:
     // TODO: getViolation(int index)
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

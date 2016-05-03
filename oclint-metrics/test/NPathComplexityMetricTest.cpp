@@ -1,8 +1,8 @@
 #include "TestHeaders.h"
 
-#include "oclint/metric/NPathComplexityMetric.h"
+#include "CAPA/metric/NPathComplexityMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 DeclarationMatcher functionDeclMatcher = functionDecl().bind("functionDecl");
 

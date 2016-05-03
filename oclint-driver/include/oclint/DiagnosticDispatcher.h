@@ -1,9 +1,9 @@
-#ifndef OCLINT_DIAGNOSTICDISPATCHER_H
-#define OCLINT_DIAGNOSTICDISPATCHER_H
+#ifndef CAPA_DIAGNOSTICDISPATCHER_H
+#define CAPA_DIAGNOSTICDISPATCHER_H
 
 #include <clang/Basic/Diagnostic.h>
 
-namespace oclint
+namespace CAPA
 {
 
 class DiagnosticDispatcher : public clang::DiagnosticConsumer
@@ -17,6 +17,6 @@ public:
                           const clang::Diagnostic& diagnosticInfo) override;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

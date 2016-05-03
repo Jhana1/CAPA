@@ -1,6 +1,6 @@
-#include "oclint/ViolationSet.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 void ViolationSet::addViolation(const Violation& violation)
 {

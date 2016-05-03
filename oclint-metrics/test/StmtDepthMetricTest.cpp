@@ -1,8 +1,8 @@
 #include "TestHeaders.h"
 
-#include "oclint/metric/StmtDepthMetric.h"
+#include "CAPA/metric/StmtDepthMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 DeclarationMatcher functionDeclMatcher = functionDecl(hasName("m")).bind("functionDecl");
 

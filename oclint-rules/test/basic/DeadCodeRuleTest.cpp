@@ -66,7 +66,7 @@ TEST(DeadCodeRuleTest, CodeAfterContinueInForObjCForEachLoop)
 
 /*
  Tests for the false positive about return followed by case label
- Details at https://github.com/oclint/oclint/issues/24
+ Details at https://github.com/CAPA/CAPA/issues/24
 */
 
 TEST(DeadCodeRuleTest, ReturnFollowedByCaseLabel)

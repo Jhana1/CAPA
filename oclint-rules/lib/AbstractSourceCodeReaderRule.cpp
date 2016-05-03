@@ -1,8 +1,8 @@
-#include "oclint/AbstractSourceCodeReaderRule.h"
+#include "CAPA/AbstractSourceCodeReaderRule.h"
 #include <clang/AST/AST.h>
-#include "oclint/helper/SuppressHelper.h"
+#include "CAPA/helper/SuppressHelper.h"
 
-namespace oclint
+namespace CAPA
 {
 
 /*virtual*/
@@ -43,5 +43,5 @@ void AbstractSourceCodeReaderRule::addViolation(int startLine, int startColumn,
     }
 }
 
-} // end namespace oclint
+} // end namespace CAPA
 

@@ -1,6 +1,6 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
-#include "oclint/util/ASTUtil.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/util/ASTUtil.h"
 
 using namespace clang;
 
@@ -94,7 +94,7 @@ static bool IsADeleteBlock(ASTContext& context, const Stmt& stmt, const Expr* ex
 }
 
 class UnnecessaryNullCheckForCXXDeallocRule :
-    public oclint::AbstractASTVisitorRule<UnnecessaryNullCheckForCXXDeallocRule>
+    public CAPA::AbstractASTVisitorRule<UnnecessaryNullCheckForCXXDeallocRule>
 {
 public:
     virtual const std::string name() const override
@@ -114,7 +114,7 @@ public:
 
     virtual unsigned int supportedLanguages() const override
     {
-        return oclint::LANG_CXX;
+        return CAPA::LANG_CXX;
     }
 
     bool VisitIfStmt(IfStmt* ifStmt)
@@ -137,4 +137,4 @@ public:
     }
 };
 
-static oclint::RuleSet rules(new UnnecessaryNullCheckForCXXDeallocRule);
+static CAPA::RuleSet rules(new UnnecessaryNullCheckForCXXDeallocRule);

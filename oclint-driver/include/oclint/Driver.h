@@ -1,5 +1,5 @@
-#ifndef OCLINT_DRIVER_H
-#define OCLINT_DRIVER_H
+#ifndef CAPA_DRIVER_H
+#define CAPA_DRIVER_H
 
 #include <string>
 
@@ -16,9 +16,9 @@ namespace tooling
 }
 }
 
-#include "oclint/Analyzer.h"
+#include "CAPA/Analyzer.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class ViolationSet;
@@ -27,9 +27,9 @@ class Driver
 {
 public:
     void run(const clang::tooling::CompilationDatabase &compilationDatabase,
-        llvm::ArrayRef<std::string> sourcePaths, oclint::Analyzer &analyzer);
+        llvm::ArrayRef<std::string> sourcePaths, CAPA::Analyzer &analyzer);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

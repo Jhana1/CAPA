@@ -1,11 +1,11 @@
-#include "oclint/ResultCollector.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Violation.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Violation.h"
+#include "CAPA/ViolationSet.h"
 
-static oclint::ResultCollector *_singleton = nullptr;
+static CAPA::ResultCollector *_singleton = nullptr;
 
-namespace oclint {
+namespace CAPA {
 
 ResultCollector* ResultCollector::getInstance()
 {
@@ -67,4 +67,4 @@ ViolationSet* ResultCollector::getClangStaticCheckerBugSet() const
     return _clangStaticCheckerBugSet.get();
 }
 
-} // end namespace oclint
+} // end namespace CAPA

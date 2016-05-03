@@ -10,14 +10,14 @@ namespace llvm
 }
 using llvm::Twine;
 
-namespace oclint
+namespace CAPA
 {
     class RuleBase;
     class ViolationSet;
     class Violation;
     class RuleCarrier;
 }
-using namespace oclint;
+using namespace CAPA;
 
 bool computeViolationSet(const Twine &fileName,
     RuleBase *rule,

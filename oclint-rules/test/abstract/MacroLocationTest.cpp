@@ -1,10 +1,10 @@
 #include "TestRuleOnCode.h"
 
-#include "oclint/AbstractASTVisitorRule.h"
+#include "CAPA/AbstractASTVisitorRule.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class DefaultASTRule2 : public AbstractASTVisitorRule<DefaultASTRule2>
 {

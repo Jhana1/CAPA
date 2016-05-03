@@ -34,7 +34,7 @@ TEST(CollapsibleIfStatementsRuleTest, IfThenIsCompoundContainsOnlyIf)
 
 /*
  Tests for the false positive found by Stephan Esch
- Details at https://github.com/oclint/oclint/issues/10
+ Details at https://github.com/CAPA/CAPA/issues/10
  When we find collapsible if statements, we need to check the existence of their else branch
  OuterElse InnerElse Emit
      1         1       0

@@ -1,6 +1,6 @@
-#include "oclint/metric/NPathComplexityMetric.h"
+#include "CAPA/metric/NPathComplexityMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 int NPathComplexityMetric::nPath(clang::CompoundStmt *stmt)
 {

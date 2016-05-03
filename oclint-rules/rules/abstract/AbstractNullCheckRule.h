@@ -1,8 +1,8 @@
-#ifndef OCLINT_ABSTRACTNULLCHECKRULE_H
-#define OCLINT_ABSTRACTNULLCHECKRULE_H
+#ifndef CAPA_ABSTRACTNULLCHECKRULE_H
+#define CAPA_ABSTRACTNULLCHECKRULE_H
 
 template <typename T>
-class AbstractNullCheckRule : public oclint::AbstractASTVisitorRule<T>
+class AbstractNullCheckRule : public CAPA::AbstractASTVisitorRule<T>
 {
 protected:
     bool isNullToPointer(clang::Expr *expr)

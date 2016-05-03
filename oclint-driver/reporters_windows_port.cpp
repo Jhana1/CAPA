@@ -2,17 +2,17 @@
 #include <windows.h>
 #include <iostream>
 
-#include "oclint/GenericException.h"
-#include "oclint/Options.h"
+#include "CAPA/GenericException.h"
+#include "CAPA/Options.h"
 
 #include "reporters.h"
 
-static oclint::Reporter *selectedReporter = NULL;
+static CAPA::Reporter *selectedReporter = NULL;
 
 void loadReporter()
 {
     selectedReporter = NULL;
-    std::string reportDirPath = oclint::option::reporterPath();
+    std::string reportDirPath = CAPA::option::reporterPath();
     DIR *pDir = opendir(reportDirPath.c_str());
     if (pDir != NULL)
     {
@@ -29,13 +29,13 @@ void loadReporter()
             {
                 std::cerr << GetLastError() << std::endl;
                 closedir(pDir);
-                throw oclint::GenericException("cannot open dynamic library: " + reporterPath);
+                throw CAPA::GenericException("cannot open dynamic library: " + reporterPath);
             }
-            typedef oclint::Reporter* (*CreateReporterFunc)();
+            typedef CAPA::Reporter* (*CreateReporterFunc)();
             CreateReporterFunc createMethodPointer;
             createMethodPointer = (CreateReporterFunc) GetProcAddress(reporterHandle, "create");
-            oclint::Reporter* reporter = (oclint::Reporter*)createMethodPointer();
-            if (reporter->name() == oclint::option::reportType())
+            CAPA::Reporter* reporter = (CAPA::Reporter*)createMethodPointer();
+            if (reporter->name() == CAPA::option::reportType())
             {
                 selectedReporter = reporter;
                 break;
@@ -45,12 +45,12 @@ void loadReporter()
     }
     if (selectedReporter == NULL)
     {
-        throw oclint::GenericException(
-            "cannot find dynamic library for report type: " + oclint::option::reportType());
+        throw CAPA::GenericException(
+            "cannot find dynamic library for report type: " + CAPA::option::reportType());
     }
 }
 
-oclint::Reporter* reporter()
+CAPA::Reporter* reporter()
 {
     return selectedReporter;
 }

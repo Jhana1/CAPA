@@ -1,6 +1,6 @@
-#include "oclint/metric/NcssMetric.h"
+#include "CAPA/metric/NcssMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 int NcssMetric::ncss(clang::NullStmt *)
 {

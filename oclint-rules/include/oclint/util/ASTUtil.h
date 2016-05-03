@@ -1,5 +1,5 @@
-#ifndef OCLINT_UTIL_ASTUTIL_H
-#define OCLINT_UTIL_ASTUTIL_H
+#ifndef CAPA_UTIL_ASTUTIL_H
+#define CAPA_UTIL_ASTUTIL_H
 
 #include <clang/AST/AST.h>
 

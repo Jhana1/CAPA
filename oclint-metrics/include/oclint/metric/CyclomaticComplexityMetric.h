@@ -1,5 +1,5 @@
-#ifndef OCLINT_METRIC_CYCLOMATICCOMPLEXITYMETRIC_H
-#define OCLINT_METRIC_CYCLOMATICCOMPLEXITYMETRIC_H
+#ifndef CAPA_METRIC_CYCLOMATICCOMPLEXITYMETRIC_H
+#define CAPA_METRIC_CYCLOMATICCOMPLEXITYMETRIC_H
 
 #include <clang/AST/AST.h>
 #include <clang/AST/RecursiveASTVisitor.h>
@@ -10,7 +10,7 @@
  *   IEEE Transactions on Software Engineering: 308–320
  */
 
-namespace oclint
+namespace CAPA
 {
 
 class CyclomaticComplexityMetric : public clang::RecursiveASTVisitor<CyclomaticComplexityMetric>
@@ -33,7 +33,7 @@ public:
     bool VisitBinaryOperator(clang::BinaryOperator *op);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 extern "C" int getCyclomaticComplexity(clang::Decl *decl);
 

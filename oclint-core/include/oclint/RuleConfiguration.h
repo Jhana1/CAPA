@@ -1,9 +1,9 @@
-#ifndef OCLINT_RULECONFIGURATION_H
-#define OCLINT_RULECONFIGURATION_H
+#ifndef CAPA_RULECONFIGURATION_H
+#define CAPA_RULECONFIGURATION_H
 
 #include <string>
 
-namespace oclint
+namespace CAPA
 {
 
 class RuleConfiguration
@@ -19,6 +19,6 @@ public:
     static double doubleForKey(std::string key, double defaultValue = 0.0);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

@@ -7,7 +7,7 @@
 #include "HTMLReporter.cpp"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {
@@ -66,7 +66,7 @@ TEST_F(HTMLReporterTest, WriteFooter)
 {
     std::ostringstream oss;
     reporter.writeFooter(oss, "-test");
-    EXPECT_THAT(oss.str(), HasSubstr("Generated with <a href='http://oclint.org'>OCLint v-test"));
+    EXPECT_THAT(oss.str(), HasSubstr("Generated with <a href='http://CAPA.org'>OCLint v-test"));
 }
 
 TEST_F(HTMLReporterTest, WriteCompilerErrorOrWarning)

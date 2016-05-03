@@ -1,6 +1,6 @@
 #include <string>
 
-#include "oclint/Reporter.h"
+#include "CAPA/Reporter.h"
 
 void loadReporter();
-oclint::Reporter* reporter();
+CAPA::Reporter* reporter();

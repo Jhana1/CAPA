@@ -6,10 +6,10 @@ import subprocess
 import sys
 import os
 
-from oclintscripts import environment
-from oclintscripts import path
-from oclintscripts import process
-from oclintscripts import version
+from CAPAscripts import environment
+from CAPAscripts import path
+from CAPAscripts import process
+from CAPAscripts import version
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-reset', '--reset', action="store_true")

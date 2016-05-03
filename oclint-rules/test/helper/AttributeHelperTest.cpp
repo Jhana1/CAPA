@@ -1,12 +1,12 @@
 #include "TestRuleOnCode.h"
 
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/AbstractSourceCodeReaderRule.h"
-#include "oclint/helper/AttributeHelper.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/AbstractSourceCodeReaderRule.h"
+#include "CAPA/helper/AttributeHelper.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class AttributeHelperTestCallRule : public AbstractASTVisitorRule<AttributeHelperTestCallRule>
 {
@@ -111,7 +111,7 @@ TEST(AttributeHelperTestCallRuleTest, AttributeFunctionCall)
     AttributeHelperTestCallRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute]")));
             void b() {
                 a();
             }
@@ -124,7 +124,7 @@ TEST(AttributeHelperTestCallRuleTest, IncorrectAction)
     AttributeHelperTestCallRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:wrong[test attribute]")));
+            void a() __attribute__((annotate("CAPA:wrong[test attribute]")));
             void b() {
                 a();
             }
@@ -137,7 +137,7 @@ TEST(AttributeHelperTestCallRuleTest, BadFormat)
     AttributeHelperTestCallRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint-sfdklj]")));
+            void a() __attribute__((annotate("CAPA-sfdklj]")));
             void b() {
                 a();
             }
@@ -150,7 +150,7 @@ TEST(AttributeHelperTestCallRuleTest, IncorrectAttribute)
     AttributeHelperTestCallRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[wrong attribute]")));
+            void a() __attribute__((annotate("CAPA:enforce[wrong attribute]")));
             void b() {
                 a();
             }
@@ -164,7 +164,7 @@ TEST(AttributeHelperTestCallRuleTest, ExtraFunctionDeclBefore)
     testRuleOnCode(&rule,
         R"END(
             void a();
-            void a() __attribute__((annotate("oclint:enforce[test attribute]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute]")));
             void b() {
                 a();
             })END",
@@ -176,7 +176,7 @@ TEST(AttributeHelperTestCallRuleTest, ExtraFunctionDeclAfter)
     AttributeHelperTestCallRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute]")));
             void a();
             void b() {
                 a();
@@ -209,7 +209,7 @@ TEST(AttributeHelperTestCallRuleTest, MethodAttribute)
        R"END(
             __attribute__((objc_root_class))
             @interface SomeObject
-            - (void)foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            - (void)foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             @implementation SomeObject
@@ -232,7 +232,7 @@ TEST(AttributeHelperTestCallRuleTest, CategoryAttribute)
             @end
 
             @interface SomeObject (Category)
-            - (void)foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            - (void)foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             @implementation SomeObject
@@ -251,7 +251,7 @@ TEST(AttributeHelperTestCallRuleTest, PropertyAttribute)
        R"END(
             __attribute__((objc_root_class))
             @interface SomeObject
-            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             @implementation SomeObject
@@ -270,7 +270,7 @@ TEST(AttributeHelperTestCallRuleTest, ProtocolAttribute)
     testRuleOnObjCCode(&rule,
        R"END(
             @protocol SomeProtocol
-            - (void)foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            - (void)foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             __attribute__((objc_root_class))
@@ -297,7 +297,7 @@ TEST(AttributeHelperTestCallRuleTest, CategoryPropertyAttribute)
             @end
 
             @interface SomeObject (SomeCategory)
-            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             @implementation SomeObject
@@ -316,7 +316,7 @@ TEST(AttributeHelperTestCallRuleTest, CategoryPropertyRedeclaredAttribute)
        R"END(
             __attribute__((objc_root_class))
             @interface SomeObject
-            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("oclint:enforce[test attribute]")));
+            @property (strong, nonatomic) SomeObject* foo __attribute__((annotate("CAPA:enforce[test attribute]")));
             @end
 
             @interface SomeObject (SomeCategory)
@@ -337,7 +337,7 @@ TEST(AttributeHelperTestCallRuleTest, CorrectComment)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute][foo]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute][foo]")));
             void b() {
                 a();
             }
@@ -350,7 +350,7 @@ TEST(AttributeHelperTestCallRuleTest, MissingClose)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute][foo")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute][foo")));
             void b() {
                 a();
             }
@@ -363,7 +363,7 @@ TEST(AttributeHelperTestCallRuleTest, ExtraClose)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute][foo]]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute][foo]]")));
             void b() {
                 a();
             }
@@ -376,7 +376,7 @@ TEST(AttributeHelperTestCallRuleTest, NoComment)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute]")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute]")));
             void b() {
                 a();
             }
@@ -389,7 +389,7 @@ TEST(AttributeHelperTestCallRuleTest, ParensComment)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute](comment)")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute](comment)")));
             void b() {
                 a();
             }
@@ -402,7 +402,7 @@ TEST(AttributeHelperTestCallRuleTest, ExtraJunk)
     AttributeHelperTestCallCommentRule rule;
     testRuleOnCode(&rule,
         R"END(
-            void a() __attribute__((annotate("oclint:enforce[test attribute]sdkjfl")));
+            void a() __attribute__((annotate("CAPA:enforce[test attribute]sdkjfl")));
             void b() {
                 a();
             }

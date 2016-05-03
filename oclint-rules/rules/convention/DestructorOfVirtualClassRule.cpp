@@ -1,5 +1,5 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
 
 using namespace clang;
 
@@ -17,7 +17,7 @@ static std::string getMessageViolation(const CXXRecordDecl& cxxRecordDecl)
 }
 
 class DestructorOfVirtualClassRule :
-    public oclint::AbstractASTVisitorRule<DestructorOfVirtualClassRule>
+    public CAPA::AbstractASTVisitorRule<DestructorOfVirtualClassRule>
 {
 public:
     virtual const std::string name() const override
@@ -37,7 +37,7 @@ public:
 
     unsigned int supportedLanguages() const override
     {
-        return oclint::LANG_CXX;
+        return CAPA::LANG_CXX;
     }
 
     bool VisitCXXRecordDecl(const CXXRecordDecl* cxxRecordDecl)
@@ -53,4 +53,4 @@ public:
     }
 };
 
-static oclint::RuleSet rules(new DestructorOfVirtualClassRule());
+static CAPA::RuleSet rules(new DestructorOfVirtualClassRule());

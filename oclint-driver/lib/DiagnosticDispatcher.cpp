@@ -1,14 +1,14 @@
-#include "oclint/DiagnosticDispatcher.h"
+#include "CAPA/DiagnosticDispatcher.h"
 
 #include <llvm/ADT/SmallString.h>
 #include <llvm/ADT/StringRef.h>
 #include <clang/Basic/SourceLocation.h>
 #include <clang/Basic/SourceManager.h>
 
-#include "oclint/ResultCollector.h"
-#include "oclint/Violation.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/Violation.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 DiagnosticDispatcher::DiagnosticDispatcher(bool runClangChecker)
 {

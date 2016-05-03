@@ -2,8 +2,8 @@
 
 import os
 
-from oclintscripts import environment
-from oclintscripts import path
+from CAPAscripts import environment
+from CAPAscripts import path
 
 class builder:
     def __init__(self, source_path):
@@ -31,7 +31,7 @@ class builder:
         return self
 
     def release_build(self):
-        return self.append('OCLINT_BUILD_TYPE', 'Release')
+        return self.append('CAPA_BUILD_TYPE', 'Release')
 
     def test_build(self):
         return self.append('TEST_BUILD', '1')

@@ -70,10 +70,10 @@ TEST_F(TooManyParametersRuleTest, Suppress)
 {
     testRuleOnObjCCode(new TooManyParametersRule(), "@interface AnInterface\n@end \n\
 @interface AnImplementation : AnInterface   \n\
-- (void)m:(int)a another:(int)b  __attribute__((annotate(\"oclint:suppress[too many parameters]\")));\n\
+- (void)m:(int)a another:(int)b  __attribute__((annotate(\"CAPA:suppress[too many parameters]\")));\n\
 @end                                        \n\
 @implementation AnImplementation            \n\
-- (void)m:(int)a another:(int)b __attribute__((annotate(\"oclint:suppress[too many parameters]\")))  \n\
+- (void)m:(int)a another:(int)b __attribute__((annotate(\"CAPA:suppress[too many parameters]\")))  \n\
 {;}                                          \n\
 @end");
 }

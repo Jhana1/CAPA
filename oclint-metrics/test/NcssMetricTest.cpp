@@ -1,8 +1,8 @@
 #include "TestHeaders.h"
 
-#include "oclint/metric/NcssMetric.h"
+#include "CAPA/metric/NcssMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 DeclarationMatcher functionDeclMatcher = functionDecl(hasName("m")).bind("functionDecl");
 

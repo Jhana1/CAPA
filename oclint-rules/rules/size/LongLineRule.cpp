@@ -1,10 +1,10 @@
-#include "oclint/AbstractSourceCodeReaderRule.h"
-#include "oclint/RuleConfiguration.h"
-#include "oclint/RuleSet.h"
-#include "oclint/util/StdUtil.h"
+#include "CAPA/AbstractSourceCodeReaderRule.h"
+#include "CAPA/RuleConfiguration.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/util/StdUtil.h"
 
 using namespace std;
-using namespace oclint;
+using namespace CAPA;
 
 class LongLineRule : public AbstractSourceCodeReaderRule
 {

@@ -1,11 +1,11 @@
 #include "TestRuleOnCode.h"
 
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/AbstractSourceCodeReaderRule.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/AbstractSourceCodeReaderRule.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class SuppressHelperTestASTRule : public AbstractASTVisitorRule<SuppressHelperTestASTRule>
 {
@@ -54,19 +54,19 @@ TEST(SuppressHelperTestASTRuleTest, NoSuppress)
 TEST(SuppressHelperTestASTRuleTest, SimpleSuppressEntireMethod)
 {
     testRuleOnCode(new SuppressHelperTestASTRule(),
-        "void __attribute__((annotate(\"oclint:suppress[test ast rule]\"))) a() { int i = 1; }");
+        "void __attribute__((annotate(\"CAPA:suppress[test ast rule]\"))) a() { int i = 1; }");
 }
 
 TEST(SuppressHelperTestASTRuleTest, SimpleSuppressEntireCXXClass)
 {
     testRuleOnCXXCode(new SuppressHelperTestASTRule(),
-        "class __attribute__((annotate(\"oclint:suppress[test ast rule]\"))) c { void a() { int i = 1; } };");
+        "class __attribute__((annotate(\"CAPA:suppress[test ast rule]\"))) c { void a() { int i = 1; } };");
 }
 
 TEST(SuppressHelperTestASTRuleTest, CXXClassSuppressOnClass)
 {
     testRuleOnCXXCode(new SuppressHelperTestASTRule(),
-        "class __attribute__((annotate(\"oclint:suppress\"))) c { void a(); };\n\
+        "class __attribute__((annotate(\"CAPA:suppress\"))) c { void a(); };\n\
 void c::a() {}\n",
         1, 2, 13, 2, 14);
 }
@@ -75,20 +75,20 @@ TEST(SuppressHelperTestASTRuleTest, CXXClassSuppressOnMethod)
 {
     testRuleOnCXXCode(new SuppressHelperTestASTRule(),
         "class c { void a(); };\n\
-void __attribute__((annotate(\"oclint:suppress\"))) c::a() { int i = 1; }\n",
+void __attribute__((annotate(\"CAPA:suppress\"))) c::a() { int i = 1; }\n",
         1, 1, 11, 1, 18);
 }
 
 TEST(SuppressHelperTestASTRuleTest, ObjCContainerSuppressOnAtInterface)
 {
     testRuleOnObjCCode(new SuppressHelperTestASTRule(),
-        "__attribute__((annotate(\"oclint:suppress\"))) @interface a {\nint i;\n}\n@end");
+        "__attribute__((annotate(\"CAPA:suppress\"))) @interface a {\nint i;\n}\n@end");
 }
 
 TEST(SuppressHelperTestASTRuleTest, ObjCContainerSuppressOnAtProtocol)
 {
     testRuleOnObjCCode(new SuppressHelperTestASTRule(),
-        "__attribute__((annotate(\"oclint:suppress\"))) @protocol a\n-(void)m;\n@end");
+        "__attribute__((annotate(\"CAPA:suppress\"))) @protocol a\n-(void)m;\n@end");
 }
 
 // TEST(SuppressHelperTestASTRuleTest, ObjCContainerSuppressOnAtImplementation)
@@ -98,16 +98,16 @@ TEST(SuppressHelperTestASTRuleTest, ObjCContainerSuppressOnAtProtocol)
 TEST(SuppressHelperTestASTRuleTest, ObjCContainerSuppressOnMethod)
 {
     testRuleOnObjCCode(new SuppressHelperTestASTRule(),
-        "__attribute__((annotate(\"oclint:suppress\"))) @interface a {\nint i;\n}\n-(void)m __attribute__((annotate(\"oclint:suppress\")));\n@end\n\
-/* __attribute__((annotate(\"oclint:suppress\"))) */ @implementation a\n-(void)m __attribute__((annotate(\"oclint:suppress\"))) {}\n@end\n",
+        "__attribute__((annotate(\"CAPA:suppress\"))) @interface a {\nint i;\n}\n-(void)m __attribute__((annotate(\"CAPA:suppress\")));\n@end\n\
+/* __attribute__((annotate(\"CAPA:suppress\"))) */ @implementation a\n-(void)m __attribute__((annotate(\"CAPA:suppress\"))) {}\n@end\n",
         0, 6, 52, 8, 1);
 }
 
 TEST(SuppressHelperTestASTRuleTest, SimpleNOLINT)
 {
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLINT");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!CAPA");
 #if defined(__APPLE__) || defined(__MACH__)
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLINT");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! CAPA");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLint");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLint");
 #endif
@@ -115,9 +115,9 @@ TEST(SuppressHelperTestASTRuleTest, SimpleNOLINT)
 
 TEST(SuppressHelperTestASTRuleTest, MultipleLineNOLINT)
 {
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //!OCLINT\n if (1) {//!OCLINT\n}}");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //!CAPA\n if (1) {//!CAPA\n}}");
 #if defined(__APPLE__) || defined(__MACH__)
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //! OCLINT\n if (1) {//! OCLINT\n}}");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //! CAPA\n if (1) {//! CAPA\n}}");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //!OCLint\n if (1) {//!OCLint\n}}");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() { //! OCLint\n if (1) {//! OCLint\n}}");
 #endif
@@ -125,15 +125,15 @@ TEST(SuppressHelperTestASTRuleTest, MultipleLineNOLINT)
 
 TEST(SuppressHelperTestASTRuleTest, CommentWithDescriptionNOLINT)
 {
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLINT(reason for suppressing this is blahblah)");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLINT[reason for suppressing this is blahblah]");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLINT:reason for suppressing this is blahblah)");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLINT     ");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!CAPA(reason for suppressing this is blahblah)");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!CAPA[reason for suppressing this is blahblah]");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!CAPA:reason for suppressing this is blahblah)");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!CAPA     ");
 #if defined(__APPLE__) || defined(__MACH__)
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLINT(reason for suppressing this is blahblah)");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLINT[reason for suppressing this is blahblah]");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLINT:reason for suppressing this is blahblah)");
-    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! OCLINT     ");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! CAPA(reason for suppressing this is blahblah)");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! CAPA[reason for suppressing this is blahblah]");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! CAPA:reason for suppressing this is blahblah)");
+    testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //! CAPA     ");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLint(reason for suppressing this is blahblah)");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLint[reason for suppressing this is blahblah]");
     testRuleOnCode(new SuppressHelperTestASTRule(), "void a() {} //!OCLint:reason for suppressing this is blahblah)");
@@ -187,9 +187,9 @@ TEST(SuppressHelperTestSourceCodeReaderRuleTest, NoSuppress)
 
 TEST(SuppressHelperTestSourceCodeReaderRuleTest, SuppressByComment)
 {
-    testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //!OCLINT");
+    testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //!CAPA");
 #if defined(__APPLE__) || defined(__MACH__)
-    testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //! OCLINT");
+    testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //! CAPA");
     testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //!OCLint");
     testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(), "void a() {} //! OCLint");
 #endif
@@ -198,17 +198,17 @@ TEST(SuppressHelperTestSourceCodeReaderRuleTest, SuppressByComment)
 TEST(SuppressHelperTestSourceCodeReaderRuleTest, SuppressEntireMethod)
 {
     testRuleOnCode(new SuppressHelperTestSourceCodeReaderRule(),
-        "void __attribute__((annotate(\"oclint:suppress[test source code rule]\"))) a()\n{\nint i = 1;\n}\n");
+        "void __attribute__((annotate(\"CAPA:suppress[test source code rule]\"))) a()\n{\nint i = 1;\n}\n");
 }
 
 TEST(SuppressHelperTestSourceCodeReaderRuleTest, SimpleSuppressEntireCXXClass)
 {
     testRuleOnCXXCode(new SuppressHelperTestSourceCodeReaderRule(),
-        "class __attribute__((annotate(\"oclint:suppress[test source code rule]\"))) c\n{\nvoid a()\n{\nint i = 1;\n}\n};\n");
+        "class __attribute__((annotate(\"CAPA:suppress[test source code rule]\"))) c\n{\nvoid a()\n{\nint i = 1;\n}\n};\n");
 }
 
 TEST(SuppressHelperTestSourceCodeReaderRuleTest, ObjCContainerSuppressOnAtInterface)
 {
     testRuleOnObjCCode(new SuppressHelperTestSourceCodeReaderRule(),
-        "__attribute__((annotate(\"oclint:suppress\"))) @interface a {\nint i;\n}\n@end");
+        "__attribute__((annotate(\"CAPA:suppress\"))) @interface a {\nint i;\n}\n@end");
 }

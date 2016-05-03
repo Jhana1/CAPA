@@ -6,10 +6,10 @@ import subprocess
 import sys
 import os
 
-from oclintscripts import cmake
-from oclintscripts import environment
-from oclintscripts import path
-from oclintscripts import process
+from CAPAscripts import cmake
+from CAPAscripts import environment
+from CAPAscripts import path
+from CAPAscripts import process
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('task_name', choices=['checkout', 'co', 'update', 'up', 'build'])

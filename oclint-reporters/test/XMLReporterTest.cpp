@@ -7,7 +7,7 @@
 #include "XMLReporter.cpp"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {
@@ -33,14 +33,14 @@ TEST_F(XMLReporterTest, WriteHeader)
 {
     std::ostringstream oss;
     reporter.writeHeader(oss, "test");
-    EXPECT_THAT(oss.str(), StrEq("<?xml version=\"1.0\" encoding=\"UTF-8\" ?><oclint version=\"test\" url=\"http://oclint.org\">"));
+    EXPECT_THAT(oss.str(), StrEq("<?xml version=\"1.0\" encoding=\"UTF-8\" ?><CAPA version=\"test\" url=\"http://CAPA.org\">"));
 }
 
 TEST_F(XMLReporterTest, WriteFooter)
 {
     std::ostringstream oss;
     reporter.writeFooter(oss);
-    EXPECT_THAT(oss.str(), StrEq("</oclint>"));
+    EXPECT_THAT(oss.str(), StrEq("</CAPA>"));
 }
 
 TEST_F(XMLReporterTest, WriteViolation)

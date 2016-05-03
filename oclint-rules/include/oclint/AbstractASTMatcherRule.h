@@ -1,11 +1,11 @@
-#ifndef OCLINT_ABSTRACTASTMATCHERRULE_H
-#define OCLINT_ABSTRACTASTMATCHERRULE_H
+#ifndef CAPA_ABSTRACTASTMATCHERRULE_H
+#define CAPA_ABSTRACTASTMATCHERRULE_H
 
 #include <clang/ASTMatchers/ASTMatchFinder.h>
 #include <clang/Lex/Lexer.h>
-#include "oclint/AbstractASTVisitorRule.h"
+#include "CAPA/AbstractASTVisitorRule.h"
 
-namespace oclint
+namespace CAPA
 {
 
 
@@ -42,6 +42,6 @@ public:
     virtual void callback(const clang::ast_matchers::MatchFinder::MatchResult &result) = 0;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

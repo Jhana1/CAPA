@@ -1,8 +1,8 @@
-#include "oclint/GenericException.h"
+#include "CAPA/GenericException.h"
 
 #include <utility>
 
-using namespace oclint;
+using namespace CAPA;
 
 GenericException::GenericException(std::string desc)
     : description(std::move(desc))

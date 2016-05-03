@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <iostream>
 
-#include "oclint/GenericException.h"
+#include "CAPA/GenericException.h"
 
 #include "rules.h"
 
@@ -24,7 +24,7 @@ void dynamicLoadRules(std::string ruleDirPath)
             {
                 std::cerr << GetLastError() << std::endl;
                 closedir(pDir);
-                throw oclint::GenericException("cannot open dynamic library: " + rulePath);
+                throw CAPA::GenericException("cannot open dynamic library: " + rulePath);
             }
         }
         closedir(pDir);

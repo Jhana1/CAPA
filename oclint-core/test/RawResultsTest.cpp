@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "oclint/RuleBase.h"
-#include "oclint/ResultCollector.h"
-#include "oclint/RawResults.h"
-#include "oclint/Violation.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RawResults.h"
+#include "CAPA/Violation.h"
 
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBaseOne : public RuleBase
 {

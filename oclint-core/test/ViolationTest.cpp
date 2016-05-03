@@ -3,11 +3,11 @@
 
 #include <clang/AST/AST.h>
 
-#include "oclint/RuleBase.h"
-#include "oclint/Violation.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Violation.h"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {

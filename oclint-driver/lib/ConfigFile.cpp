@@ -1,12 +1,12 @@
-#include "oclint/ConfigFile.h"
+#include "CAPA/ConfigFile.h"
 
 #include <llvm/Support/SourceMgr.h>
 #include <llvm/Support/YAMLParser.h>
 
-#include "oclint/Logger.h"
+#include "CAPA/Logger.h"
 
-using namespace oclint;
-using namespace oclint::option;
+using namespace CAPA;
+using namespace CAPA::option;
 
 /* ---------------------
    RuleConfigurationPair
@@ -29,17 +29,17 @@ struct MappingTraits<RuleConfigurationPair>
 }
 }
 
-const llvm::StringRef &oclint::option::RuleConfigurationPair::key() const
+const llvm::StringRef &CAPA::option::RuleConfigurationPair::key() const
 {
     return _key;
 }
 
-const llvm::StringRef &oclint::option::RuleConfigurationPair::value() const
+const llvm::StringRef &CAPA::option::RuleConfigurationPair::value() const
 {
     return _value;
 }
 
-void oclint::option::RuleConfigurationPair::mapping(llvm::yaml::IO& inputOutput)
+void CAPA::option::RuleConfigurationPair::mapping(llvm::yaml::IO& inputOutput)
 {
     inputOutput.mapOptional("key", _key);
     inputOutput.mapOptional("value", _value);
@@ -76,7 +76,7 @@ struct ScalarEnumerationTraits<TriState>
 }
 }
 
-oclint::option::ConfigFile::ConfigFile(const std::string &path)
+CAPA::option::ConfigFile::ConfigFile(const std::string &path)
     : _path(path), _maxP1(INT_MIN), _maxP2(INT_MIN), _maxP3(INT_MIN)
 {
     LOG_DEBUG("Reading config file: ");
@@ -106,27 +106,27 @@ oclint::option::ConfigFile::ConfigFile(const std::string &path)
     }
 }
 
-const std::string &oclint::option::ConfigFile::path() const
+const std::string &CAPA::option::ConfigFile::path() const
 {
     return _path;
 }
 
-const std::vector<llvm::StringRef> &oclint::option::ConfigFile::rules() const
+const std::vector<llvm::StringRef> &CAPA::option::ConfigFile::rules() const
 {
     return _rules;
 }
 
-const std::vector<llvm::StringRef> &oclint::option::ConfigFile::disableRules() const
+const std::vector<llvm::StringRef> &CAPA::option::ConfigFile::disableRules() const
 {
     return _disableRules;
 }
 
-const std::vector<llvm::StringRef> &oclint::option::ConfigFile::rulePaths() const
+const std::vector<llvm::StringRef> &CAPA::option::ConfigFile::rulePaths() const
 {
     return _rulePaths;
 }
 
-const std::vector<RuleConfigurationPair> &oclint::option::ConfigFile::ruleConfigurations() const
+const std::vector<RuleConfigurationPair> &CAPA::option::ConfigFile::ruleConfigurations() const
 {
     return _ruleConfigurations;
 }
@@ -137,12 +137,12 @@ static llvm::Optional<std::string> createOptionalString(const llvm::StringRef &v
     return string.size() ? llvm::Optional<std::string>(string) : llvm::Optional<std::string>();
 }
 
-llvm::Optional<std::string> oclint::option::ConfigFile::output() const
+llvm::Optional<std::string> CAPA::option::ConfigFile::output() const
 {
     return createOptionalString(_output);
 }
 
-llvm::Optional<std::string> oclint::option::ConfigFile::reportType() const
+llvm::Optional<std::string> CAPA::option::ConfigFile::reportType() const
 {
     return createOptionalString(_reportType);
 }
@@ -152,17 +152,17 @@ static llvm::Optional<int> createOptionalInt(int value)
     return value == INT_MIN ? llvm::Optional<int>() : llvm::Optional<int>(value);
 }
 
-llvm::Optional<int> oclint::option::ConfigFile::maxP1() const
+llvm::Optional<int> CAPA::option::ConfigFile::maxP1() const
 {
     return createOptionalInt(_maxP1);
 }
 
-llvm::Optional<int> oclint::option::ConfigFile::maxP2() const
+llvm::Optional<int> CAPA::option::ConfigFile::maxP2() const
 {
     return createOptionalInt(_maxP2);
 }
 
-llvm::Optional<int> oclint::option::ConfigFile::maxP3() const
+llvm::Optional<int> CAPA::option::ConfigFile::maxP3() const
 {
     return createOptionalInt(_maxP3);
 }
@@ -180,17 +180,17 @@ static llvm::Optional<bool> createOptionalBool(const TriState value)
     }
 }
 
-llvm::Optional<bool> oclint::option::ConfigFile::clangChecker() const
+llvm::Optional<bool> CAPA::option::ConfigFile::clangChecker() const
 {
     return createOptionalBool(_clangChecker);
 }
 
-llvm::Optional<bool> oclint::option::ConfigFile::allowDuplicatedViolations() const
+llvm::Optional<bool> CAPA::option::ConfigFile::allowDuplicatedViolations() const
 {
     return createOptionalBool(_allowDuplicatedViolations);
 }
 
-void oclint::option::ConfigFile::mapping(llvm::yaml::IO& inputOutput)
+void CAPA::option::ConfigFile::mapping(llvm::yaml::IO& inputOutput)
 {
     inputOutput.mapOptional("rules", _rules);
     inputOutput.mapOptional("disable-rules", _disableRules);

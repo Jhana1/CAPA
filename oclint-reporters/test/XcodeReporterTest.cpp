@@ -7,7 +7,7 @@
 #include "XcodeReporter.cpp"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {

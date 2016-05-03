@@ -1,16 +1,16 @@
-#include "oclint/helper/AttributeHelper.h"
+#include "CAPA/helper/AttributeHelper.h"
 
 #include <clang/AST/AST.h>
 #include <clang/AST/Attr.h>
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
 bool attributeHasAnnotation(
     const std::string& annotation,
     const std::string& attributeName,
     std::string* comment) {
     // Unqualified actions must compare directly e.g. we don't want to return a match for 
-    // for 'oclint:suppress' when the annotation is 'oclint::suppress[foo]'
+    // for 'CAPA:suppress' when the annotation is 'CAPA::suppress[foo]'
     if(attributeName.find('[') == std::string::npos) {
         return attributeName == annotation;
     }
@@ -66,13 +66,13 @@ bool declHasOCLintAttribute(
     const clang::Decl *decl,
     const std::string& attributeName,
     std::string* comment) {
-    return declHasAttribute(decl, "oclint:" + attributeName, comment);
+    return declHasAttribute(decl, "CAPA:" + attributeName, comment);
 }
 
 bool baseDeclHasActionAttributeImpl (
     const clang::Decl *decl,
     const std::string& action,
-    const oclint::RuleBase& rule,
+    const CAPA::RuleBase& rule,
     std::string* comment) {
     return declHasOCLintAttribute(decl, action + "[" + rule.attributeName() + "]", comment);
 }
@@ -80,7 +80,7 @@ bool baseDeclHasActionAttributeImpl (
 bool objCMethodDeclHasAttributeFromCategory(
     const clang::ObjCMethodDecl *decl,
     const std::string& action,
-    const oclint::RuleBase& rule,
+    const CAPA::RuleBase& rule,
     std::string* comment) {
     // If the method is already from a category, we don't need to traverse any other categories
     if(clang::dyn_cast<clang::ObjCCategoryDecl>(decl->getDeclContext())) {
@@ -109,7 +109,7 @@ bool objCMethodDeclHasAttributeFromCategory(
 bool objCMethodDeclHasActionAttributeImpl(
     const clang::ObjCMethodDecl *decl,
     const std::string& action,
-    const oclint::RuleBase& rule,
+    const CAPA::RuleBase& rule,
     std::string* comment) {
     if(decl == nullptr) {
         return false;
@@ -141,7 +141,7 @@ bool objCMethodDeclHasActionAttributeImpl(
 bool declHasActionAttribute(
     const clang::Decl *decl,
     const std::string& action,
-    const oclint::RuleBase& rule,
+    const CAPA::RuleBase& rule,
     std::string* comment) {
     const clang::ObjCMethodDecl* method = clang::dyn_cast_or_null<clang::ObjCMethodDecl>(decl);
     if(method) {

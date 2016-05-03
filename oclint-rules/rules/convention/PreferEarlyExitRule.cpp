@@ -1,11 +1,11 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleConfiguration.h"
-#include "oclint/RuleSet.h"
-#include "oclint/util/ASTUtil.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleConfiguration.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/util/ASTUtil.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class PreferEarlyExitRule : public AbstractASTVisitorRule<PreferEarlyExitRule>
 {

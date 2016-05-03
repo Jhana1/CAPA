@@ -44,15 +44,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
  * SOFTWARE.
  */
-#include "oclint/CompilerInstance.h"
+#include "CAPA/CompilerInstance.h"
 
 #include <clang/Basic/TargetInfo.h>
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/StaticAnalyzer/Frontend/FrontendActions.h>
 
-#include "oclint/Options.h"
+#include "CAPA/Options.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 static clang::FrontendAction *getFrontendAction()
 {

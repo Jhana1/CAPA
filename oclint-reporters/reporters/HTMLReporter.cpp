@@ -1,12 +1,12 @@
 #include <ctime>
 
-#include "oclint/Results.h"
-#include "oclint/Reporter.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Version.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Results.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Version.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class HTMLReporter : public Reporter
 {
@@ -58,7 +58,7 @@ public:
     {
         time_t now = time(nullptr);
         out << "<p>" << ctime(&now)
-            << "| Generated with <a href='http://oclint.org'>OCLint v" << version << "</a>.</p>";
+            << "| Generated with <a href='http://CAPA.org'>OCLint v" << version << "</a>.</p>";
     }
 
     void writeViolation(std::ostream &out, const Violation &violation)

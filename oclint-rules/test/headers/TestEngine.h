@@ -1,6 +1,6 @@
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class TestProcessor : public ASTConsumer
 {

@@ -1,5 +1,5 @@
-#ifndef OCLINT_CONFIGFILE_H
-#define OCLINT_CONFIGFILE_H
+#ifndef CAPA_CONFIGFILE_H
+#define CAPA_CONFIGFILE_H
 
 #include <vector>
 
@@ -7,7 +7,7 @@
 #include <llvm/Support/YAMLTraits.h>
 #include <llvm/Support/MemoryBuffer.h>
 
-namespace oclint
+namespace CAPA
 {
 namespace option
 {
@@ -63,6 +63,6 @@ public:
 };
 
 } // end namespace option
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

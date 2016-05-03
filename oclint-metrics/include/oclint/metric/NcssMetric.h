@@ -1,12 +1,12 @@
-#ifndef OCLINT_METRIC_NCSSMETRIC_H
-#define OCLINT_METRIC_NCSSMETRIC_H
+#ifndef CAPA_METRIC_NCSSMETRIC_H
+#define CAPA_METRIC_NCSSMETRIC_H
 
 #define DISPATH(STMT_TYPE) if (clang::isa<STMT_TYPE>(node)) \
 return ncss(clang::dyn_cast<STMT_TYPE>(node))
 
 #include <clang/AST/AST.h>
 
-namespace oclint
+namespace CAPA
 {
 
 class NcssMetric
@@ -55,7 +55,7 @@ public:
     int ncss(clang::ObjCAutoreleasePoolStmt *stmt);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 extern "C" int getNcssCount(clang::Decl *decl);
 

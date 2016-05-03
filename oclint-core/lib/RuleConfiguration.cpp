@@ -1,9 +1,9 @@
-#include "oclint/RuleConfiguration.h"
+#include "CAPA/RuleConfiguration.h"
 
 #include <cstdlib>
 #include <map>
 
-using namespace oclint;
+using namespace CAPA;
 
 static std::map<std::string, std::string>* _configurations = nullptr;
 

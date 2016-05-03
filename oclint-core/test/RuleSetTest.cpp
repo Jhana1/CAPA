@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "oclint/RuleBase.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/RuleSet.h"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 int RuleSetTest_applyCount;
 

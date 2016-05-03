@@ -1,6 +1,6 @@
-#include "oclint/AbstractASTMatcherRule.h"
+#include "CAPA/AbstractASTMatcherRule.h"
 
-namespace oclint
+namespace CAPA
 {
 
 /*virtual*/
@@ -38,4 +38,4 @@ void AbstractASTMatcherRule::tearDown()
     _finder = nullptr;
 }
 
-} // end namespace oclint
+} // end namespace CAPA

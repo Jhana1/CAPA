@@ -1,11 +1,11 @@
-#ifndef OCLINT_ABSTRACTASTRULEBASE_H
-#define OCLINT_ABSTRACTASTRULEBASE_H
+#ifndef CAPA_ABSTRACTASTRULEBASE_H
+#define CAPA_ABSTRACTASTRULEBASE_H
 
 #include <clang/AST/AST.h>
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-namespace oclint
+namespace CAPA
 {
 
 enum LanguageSupportFlags
@@ -37,6 +37,6 @@ public:
     virtual ~AbstractASTRuleBase();
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

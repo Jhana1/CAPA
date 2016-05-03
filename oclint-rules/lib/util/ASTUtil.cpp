@@ -1,4 +1,4 @@
-#include "oclint/util/ASTUtil.h"
+#include "CAPA/util/ASTUtil.h"
 
 bool isObjCMethodDeclaredInSuperClass(clang::ObjCMethodDecl *decl)
 {

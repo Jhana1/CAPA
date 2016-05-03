@@ -1,5 +1,5 @@
-#ifndef OCLINT_METRIC_NPATHCOMPLEXITYMETRIC_H
-#define OCLINT_METRIC_NPATHCOMPLEXITYMETRIC_H
+#ifndef CAPA_METRIC_NPATHCOMPLEXITYMETRIC_H
+#define CAPA_METRIC_NPATHCOMPLEXITYMETRIC_H
 
 #define DISPATH(STMT_TYPE) if (clang::isa<STMT_TYPE>(node)) \
 return nPath(clang::dyn_cast<STMT_TYPE>(node))
@@ -12,7 +12,7 @@ return nPath(clang::dyn_cast<STMT_TYPE>(node))
  *   its applications”. Communications of the ACM 31 (2) p. 188-200
  */
 
-namespace oclint
+namespace CAPA
 {
 
 class NPathComplexityMetric
@@ -58,7 +58,7 @@ public:
     int nPath(clang::CastExpr *expr);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 extern "C" int getNPathComplexity(clang::Stmt *stmt);
 

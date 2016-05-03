@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdarg>
-#include "oclint/AbstractASTMatcherRule.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTMatcherRule.h"
+#include "CAPA/RuleSet.h"
 
 using namespace std;
 using namespace clang;
 using namespace clang::ast_matchers;
-using namespace oclint;
+using namespace CAPA;
 
 
 bool areSameVariable(int n, ...)

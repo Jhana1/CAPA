@@ -1,12 +1,12 @@
-#include "oclint/AbstractASTMatcherRule.h"
-#include "oclint/RuleSet.h"
-#include "oclint/util/MyASTUtil.h"
+#include "CAPA/AbstractASTMatcherRule.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/util/MyASTUtil.h"
 #include <iostream>
 
 using namespace std;
 using namespace clang;
 using namespace clang::ast_matchers;
-using namespace oclint;
+using namespace CAPA;
 
 class ReduceInfo
 {

@@ -1,9 +1,9 @@
-#ifndef OCLINT_VERSION_H
-#define OCLINT_VERSION_H
+#ifndef CAPA_VERSION_H
+#define CAPA_VERSION_H
 
 #include <string>
 
-namespace oclint
+namespace CAPA
 {
 
 class Version
@@ -12,6 +12,6 @@ public:
     static std::string identifier();
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

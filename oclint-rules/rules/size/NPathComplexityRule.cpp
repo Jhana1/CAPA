@@ -1,12 +1,12 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleConfiguration.h"
-#include "oclint/RuleSet.h"
-#include "oclint/metric/NPathComplexityMetric.h"
-#include "oclint/util/StdUtil.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleConfiguration.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/metric/NPathComplexityMetric.h"
+#include "CAPA/util/StdUtil.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 /*
  * References:

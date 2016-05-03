@@ -1,10 +1,10 @@
 #include <map>
 
-#include "oclint/AbstractResults.h"
-#include "oclint/ResultCollector.h"
-#include "oclint/RuleBase.h"
+#include "CAPA/AbstractResults.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RuleBase.h"
 
-namespace oclint {
+namespace CAPA {
 
 AbstractResults::AbstractResults(const ResultCollector& resultCollector)
     : _resultCollector(resultCollector)
@@ -79,4 +79,4 @@ bool AbstractResults::hasCheckerBugs() const
     return numberOfCheckerBugs() > 0;
 }
 
-} // end namespace oclint
+} // end namespace CAPA

@@ -9,7 +9,7 @@ static const string testBase = "\
                                                                              \n\
 @interface A : NSObject                                                      \n\
                                                                              \n\
-- (void)foo __attribute__((annotate(\"oclint:enforce[protected method]\"))); \n\
+- (void)foo __attribute__((annotate(\"CAPA:enforce[protected method]\"))); \n\
                                                                              \n\
 @end                                                                         \n\
                                                                              \n\
@@ -97,7 +97,7 @@ TEST(ObjCVerifyProtectedMethodRule, ProtectedPropertyGetterOutside)
     const string testGetterOutside = testBase + "\
     @interface C : NSObject                                                     \n\
     @property (strong) A* a                                                     \n\
-        __attribute__((annotate(\"oclint:enforce[protected method]\")));        \n\
+        __attribute__((annotate(\"CAPA:enforce[protected method]\")));        \n\
     @end                                                                        \n\
     @interface D : NSObject                                                     \n\
     @property (strong) C* c;                                                    \n\
@@ -119,7 +119,7 @@ TEST(ObjCVerifyProtectedMethodRule, ProtectedPropertySetterOutside)
     const string testSetterOutside = testBase + "\
     @interface C : NSObject                                                     \n\
     @property (strong) A* a                                                     \n\
-        __attribute__((annotate(\"oclint:enforce[protected method]\")));        \n\
+        __attribute__((annotate(\"CAPA:enforce[protected method]\")));        \n\
     @end                                                                        \n\
     @interface D : NSObject                                                     \n\
     @property (strong) C* c;                                                    \n\
@@ -140,7 +140,7 @@ TEST(ObjCVerifyProtectedMethodRule, ProtectedPropertyGetterInside)
     const string testGetterInside = testBase + "\
     @interface C : NSObject                                                     \n\
     @property (strong) A* a                                                     \n\
-        __attribute__((annotate(\"oclint:enforce[protected method]\")));        \n\
+        __attribute__((annotate(\"CAPA:enforce[protected method]\")));        \n\
     @end                                                                        \n\
     @interface D : C                                                            \n\
     @property (strong) C* c;                                                    \n\
@@ -159,7 +159,7 @@ TEST(ObjCVerifyProtectedMethodRule, ProtectedPropertySetterInside)
     const string testSetterInside = testBase + "\
     @interface C : NSObject                                                     \n\
     @property (strong) A* a                                                     \n\
-        __attribute__((annotate(\"oclint:enforce[protected method]\")));        \n\
+        __attribute__((annotate(\"CAPA:enforce[protected method]\")));        \n\
     @end                                                                        \n\
     @interface D : C\n\
     @property (strong) C* c;                                                    \n\
@@ -182,7 +182,7 @@ TEST(ObjCVerifyProtectedMethodRule, ProtectedPropertyCategoryOutside)
     @end                                                                        \n\
     @interface C (Additions)                                                    \n\
     - (void)setA:(A*)a                                                          \n\
-        __attribute__((annotate(\"oclint:enforce[protected method]\")));        \n\
+        __attribute__((annotate(\"CAPA:enforce[protected method]\")));        \n\
     @end                                                                        \n\
     @interface D : NSObject                                                     \n\
     @property (strong) C* c;                                                    \n\

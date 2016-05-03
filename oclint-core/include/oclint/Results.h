@@ -1,9 +1,9 @@
-#ifndef OCLINT_RESULTS_H
-#define OCLINT_RESULTS_H
+#ifndef CAPA_RESULTS_H
+#define CAPA_RESULTS_H
 
 #include <vector>
 
-namespace oclint
+namespace CAPA
 {
 
 class Violation;
@@ -36,6 +36,6 @@ public:
     virtual const std::vector<Violation>& allCheckerBugs() const = 0;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

@@ -1,11 +1,11 @@
-#ifndef OCLINT_ABSTRACTASTVISITORRULE_H
-#define OCLINT_ABSTRACTASTVISITORRULE_H
+#ifndef CAPA_ABSTRACTASTVISITORRULE_H
+#define CAPA_ABSTRACTASTVISITORRULE_H
 
 #include <clang/AST/RecursiveASTVisitor.h>
 
-#include "oclint/AbstractASTRuleBase.h"
+#include "CAPA/AbstractASTRuleBase.h"
 
-namespace oclint
+namespace CAPA
 {
 
 template<typename T>
@@ -44,6 +44,6 @@ public:
     virtual void tearDown() {}
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

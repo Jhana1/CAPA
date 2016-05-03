@@ -1,10 +1,10 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleConfiguration.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleConfiguration.h"
+#include "CAPA/RuleSet.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class TooFewBranchesInSwitchStatementRule :
     public AbstractASTVisitorRule<TooFewBranchesInSwitchStatementRule>

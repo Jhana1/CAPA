@@ -1,7 +1,7 @@
-#ifndef OCLINT_RULESET_H
-#define OCLINT_RULESET_H
+#ifndef CAPA_RULESET_H
+#define CAPA_RULESET_H
 
-namespace oclint
+namespace CAPA
 {
 
 class RuleBase;
@@ -14,6 +14,6 @@ public:
     static RuleBase* getRuleAtIndex(int index);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

@@ -1,10 +1,10 @@
-#include "oclint/UniqueResults.h"
+#include "CAPA/UniqueResults.h"
 
 #include <unordered_set>
 
-#include "oclint/ResultCollector.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Violation.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Violation.h"
 
 namespace
 {
@@ -12,9 +12,9 @@ namespace
 class ViolationHash
 {
 public:
-    std::size_t operator()(const oclint::Violation& violation) const
+    std::size_t operator()(const CAPA::Violation& violation) const
     {
-        std::size_t hash1 = std::hash<const oclint::RuleBase*>()(violation.rule);
+        std::size_t hash1 = std::hash<const CAPA::RuleBase*>()(violation.rule);
         std::size_t hash2 = std::hash<std::string>()(violation.path);
         std::size_t hash3 = std::hash<std::string>()(violation.message);
         std::size_t hash4 = violation.startLine
@@ -25,11 +25,11 @@ public:
     }
 };
 
-std::vector<oclint::Violation> removeViolationDuplications(
-  std::vector<oclint::Violation> originalViolations)
+std::vector<CAPA::Violation> removeViolationDuplications(
+  std::vector<CAPA::Violation> originalViolations)
 {
-    std::vector<oclint::Violation> violations;
-    std::unordered_set<oclint::Violation, ViolationHash> set;
+    std::vector<CAPA::Violation> violations;
+    std::unordered_set<CAPA::Violation, ViolationHash> set;
 
     for (const auto& violation : originalViolations)
     {
@@ -45,7 +45,7 @@ std::vector<oclint::Violation> removeViolationDuplications(
 } // end namespace
 
 
-namespace oclint
+namespace CAPA
 {
 
 UniqueResults::UniqueResults(const ResultCollector &resultCollector)
@@ -53,7 +53,7 @@ UniqueResults::UniqueResults(const ResultCollector &resultCollector)
 {
 }
 
-std::vector<oclint::Violation> UniqueResults::allViolations() const
+std::vector<CAPA::Violation> UniqueResults::allViolations() const
 {
     if (!_violations.empty())
     {
@@ -108,4 +108,4 @@ const std::vector<Violation>& UniqueResults::allCheckerBugs() const
     return _checkerBugs;
 }
 
-} // end namespace oclint
+} // end namespace CAPA

@@ -1,6 +1,6 @@
 # Optional modules
-oclint-json-compilation-database/
-oclint-xcodebuild/
+CAPA-json-compilation-database/
+CAPA-xcodebuild/
 
 # Third-party dependencies and build directory
 googletest/

@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "oclint/Version.h"
+#include "CAPA/Version.h"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 TEST(VersionTest, VersionString)
 {

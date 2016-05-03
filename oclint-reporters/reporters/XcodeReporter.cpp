@@ -1,9 +1,9 @@
-#include "oclint/Results.h"
-#include "oclint/Reporter.h"
-#include "oclint/RuleBase.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Results.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class XcodeReporter : public Reporter
 {
@@ -17,7 +17,7 @@ public:
     {
         // Compiler warnings, errors and clang static analyzer results
         // can be retrieved from Xcode directly, so we only need to
-        // output violations that is emitted by oclint.
+        // output violations that is emitted by CAPA.
 
         for (const auto& violation : results->allViolations())
         {

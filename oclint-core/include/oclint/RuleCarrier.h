@@ -1,5 +1,5 @@
-#ifndef OCLINT_RULECARRIER_H
-#define OCLINT_RULECARRIER_H
+#ifndef CAPA_RULECARRIER_H
+#define CAPA_RULECARRIER_H
 
 #include <string>
 
@@ -10,9 +10,9 @@ namespace clang
     class TranslationUnitDecl;
 }
 
-#include "oclint/ViolationSet.h"
+#include "CAPA/ViolationSet.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class RuleCarrier
@@ -32,6 +32,6 @@ public:
         int endLine, int endColumn, RuleBase *rule, const std::string& message = "");
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

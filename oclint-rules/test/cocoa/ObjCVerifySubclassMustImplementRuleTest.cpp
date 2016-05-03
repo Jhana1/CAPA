@@ -7,7 +7,7 @@ static string testAnnotationBase = "\
 @interface Parent                                   \n\
                                                     \n\
 - (void)someAbstractMethod                          \n\
-    __attribute__((annotate(\"oclint:enforce[subclass must implement]\")));  \n\
+    __attribute__((annotate(\"CAPA:enforce[subclass must implement]\")));  \n\
 @end                                                \n\
                                                     \n\
 @interface Child : Parent                           \n\

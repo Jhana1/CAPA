@@ -1,6 +1,6 @@
-#include "oclint/metric/CyclomaticComplexityMetric.h"
+#include "CAPA/metric/CyclomaticComplexityMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 int CyclomaticComplexityMetric::calculate(clang::Decl *decl)
 {

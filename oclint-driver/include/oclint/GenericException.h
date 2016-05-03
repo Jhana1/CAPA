@@ -1,10 +1,10 @@
-#ifndef OCLINT_GENERICEXCEPTION_H
-#define OCLINT_GENERICEXCEPTION_H
+#ifndef CAPA_GENERICEXCEPTION_H
+#define CAPA_GENERICEXCEPTION_H
 
 #include <exception>
 #include <string>
 
-namespace oclint
+namespace CAPA
 {
 
 class GenericException : public std::exception
@@ -18,6 +18,6 @@ private:
     std::string description;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

@@ -1,10 +1,10 @@
-#include "oclint/RulesetFilter.h"
+#include "CAPA/RulesetFilter.h"
 
 #include <algorithm>
 
-#include "oclint/RuleSet.h"
+#include "CAPA/RuleSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 static std::string convertSpacesInName(const std::string &name)
 {
@@ -27,7 +27,7 @@ static std::string convertSpacesInName(const std::string &name)
     return copy;
 }
 
-static std::string getName(const oclint::RuleBase *rule)
+static std::string getName(const CAPA::RuleBase *rule)
 {
     return convertSpacesInName(rule->name());
 }
@@ -56,10 +56,10 @@ std::vector<RuleBase *> RulesetFilter::filteredRules() const
 {
     std::vector<RuleBase *> filteredRules;
 
-    for (int ruleIdx = 0, numRules = oclint::RuleSet::numberOfRules();
+    for (int ruleIdx = 0, numRules = CAPA::RuleSet::numberOfRules();
         ruleIdx < numRules; ruleIdx++)
     {
-        RuleBase *rule = oclint::RuleSet::getRuleAtIndex(ruleIdx);
+        RuleBase *rule = CAPA::RuleSet::getRuleAtIndex(ruleIdx);
         const std::string &name = getName(rule);
         if ((_enabled.empty() || find(_enabled.begin(), _enabled.end(), name) != _enabled.end()) &&
             find(_disabled.begin(), _disabled.end(), name) == _disabled.end())

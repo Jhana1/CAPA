@@ -2,13 +2,13 @@
 #include <set>
 #include <string>
 #include <list>
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
-#include "oclint/RuleConfiguration.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/RuleConfiguration.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class UnusedLocalVariableRule : public AbstractASTVisitorRule<UnusedLocalVariableRule>
 {

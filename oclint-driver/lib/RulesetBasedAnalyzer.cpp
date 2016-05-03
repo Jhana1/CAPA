@@ -1,15 +1,15 @@
-#include "oclint/RulesetBasedAnalyzer.h"
+#include "CAPA/RulesetBasedAnalyzer.h"
 
 #include <utility>
 
-#include "oclint/Logger.h"
-#include "oclint/ResultCollector.h"
-#include "oclint/RuleBase.h"
-#include "oclint/RuleCarrier.h"
-#include "oclint/RuleSet.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Logger.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/RuleCarrier.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 RulesetBasedAnalyzer::RulesetBasedAnalyzer(std::vector<RuleBase*> filteredRules)
     : _filteredRules(std::move(filteredRules))

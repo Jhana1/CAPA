@@ -1,7 +1,7 @@
-#include "oclint/ResultCollector.h"
-#include "oclint/AbstractResults.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/AbstractResults.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class ReportTestResults : public AbstractResults
@@ -38,8 +38,8 @@ public:
 
 }
 
-oclint::Results *getTestResults()
+CAPA::Results *getTestResults()
 {
-    oclint::ResultCollector *resultCollector = oclint::ResultCollector::getInstance();
-    return new oclint::ReportTestResults(*resultCollector);
+    CAPA::ResultCollector *resultCollector = CAPA::ResultCollector::getInstance();
+    return new CAPA::ReportTestResults(*resultCollector);
 }

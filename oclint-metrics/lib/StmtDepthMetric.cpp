@@ -1,6 +1,6 @@
-#include "oclint/metric/StmtDepthMetric.h"
+#include "CAPA/metric/StmtDepthMetric.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 int StmtDepthMetric::depth(clang::CompoundStmt *stmt)
 {

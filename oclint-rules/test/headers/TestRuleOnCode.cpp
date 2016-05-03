@@ -9,7 +9,7 @@ using namespace llvm;
 using namespace clang;
 using namespace clang::tooling;
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 #include "TestEngine.h"
 
 bool computeViolationSet(const Twine &fileName,

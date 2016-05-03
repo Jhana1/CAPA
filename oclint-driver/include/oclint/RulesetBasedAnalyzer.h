@@ -1,11 +1,11 @@
-#ifndef OCLINT_RULESETBASEDANALYZER_H
-#define OCLINT_RULESETBASEDANALYZER_H
+#ifndef CAPA_RULESETBASEDANALYZER_H
+#define CAPA_RULESETBASEDANALYZER_H
 
-#include "oclint/Analyzer.h"
+#include "CAPA/Analyzer.h"
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class RulesetBasedAnalyzer : public Analyzer
@@ -19,6 +19,6 @@ public:
     virtual void analyze(std::vector<clang::ASTContext*>& contexts) override;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

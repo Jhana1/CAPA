@@ -1,10 +1,10 @@
-#include "oclint/Violation.h"
+#include "CAPA/Violation.h"
 
 #include <utility>
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 Violation::Violation(RuleBase* violatedRule, std::string violationFilePath,
                      int violationStartLine, int violationStartColumn,
@@ -19,7 +19,7 @@ Violation::Violation(RuleBase* violatedRule, std::string violationFilePath,
     endColumn = violationEndColumn;
 }
 
-bool Violation::operator==(const oclint::Violation &rhs) const
+bool Violation::operator==(const CAPA::Violation &rhs) const
 {
     return (rule == rhs.rule)
             && (path == rhs.path)

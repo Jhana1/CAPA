@@ -1,12 +1,12 @@
-#ifndef OCLINT_METRIC_STMTDEPTHMETRIC_H
-#define OCLINT_METRIC_STMTDEPTHMETRIC_H
+#ifndef CAPA_METRIC_STMTDEPTHMETRIC_H
+#define CAPA_METRIC_STMTDEPTHMETRIC_H
 
 #define DISPATH(STMT_TYPE) if (clang::isa<STMT_TYPE>(node)) \
 return depth(clang::dyn_cast<STMT_TYPE>(node))
 
 #include <clang/AST/AST.h>
 
-namespace oclint
+namespace CAPA
 {
 
 class StmtDepthMetric
@@ -52,7 +52,7 @@ public:
     int depth(clang::ObjCAutoreleasePoolStmt *stmt);
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 extern "C" int getStmtDepth(clang::Stmt *stmt);
 

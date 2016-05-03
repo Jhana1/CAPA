@@ -234,12 +234,12 @@ TEST(UnusedLocalVariableRuleTest, RAIITechniqueCustomValuesWithFullNamespaceWith
 
 TEST(UnusedLocalVariableRuleTest, SuppressUnusedLocalVariable)
 {
-    testRuleOnCode(new UnusedLocalVariableRule(), "void aMethod() { int a  __attribute__((annotate(\"oclint:suppress[unused local variable]\"))); }");
+    testRuleOnCode(new UnusedLocalVariableRule(), "void aMethod() { int a  __attribute__((annotate(\"CAPA:suppress[unused local variable]\"))); }");
 }
 
 /*
  Tests for the false positive found by Reece Dunn
- Details at https://github.com/oclint/oclint/issues/34
+ Details at https://github.com/CAPA/CAPA/issues/34
 */
 TEST(UnusedLocalVariableRuleTest, IgnoreVariablesWithoutAName)
 {

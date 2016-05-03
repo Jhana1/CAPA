@@ -34,7 +34,7 @@ typedef unsigned char BOOL;                                                     
 @interface SomeBaseClass : NSObject                                                            \n\
                                                                                                \n\
 - (void)viewWillAppear:(BOOL)animated                                                          \n\
-__attribute__((annotate(\"oclint:enforce[must call super]\")));                                \n\
+__attribute__((annotate(\"CAPA:enforce[must call super]\")));                                \n\
                                                                                                \n\
 @end                                                                                           \n\
                                                                                                \n\
@@ -51,7 +51,7 @@ static const string testSuppression = "\
 @implementation ChildViewController                                             \n\
                                                                                 \n\
 - (void)viewWillAppear:(BOOL)animated                                           \n\
-    __attribute__((annotate(\"oclint:suppress[must call super]\"))) {           \n\
+    __attribute__((annotate(\"CAPA:suppress[must call super]\"))) {           \n\
 }                                                                               \n\
                                                                                 \n\
 @end                                                                            \n\

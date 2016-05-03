@@ -21,16 +21,16 @@ before_install:
 - sudo pip install cpp-coveralls
 
 script:
-  - cd oclint-scripts
+  - cd CAPA-scripts
   - ./travis $BUILD $MODULE $DEP
   - cd ..
 
 after_success:
   - if [ $BUILD == test ]; then
-      coveralls --gcov $PWD/build/llvm-install/bin/llvm-cov --gcov-options gcov --include oclint-${MODULE}/ --exclude oclint-${MODULE}/test;
+      coveralls --gcov $PWD/build/llvm-install/bin/llvm-cov --gcov-options gcov --include CAPA-${MODULE}/ --exclude CAPA-${MODULE}/test;
     fi
 
 addons:
   artifacts:
     paths:
-      - $(ls build/oclint-*.tar.gz)
+      - $(ls build/CAPA-*.tar.gz)

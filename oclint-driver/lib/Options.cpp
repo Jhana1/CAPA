@@ -1,4 +1,4 @@
-#include "oclint/Options.h"
+#include "CAPA/Options.h"
 
 #include <unistd.h>
 
@@ -11,10 +11,10 @@
 #include <clang/Driver/Options.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 
-#include "oclint/ConfigFile.h"
-#include "oclint/RuleConfiguration.h"
+#include "CAPA/ConfigFile.h"
+#include "CAPA/RuleConfiguration.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 llvm::cl::OptionCategory OCLintOptionCategory("OCLint options");
 
@@ -29,7 +29,7 @@ static llvm::cl::opt<std::string> argOutput("o",
     llvm::cl::cat(OCLintOptionCategory));
 
 /* --------------------
-   oclint configuration
+   CAPA configuration
    -------------------- */
 
 static llvm::cl::opt<std::string> argReportType("report-type",
@@ -102,7 +102,7 @@ static llvm::cl::opt<bool> argEnableVerbose("verbose",
 
 static llvm::cl::extrahelp CommonHelp(clang::tooling::CommonOptionsParser::HelpMessage);
 static llvm::cl::extrahelp MoreHelp(
-    "For more information, please visit http://oclint.org\n"
+    "For more information, please visit http://CAPA.org\n"
 );
 static std::unique_ptr<llvm::opt::OptTable> Options(clang::driver::createDriverOptTable());
 
@@ -110,7 +110,7 @@ static std::unique_ptr<llvm::opt::OptTable> Options(clang::driver::createDriverO
    options
    ------- */
 
-static oclint::RulesetFilter filter;
+static CAPA::RulesetFilter filter;
 static std::string absoluteWorkingPath("");
 static std::string executablePath("");
 
@@ -126,20 +126,20 @@ void updateArgIfSet(llvm::cl::opt<T> &argValue, const llvm::Optional<T> &configV
 static std::vector<std::string> configFilePaths()
 {
     std::vector<std::string> paths;
-    paths.push_back(oclint::option::etcPath() + "/oclint");
-    if (oclint::option::homePath().length() > 0) {
-        paths.push_back(oclint::option::homePath() + "/.oclint");
+    paths.push_back(CAPA::option::etcPath() + "/CAPA");
+    if (CAPA::option::homePath().length() > 0) {
+        paths.push_back(CAPA::option::homePath() + "/.CAPA");
     }
-    paths.push_back(oclint::option::workingPath() + "/.oclint");
+    paths.push_back(CAPA::option::workingPath() + "/.CAPA");
     return paths;
 }
 
 static void processConfigFile(const std::string &path)
 {
-    oclint::option::ConfigFile config(path);
-    for (const oclint::option::RuleConfigurationPair &ruleConfig : config.ruleConfigurations())
+    CAPA::option::ConfigFile config(path);
+    for (const CAPA::option::RuleConfigurationPair &ruleConfig : config.ruleConfigurations())
     {
-        oclint::RuleConfiguration::addConfiguration(ruleConfig.key(), ruleConfig.value());
+        CAPA::RuleConfiguration::addConfiguration(ruleConfig.key(), ruleConfig.value());
     }
     for (const llvm::StringRef &rulePath : config.rulePaths())
     {
@@ -199,7 +199,7 @@ static void preserveExecutablePath(const char *argv)
     executablePath = std::string(installedPath.c_str());
 }
 
-void oclint::option::process(const char *argv)
+void CAPA::option::process(const char *argv)
 {
     preserveWorkingPath();
     preserveExecutablePath(argv);
@@ -212,116 +212,116 @@ void oclint::option::process(const char *argv)
         std::string key = configuration.substr(0, indexOfSeparator);
         std::string value = configuration.substr(indexOfSeparator + 1,
             configuration.size() - indexOfSeparator - 1);
-        oclint::RuleConfiguration::addConfiguration(key, value);
+        CAPA::RuleConfiguration::addConfiguration(key, value);
     }
 
     filter.enableRules(argEnabledRules.begin(), argEnabledRules.end());
     filter.disableRules(argDisabledRules.begin(), argDisabledRules.end());
 }
 
-std::string oclint::option::workingPath()
+std::string CAPA::option::workingPath()
 {
     return absoluteWorkingPath;
 }
 
-std::string oclint::option::installPrefix()
+std::string CAPA::option::installPrefix()
 {
     return binPath() + "/..";
 }
 
-std::string oclint::option::binPath()
+std::string CAPA::option::binPath()
 {
     return executablePath;
 }
 
-std::string oclint::option::libPath()
+std::string CAPA::option::libPath()
 {
     return installPrefix() + "/lib";
 }
 
-std::string oclint::option::etcPath()
+std::string CAPA::option::etcPath()
 {
     return installPrefix() + "/etc";
 }
 
-std::string oclint::option::homePath()
+std::string CAPA::option::homePath()
 {
     const char *home = getenv("HOME");
     return home ? std::string(home) : std::string();
 }
 
-std::vector<std::string> oclint::option::rulesPath()
+std::vector<std::string> CAPA::option::rulesPath()
 {
     if (argRulesPath.size() > 0)
     {
         return argRulesPath;
     }
-    std::string defaultRulePath = libPath() + "/oclint/rules";
+    std::string defaultRulePath = libPath() + "/CAPA/rules";
     std::vector<std::string> defaultRulesPath { defaultRulePath };
     return defaultRulesPath;
 }
 
-std::string oclint::option::reporterPath()
+std::string CAPA::option::reporterPath()
 {
-    return libPath() + "/oclint/reporters";
+    return libPath() + "/CAPA/reporters";
 }
 
-bool oclint::option::hasOutputPath()
+bool CAPA::option::hasOutputPath()
 {
     return argOutput != "-";
 }
 
-std::string oclint::option::outputPath()
+std::string CAPA::option::outputPath()
 {
     return argOutput.at(0) == '/' ? argOutput : workingPath() + "/" + argOutput;
 }
 
-std::string oclint::option::reportType()
+std::string CAPA::option::reportType()
 {
     return argReportType;
 }
 
-const oclint::RulesetFilter &oclint::option::rulesetFilter()
+const CAPA::RulesetFilter &CAPA::option::rulesetFilter()
 {
     return filter;
 }
 
-int oclint::option::maxP1()
+int CAPA::option::maxP1()
 {
     return argMaxP1;
 }
 
-int oclint::option::maxP2()
+int CAPA::option::maxP2()
 {
     return argMaxP2;
 }
 
-int oclint::option::maxP3()
+int CAPA::option::maxP3()
 {
     return argMaxP3;
 }
 
-bool oclint::option::showEnabledRules()
+bool CAPA::option::showEnabledRules()
 {
     return argListEnabledRules;
 }
 
-bool oclint::option::enableGlobalAnalysis()
+bool CAPA::option::enableGlobalAnalysis()
 {
     return argGlobalAnalysis;
 }
 
-bool oclint::option::enableClangChecker()
+bool CAPA::option::enableClangChecker()
 {
     return argClangChecker;
 }
 
-bool oclint::option::allowDuplicatedViolations()
+bool CAPA::option::allowDuplicatedViolations()
 {
     return argDuplications;
 }
 
-bool oclint::option::enableVerbose()
+bool CAPA::option::enableVerbose()
 {
     return argEnableVerbose;
 }

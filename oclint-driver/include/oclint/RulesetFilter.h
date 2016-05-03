@@ -1,12 +1,12 @@
-#ifndef OCLINT_RULESETFILTER_H
-#define OCLINT_RULESETFILTER_H
+#ifndef CAPA_RULESETFILTER_H
+#define CAPA_RULESETFILTER_H
 
 #include <set>
 #include <vector>
 
-#include "oclint/RuleBase.h"
+#include "CAPA/RuleBase.h"
 
-namespace oclint
+namespace CAPA
 {
 
 /**

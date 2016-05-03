@@ -4,10 +4,10 @@ import os
 import re
 import argparse
 
-from oclintscripts import path
+from CAPAscripts import path
 
 SCRIPT_WORKING_FOLDER = os.path.dirname(os.path.abspath(__file__))
-RULES_PROJECT_DIRECTORY = os.path.join(SCRIPT_WORKING_FOLDER, "../oclint-rules")
+RULES_PROJECT_DIRECTORY = os.path.join(SCRIPT_WORKING_FOLDER, "../CAPA-rules")
 RULES_SOURCE_ROOT_DIRECTORY = os.path.join(RULES_PROJECT_DIRECTORY, "rules")
 RULES_SOURCE_ROOT_CMAKELISTS = os.path.join(RULES_SOURCE_ROOT_DIRECTORY, "CMakeLists.txt")
 RULES_TEST_ROOT_DIRECTORY = os.path.join(RULES_PROJECT_DIRECTORY, "test")

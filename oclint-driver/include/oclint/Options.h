@@ -1,12 +1,12 @@
-#ifndef OCLINT_OPTIONS_H
-#define OCLINT_OPTIONS_H
+#ifndef CAPA_OPTIONS_H
+#define CAPA_OPTIONS_H
 
 #include <string>
 #include <vector>
 
-#include "oclint/RulesetFilter.h"
+#include "CAPA/RulesetFilter.h"
 
-namespace oclint
+namespace CAPA
 {
 namespace option
 {
@@ -24,7 +24,7 @@ namespace option
     bool hasOutputPath();
     std::string outputPath();
     std::string reportType();
-    const oclint::RulesetFilter &rulesetFilter();
+    const CAPA::RulesetFilter &rulesetFilter();
     int maxP1();
     int maxP2();
     int maxP3();
@@ -34,6 +34,6 @@ namespace option
     bool allowDuplicatedViolations();
     bool enableVerbose();
 } // end namespace option
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

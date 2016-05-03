@@ -1,6 +1,6 @@
-#include "oclint/Reporter.h"
+#include "CAPA/Reporter.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class nullReporter : public Reporter
 {

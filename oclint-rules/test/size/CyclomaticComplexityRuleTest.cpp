@@ -107,5 +107,5 @@ TEST_F(CyclomaticComplexityRuleTest, ABinaryOperatorButHasNoEffectOnCCNCouting)
 
 TEST_F(CyclomaticComplexityRuleTest, SuppressCyclomaticComplexity)
 {
-    testRuleOnCode(new CyclomaticComplexityRule(), "void __attribute__((annotate(\"oclint:suppress[high cyclomatic complexity]\"))) aMethod() { int b = 1 || 0; }");
+    testRuleOnCode(new CyclomaticComplexityRule(), "void __attribute__((annotate(\"CAPA:suppress[high cyclomatic complexity]\"))) aMethod() { int b = 1 || 0; }");
 }

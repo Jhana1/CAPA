@@ -1,10 +1,10 @@
 #include <clang/AST/StmtVisitor.h>
 
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
 
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 static bool isAnyLabelStmt(const Stmt& stmt)
 {

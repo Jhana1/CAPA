@@ -129,7 +129,7 @@ default:      \n\
 
 /*
  Tests for the false positive found by Stephan Esch
- Details at https://github.com/oclint/oclint/issues/16
+ Details at https://github.com/CAPA/CAPA/issues/16
 */
 
 TEST(MissingBreakInSwitchStatementRuleTest, CasesHaveAssignmentAndBreak)

@@ -1,11 +1,11 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
 
 #include "../abstract/AbstractEmptyBlockStmtRule.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class EmptyFinallyStatementRule : public AbstractEmptyBlockStmtRule<EmptyFinallyStatementRule>
 {

@@ -1,10 +1,10 @@
-#include "oclint/AbstractASTVisitorRule.h"
-#include "oclint/RuleSet.h"
-#include "oclint/util/StdUtil.h"
+#include "CAPA/AbstractASTVisitorRule.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/util/StdUtil.h"
 
 using namespace std;
 using namespace clang;
-using namespace oclint;
+using namespace CAPA;
 
 class ObjCObjectSubscriptingRule : public AbstractASTVisitorRule<ObjCObjectSubscriptingRule>
 {

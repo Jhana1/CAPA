@@ -7,7 +7,7 @@
 #include "TextReporter.cpp"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {
@@ -40,7 +40,7 @@ TEST_F(TextReporterTest, WriteFooter)
 {
     std::ostringstream oss;
     reporter.writeFooter(oss, "-test");
-    EXPECT_THAT(oss.str(), StrEq("[OCLint (http://oclint.org) v-test]"));
+    EXPECT_THAT(oss.str(), StrEq("[OCLint (http://CAPA.org) v-test]"));
 }
 
 TEST_F(TextReporterTest, WriteSummary)

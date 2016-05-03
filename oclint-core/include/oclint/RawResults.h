@@ -1,9 +1,9 @@
-#ifndef OCLINT_RAWRESULTS_H
-#define OCLINT_RAWRESULTS_H
+#ifndef CAPA_RAWRESULTS_H
+#define CAPA_RAWRESULTS_H
 
-#include "oclint/AbstractResults.h"
+#include "CAPA/AbstractResults.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class ResultCollector;
@@ -19,6 +19,6 @@ public:
     const std::vector<Violation>& allCheckerBugs() const override;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

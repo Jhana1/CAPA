@@ -1,12 +1,12 @@
 #include <ctime>
 
-#include "oclint/Results.h"
-#include "oclint/Reporter.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Version.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Results.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Version.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class JSONReporter : public Reporter
 {
@@ -54,7 +54,7 @@ public:
     void writeHeader(std::ostream &out, std::string version)
     {
         writeKeyValue(out, "version", version);
-        writeKeyValue(out, "url", "http://oclint.org");
+        writeKeyValue(out, "url", "http://CAPA.org");
         time_t now = time(nullptr);
         writeKeyValue(out, "timestamp", now);
     }

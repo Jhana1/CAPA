@@ -1,10 +1,10 @@
-#include "oclint/Results.h"
-#include "oclint/Reporter.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Version.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Results.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Version.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class PMDReporter : public Reporter
 {
@@ -28,7 +28,7 @@ public:
     void writeHeader(std::ostream &out, std::string version)
     {
         out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-        out << "<pmd version=\"oclint-" << version << "\">";
+        out << "<pmd version=\"CAPA-" << version << "\">";
     }
 
     void writeFooter(std::ostream &out)

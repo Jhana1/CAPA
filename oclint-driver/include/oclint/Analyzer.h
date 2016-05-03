@@ -1,5 +1,5 @@
-#ifndef OCLINT_ANALYZER_H
-#define OCLINT_ANALYZER_H
+#ifndef CAPA_ANALYZER_H
+#define CAPA_ANALYZER_H
 
 #include <vector>
 
@@ -8,7 +8,7 @@ namespace clang
     class ASTContext;
 }
 
-namespace oclint
+namespace CAPA
 {
 
 class Analyzer
@@ -19,6 +19,6 @@ public:
     virtual void postprocess(std::vector<clang::ASTContext *> &contexts) {}
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

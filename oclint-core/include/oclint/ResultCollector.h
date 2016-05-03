@@ -1,12 +1,12 @@
-#ifndef OCLINT_RESULTCOLLECTOR_H
-#define OCLINT_RESULTCOLLECTOR_H
+#ifndef CAPA_RESULTCOLLECTOR_H
+#define CAPA_RESULTCOLLECTOR_H
 
-#include "oclint/Violation.h"
+#include "CAPA/Violation.h"
 
 #include <vector>
 #include <memory>
 
-namespace oclint
+namespace CAPA
 {
 
 class ViolationSet;
@@ -41,6 +41,6 @@ public:
     ViolationSet* getClangStaticCheckerBugSet() const;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

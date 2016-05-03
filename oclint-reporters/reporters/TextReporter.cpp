@@ -1,10 +1,10 @@
-#include "oclint/Results.h"
-#include "oclint/Reporter.h"
-#include "oclint/RuleBase.h"
-#include "oclint/Version.h"
-#include "oclint/ViolationSet.h"
+#include "CAPA/Results.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/Version.h"
+#include "CAPA/ViolationSet.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 class TextReporter : public Reporter
 {
@@ -49,7 +49,7 @@ public:
 
     void writeFooter(std::ostream &out, std::string version)
     {
-        out << "[OCLint (http://oclint.org) v" << version << "]";
+        out << "[OCLint (http://CAPA.org) v" << version << "]";
     }
 
     void writeSummary(std::ostream &out, Results &results)

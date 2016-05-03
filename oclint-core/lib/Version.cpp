@@ -1,6 +1,6 @@
-#include "oclint/Version.h"
+#include "CAPA/Version.h"
 
-using namespace oclint;
+using namespace CAPA;
 
 std::string Version::identifier()
 {

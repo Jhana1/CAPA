@@ -1,5 +1,5 @@
-#ifndef OCLINT_COMPILERINSTANCE_H
-#define OCLINT_COMPILERINSTANCE_H
+#ifndef CAPA_COMPILERINSTANCE_H
+#define CAPA_COMPILERINSTANCE_H
 
 #include <vector>
 
@@ -10,7 +10,7 @@ namespace clang
     class FrontendAction;
 }
 
-namespace oclint
+namespace CAPA
 {
 
 class CompilerInstance : public clang::CompilerInstance
@@ -23,6 +23,6 @@ private:
     std::vector<clang::FrontendAction *> _actions;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

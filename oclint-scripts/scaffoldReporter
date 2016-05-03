@@ -5,7 +5,7 @@ import re
 import argparse
 
 SCRIPT_WORKING_FOLDER = os.path.dirname(os.path.abspath(__file__))
-REPORTERS_PROJECT_DIRECTORY = os.path.join(SCRIPT_WORKING_FOLDER, "../oclint-reporters")
+REPORTERS_PROJECT_DIRECTORY = os.path.join(SCRIPT_WORKING_FOLDER, "../CAPA-reporters")
 REPORTERS_SOURCE_ROOT_DIRECTORY = os.path.join(REPORTERS_PROJECT_DIRECTORY, "reporters")
 REPORTERS_SOURCE_ROOT_CMAKELISTS = os.path.join(REPORTERS_SOURCE_ROOT_DIRECTORY, "CMakeLists.txt")
 REPORTERS_TEST_ROOT_DIRECTORY = os.path.join(REPORTERS_PROJECT_DIRECTORY, "test")

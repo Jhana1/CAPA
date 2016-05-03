@@ -202,5 +202,5 @@ TEST_F(NPathComplexityRuleTest, NastingConditionalOperator)
 
 TEST_F(NPathComplexityRuleTest, SuppressHighNPathComplexity)
 {
-    testRuleOnCode(new NPathComplexityRule(), "void __attribute__((annotate(\"oclint:suppress[high npath complexity]\"))) mthd() { if (1 ? 2 : 3) {} }");
+    testRuleOnCode(new NPathComplexityRule(), "void __attribute__((annotate(\"CAPA:suppress[high npath complexity]\"))) mthd() { if (1 ? 2 : 3) {} }");
 }

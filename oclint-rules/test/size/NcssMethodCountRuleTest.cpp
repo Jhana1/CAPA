@@ -152,5 +152,5 @@ TEST_F(NcssMethodCountRuleTest, TwoCaseStatementsAndDefault)
 
 TEST_F(NcssMethodCountRuleTest, SupressHighNcssMethod)
 {
-    testRuleOnCode(new NcssMethodCountRule(), "void __attribute__((annotate(\"oclint:suppress[high ncss method]\"))) aMethod() { do {} while(1); }");
+    testRuleOnCode(new NcssMethodCountRule(), "void __attribute__((annotate(\"CAPA:suppress[high ncss method]\"))) aMethod() { do {} while(1); }");
 }

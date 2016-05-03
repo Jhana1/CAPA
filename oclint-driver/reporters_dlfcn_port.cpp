@@ -2,17 +2,17 @@
 #include <dlfcn.h>
 #include <iostream>
 
-#include "oclint/GenericException.h"
-#include "oclint/Options.h"
+#include "CAPA/GenericException.h"
+#include "CAPA/Options.h"
 
 #include "reporters.h"
 
-static oclint::Reporter* selectedReporter = nullptr;
+static CAPA::Reporter* selectedReporter = nullptr;
 
 void loadReporter()
 {
     selectedReporter = nullptr;
-    std::string reportDirPath = oclint::option::reporterPath();
+    std::string reportDirPath = CAPA::option::reporterPath();
     DIR *pDir = opendir(reportDirPath.c_str());
     if (pDir != nullptr)
     {
@@ -29,12 +29,12 @@ void loadReporter()
             {
                 std::cerr << dlerror() << std::endl;
                 closedir(pDir);
-                throw oclint::GenericException("cannot open dynamic library: " + reporterPath);
+                throw CAPA::GenericException("cannot open dynamic library: " + reporterPath);
             }
-            oclint::Reporter* (*createMethodPointer)();
-            createMethodPointer = (oclint::Reporter* (*)())dlsym(reporterHandle, "create");
-            oclint::Reporter* reporter = (oclint::Reporter*)createMethodPointer();
-            if (reporter->name() == oclint::option::reportType())
+            CAPA::Reporter* (*createMethodPointer)();
+            createMethodPointer = (CAPA::Reporter* (*)())dlsym(reporterHandle, "create");
+            CAPA::Reporter* reporter = (CAPA::Reporter*)createMethodPointer();
+            if (reporter->name() == CAPA::option::reportType())
             {
                 selectedReporter = reporter;
                 break;
@@ -44,12 +44,12 @@ void loadReporter()
     }
     if (selectedReporter == nullptr)
     {
-        throw oclint::GenericException(
-            "cannot find dynamic library for report type: " + oclint::option::reportType());
+        throw CAPA::GenericException(
+            "cannot find dynamic library for report type: " + CAPA::option::reportType());
     }
 }
 
-oclint::Reporter* reporter()
+CAPA::Reporter* reporter()
 {
     return selectedReporter;
 }

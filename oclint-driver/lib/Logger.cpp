@@ -1,12 +1,12 @@
-#include "oclint/Logger.h"
+#include "CAPA/Logger.h"
 
 #include <llvm/Support/Debug.h>
 
-#include "oclint/Options.h"
+#include "CAPA/Options.h"
 
 #ifndef NDEBUG
 
-llvm::raw_ostream &oclint::logger::debugStream()
+llvm::raw_ostream &CAPA::logger::debugStream()
 {
     if (llvm::DebugFlag)
     {
@@ -17,12 +17,12 @@ llvm::raw_ostream &oclint::logger::debugStream()
 
 #endif
 
-llvm::raw_ostream &oclint::logger::verboseStream()
+llvm::raw_ostream &CAPA::logger::verboseStream()
 {
 #ifndef NDEBUG
-    if (llvm::DebugFlag || oclint::option::enableVerbose())
+    if (llvm::DebugFlag || CAPA::option::enableVerbose())
 #else
-    if (oclint::option::enableVerbose())
+    if (CAPA::option::enableVerbose())
 #endif
     {
         return llvm::outs();

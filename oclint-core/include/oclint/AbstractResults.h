@@ -1,9 +1,9 @@
-#ifndef OCLINT_ABSTRACTRESULTS_H
-#define OCLINT_ABSTRACTRESULTS_H
+#ifndef CAPA_ABSTRACTRESULTS_H
+#define CAPA_ABSTRACTRESULTS_H
 
-#include "oclint/Results.h"
+#include "CAPA/Results.h"
 
-namespace oclint
+namespace CAPA
 {
 
 class ResultCollector;
@@ -33,6 +33,6 @@ public:
     virtual bool hasCheckerBugs() const override;
 };
 
-} // end namespace oclint
+} // end namespace CAPA
 
 #endif

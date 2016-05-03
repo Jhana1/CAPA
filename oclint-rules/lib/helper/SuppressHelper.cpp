@@ -1,4 +1,4 @@
-#include "oclint/helper/SuppressHelper.h"
+#include "CAPA/helper/SuppressHelper.h"
 
 #include <regex>
 #include <set>
@@ -7,11 +7,11 @@
 
 #include <clang/AST/RecursiveASTVisitor.h>
 
-#include "oclint/RuleCarrier.h"
+#include "CAPA/RuleCarrier.h"
 
-#include "oclint/helper/AttributeHelper.h"
+#include "CAPA/helper/AttributeHelper.h"
 
-bool markedAsSuppress(const clang::Decl *decl, oclint::RuleBase *rule)
+bool markedAsSuppress(const clang::Decl *decl, CAPA::RuleBase *rule)
 {
     if(rule) {
         return declHasOCLintAttribute(decl, "suppress")
@@ -21,7 +21,7 @@ bool markedAsSuppress(const clang::Decl *decl, oclint::RuleBase *rule)
 }
 
 template <typename T>
-bool markedParentsAsSuppress(const T &node, clang::ASTContext &context, oclint::RuleBase *rule)
+bool markedParentsAsSuppress(const T &node, clang::ASTContext &context, CAPA::RuleBase *rule)
 {
     const auto &parents = context.getParents(node);
     if (parents.empty())
@@ -48,12 +48,12 @@ bool markedParentsAsSuppress(const T &node, clang::ASTContext &context, oclint::
     return false;
 }
 
-bool shouldSuppress(const clang::Decl *decl, clang::ASTContext &context, oclint::RuleBase *rule)
+bool shouldSuppress(const clang::Decl *decl, clang::ASTContext &context, CAPA::RuleBase *rule)
 {
     return markedAsSuppress(decl, rule) || markedParentsAsSuppress(*decl, context, rule);
 }
 
-bool shouldSuppress(const clang::Stmt *stmt, clang::ASTContext &context, oclint::RuleBase *rule)
+bool shouldSuppress(const clang::Stmt *stmt, clang::ASTContext &context, CAPA::RuleBase *rule)
 {
     return markedParentsAsSuppress(*stmt, context, rule);
 }
@@ -63,12 +63,12 @@ typedef std::set<std::pair<int, int>> RangeSet;
 class DeclAnnotationRangeCollector : public clang::RecursiveASTVisitor<DeclAnnotationRangeCollector>
 {
 private:
-    oclint::RuleBase *_rule;
+    CAPA::RuleBase *_rule;
     clang::SourceManager *_sourceManager;
     RangeSet _range;
 
 public:
-    RangeSet collect(clang::ASTContext &astContext, oclint::RuleBase *rule)
+    RangeSet collect(clang::ASTContext &astContext, CAPA::RuleBase *rule)
     {
         _rule = rule;
         _sourceManager = &astContext.getSourceManager();
@@ -107,7 +107,7 @@ public:
 
 std::string getMainFilePath(clang::ASTContext &context)
 {
-    oclint::RuleCarrier ruleCarrier(&context, nullptr);
+    CAPA::RuleCarrier ruleCarrier(&context, nullptr);
     return ruleCarrier.getMainFilePath();
 }
 
@@ -130,12 +130,12 @@ bool lineBasedShouldSuppress(int beginLine, clang::ASTContext &context)
 // so we will ship this once Ubuntu 16.04 releases
 #if defined(__APPLE__) || defined(__MACH__)
             std::string commentString = comment->getRawText(context.getSourceManager()).str();
-            std::regex oclintRegex =
-                std::regex("//! *OCLINT", std::regex::basic | std::regex::icase);
-            if (std::regex_search(commentString, oclintRegex))
+            std::regex CAPARegex =
+                std::regex("//! *CAPA", std::regex::basic | std::regex::icase);
+            if (std::regex_search(commentString, CAPARegex))
 #else
             if (std::string::npos !=
-                comment->getRawText(context.getSourceManager()).find("//!OCLINT"))
+                comment->getRawText(context.getSourceManager()).find("//!CAPA"))
 #endif
             {
                 clang::SourceLocation startLocation = comment->getLocStart();
@@ -157,7 +157,7 @@ bool lineBasedShouldSuppress(int beginLine, clang::ASTContext &context)
 typedef std::unordered_map<std::string, RangeSet> RangeMap;
 static RangeMap rangeMapping;
 
-bool rangeBasedShouldSuppress(int beginLine, clang::ASTContext &context, oclint::RuleBase *rule)
+bool rangeBasedShouldSuppress(int beginLine, clang::ASTContext &context, CAPA::RuleBase *rule)
 {
     std::string filePath = getMainFilePath(context);
     auto commentRangesIt = rangeMapping.find(filePath);
@@ -184,7 +184,7 @@ bool rangeBasedShouldSuppress(int beginLine, clang::ASTContext &context, oclint:
     return false;
 }
 
-bool shouldSuppress(int beginLine, clang::ASTContext &context, oclint::RuleBase *rule)
+bool shouldSuppress(int beginLine, clang::ASTContext &context, CAPA::RuleBase *rule)
 {
     return lineBasedShouldSuppress(beginLine, context) ||
         (rule && rangeBasedShouldSuppress(beginLine, context, rule));

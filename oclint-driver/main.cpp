@@ -7,22 +7,22 @@
 
 #include <clang/Tooling/CommonOptionsParser.h>
 
-#include "oclint/Analyzer.h"
-#include "oclint/CompilerInstance.h"
-#include "oclint/Driver.h"
-#include "oclint/GenericException.h"
-#include "oclint/Options.h"
-#include "oclint/RawResults.h"
-#include "oclint/Reporter.h"
-#include "oclint/ResultCollector.h"
-#include "oclint/RuleBase.h"
-#include "oclint/RuleSet.h"
-#include "oclint/RulesetFilter.h"
-#include "oclint/RulesetBasedAnalyzer.h"
-#include "oclint/UniqueResults.h"
-#include "oclint/Version.h"
-#include "oclint/ViolationSet.h"
-#include "oclint/Violation.h"
+#include "CAPA/Analyzer.h"
+#include "CAPA/CompilerInstance.h"
+#include "CAPA/Driver.h"
+#include "CAPA/GenericException.h"
+#include "CAPA/Options.h"
+#include "CAPA/RawResults.h"
+#include "CAPA/Reporter.h"
+#include "CAPA/ResultCollector.h"
+#include "CAPA/RuleBase.h"
+#include "CAPA/RuleSet.h"
+#include "CAPA/RulesetFilter.h"
+#include "CAPA/RulesetBasedAnalyzer.h"
+#include "CAPA/UniqueResults.h"
+#include "CAPA/Version.h"
+#include "CAPA/ViolationSet.h"
+#include "CAPA/Violation.h"
 
 #include "reporters.h"
 #include "rules.h"
@@ -34,37 +34,37 @@ using namespace clang::tooling;
 
 void consumeArgRulesPath()
 {
-    for (const auto& rulePath : oclint::option::rulesPath())
+    for (const auto& rulePath : CAPA::option::rulesPath())
     {
         dynamicLoadRules(rulePath);
     }
 }
 
-bool numberOfViolationsExceedThreshold(oclint::Results *results)
+bool numberOfViolationsExceedThreshold(CAPA::Results *results)
 {
-    return results->numberOfViolationsWithPriority(1) > oclint::option::maxP1() ||
-        results->numberOfViolationsWithPriority(2) > oclint::option::maxP2() ||
-        results->numberOfViolationsWithPriority(3) > oclint::option::maxP3();
+    return results->numberOfViolationsWithPriority(1) > CAPA::option::maxP1() ||
+        results->numberOfViolationsWithPriority(2) > CAPA::option::maxP2() ||
+        results->numberOfViolationsWithPriority(3) > CAPA::option::maxP3();
 }
 
 ostream* outStream()
 {
-    if (!oclint::option::hasOutputPath())
+    if (!CAPA::option::hasOutputPath())
     {
         return &cout;
     }
-    string output = oclint::option::outputPath();
+    string output = CAPA::option::outputPath();
     auto out = new ofstream(output.c_str());
     if (!out->is_open())
     {
-        throw oclint::GenericException("cannot open report output file " + output);
+        throw CAPA::GenericException("cannot open report output file " + output);
     }
     return out;
 }
 
 void disposeOutStream(ostream* out)
 {
-    if (out && oclint::option::hasOutputPath())
+    if (out && CAPA::option::hasOutputPath())
     {
         ofstream *fout = (ofstream *)out;
         fout->close();
@@ -74,7 +74,7 @@ void disposeOutStream(ostream* out)
 void listRules()
 {
     cerr << "Enabled rules:\n";
-    for (const std::string &ruleName : oclint::option::rulesetFilter().filteredRuleNames())
+    for (const std::string &ruleName : CAPA::option::rulesetFilter().filteredRuleNames())
     {
         cerr << "- " << ruleName << "\n";
     }
@@ -82,30 +82,30 @@ void listRules()
 
 void printErrorLine(const char *errorMessage)
 {
-    cerr << endl << "oclint: error: " << errorMessage << endl;
+    cerr << endl << "CAPA: error: " << errorMessage << endl;
 }
 
-void printViolationsExceedThresholdError(const oclint::Results *results)
+void printViolationsExceedThresholdError(const CAPA::Results *results)
 {
     printErrorLine("violations exceed threshold");
     cerr << "P1=" << results->numberOfViolationsWithPriority(1)
-        << "[" << oclint::option::maxP1() << "] ";
+        << "[" << CAPA::option::maxP1() << "] ";
     cerr << "P2=" << results->numberOfViolationsWithPriority(2)
-        << "[" << oclint::option::maxP2() << "] ";
+        << "[" << CAPA::option::maxP2() << "] ";
     cerr << "P3=" << results->numberOfViolationsWithPriority(3)
-        << "[" << oclint::option::maxP3() << "] " <<endl;
+        << "[" << CAPA::option::maxP3() << "] " <<endl;
 }
 
-std::unique_ptr<oclint::Results> getResults()
+std::unique_ptr<CAPA::Results> getResults()
 {
-    std::unique_ptr<oclint::Results> results;
-    if (oclint::option::allowDuplicatedViolations())
+    std::unique_ptr<CAPA::Results> results;
+    if (CAPA::option::allowDuplicatedViolations())
     {
-        results.reset(new oclint::RawResults(*oclint::ResultCollector::getInstance()));
+        results.reset(new CAPA::RawResults(*CAPA::ResultCollector::getInstance()));
     }
     else
     {
-        results.reset(new oclint::UniqueResults(*oclint::ResultCollector::getInstance()));
+        results.reset(new CAPA::UniqueResults(*CAPA::ResultCollector::getInstance()));
     }
     return results;
 }
@@ -131,7 +131,7 @@ int prepare()
         printErrorLine(e.what());
         return RULE_NOT_FOUND;
     }
-    if (oclint::RuleSet::numberOfRules() <= 0)
+    if (CAPA::RuleSet::numberOfRules() <= 0)
     {
         printErrorLine("no rule loaded");
         return RULE_NOT_FOUND;
@@ -149,10 +149,10 @@ int prepare()
     return SUCCESS;
 }
 
-static void oclintVersionPrinter()
+static void CAPAVersionPrinter()
 {
-    cout << "OCLint (http://oclint.org/):\n";
-    cout << "  OCLint version " << oclint::Version::identifier() << ".\n";
+    cout << "OCLint (http://CAPA.org/):\n";
+    cout << "  OCLint version " << CAPA::Version::identifier() << ".\n";
     cout << "  Built " << __DATE__ << " (" << __TIME__ << ").\n";
 }
 
@@ -160,9 +160,9 @@ extern llvm::cl::OptionCategory OCLintOptionCategory;
 
 int main(int argc, const char **argv)
 {
-    llvm::cl::AddExtraVersionPrinter(&oclintVersionPrinter);
+    llvm::cl::AddExtraVersionPrinter(&CAPAVersionPrinter);
     CommonOptionsParser optionsParser(argc, argv, OCLintOptionCategory);
-    oclint::option::process(argv[0]);
+    CAPA::option::process(argv[0]);
 
     int prepareStatus = prepare();
     if (prepareStatus)
@@ -170,13 +170,13 @@ int main(int argc, const char **argv)
         return prepareStatus;
     }
 
-    if (oclint::option::showEnabledRules())
+    if (CAPA::option::showEnabledRules())
     {
         listRules();
     }
 
-    oclint::RulesetBasedAnalyzer analyzer(oclint::option::rulesetFilter().filteredRules());
-    oclint::Driver driver;
+    CAPA::RulesetBasedAnalyzer analyzer(CAPA::option::rulesetFilter().filteredRules());
+    CAPA::Driver driver;
     try
     {
         driver.run(optionsParser.getCompilations(), optionsParser.getSourcePathList(), analyzer);
@@ -187,7 +187,7 @@ int main(int argc, const char **argv)
         return ERROR_WHILE_PROCESSING;
     }
 
-    std::unique_ptr<oclint::Results> results(std::move(getResults()));
+    std::unique_ptr<CAPA::Results> results(std::move(getResults()));
 
     try
     {

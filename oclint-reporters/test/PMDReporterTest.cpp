@@ -6,7 +6,7 @@
 #include "PMDReporter.cpp"
 
 using namespace ::testing;
-using namespace oclint;
+using namespace CAPA;
 
 class MockRuleBase : public RuleBase
 {
@@ -33,7 +33,7 @@ TEST_F(PMDReporterTest, WriteHeader)
     std::ostringstream oss;
     reporter.writeHeader(oss, "test");
     EXPECT_THAT(oss.str(), HasSubstr("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-    EXPECT_THAT(oss.str(), HasSubstr("<pmd version=\"oclint-test\">"));
+    EXPECT_THAT(oss.str(), HasSubstr("<pmd version=\"CAPA-test\">"));
 }
 
 TEST_F(PMDReporterTest, WriteFooter)

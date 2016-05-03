@@ -1,8 +1,8 @@
-#include "oclint/RuleCarrier.h"
+#include "CAPA/RuleCarrier.h"
 
 #include <clang/AST/AST.h>
 
-using namespace oclint;
+using namespace CAPA;
 
 RuleCarrier::RuleCarrier(clang::ASTContext *astContext, ViolationSet *violationSet)
 {
