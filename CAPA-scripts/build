@@ -11,7 +11,7 @@ from CAPAscripts import environment
 from CAPAscripts import path
 from CAPAscripts import process
 
-CAPA_MODULES = ['core', 'metrics', 'rules', 'reporters', 'driver']
+CAPA_MODULES = ['core', 'rules', 'reporters', 'driver']
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('module_name', nargs='?', choices=['all'] + CAPA_MODULES, default='all')
@@ -44,9 +44,6 @@ def build_module(module_name, llvm_root, is_release, multiple_thread):
     if module_name == "rules" or module_name == "reporters" or module_name == "driver":
         module_extras['CAPA_SOURCE_DIR'] = path.source.core_dir
         module_extras['CAPA_BUILD_DIR'] = path.build.core_build_dir
-    if module_name == "rules":
-        module_extras['CAPA_METRICS_SOURCE_DIR'] = path.source.metrics_dir
-        module_extras['CAPA_METRICS_BUILD_DIR'] = path.build.metrics_build_dir
 
     command = build_command(llvm_root, is_release, module_extras, source_path)
 
