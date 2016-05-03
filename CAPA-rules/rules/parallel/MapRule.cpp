@@ -88,7 +88,6 @@ public:
             MapInfo currentMap(Result);
             // Check if we've had this map before
             // If we have then it has had 2 callbacks, making it almost certainly not a map
-            
             if (mMapStatus.find(currentMap.mLoop) != mMapStatus.end())
             {
                 mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
