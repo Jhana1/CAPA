@@ -1,5 +1,4 @@
 #include "CAPA/RuleCarrier.h"
-
 #include <clang/AST/AST.h>
 
 using namespace CAPA;
@@ -33,12 +32,13 @@ clang::TranslationUnitDecl* RuleCarrier::getTranslationUnitDecl()
 }
 
 void RuleCarrier::addViolation(std::string filePath, int startLine, int startColumn,
-    int endLine, int endColumn, RuleBase *rule, const std::string& message)
+    int endLine, int endColumn, RuleBase *rule, const PatternInfo &patternInfo, 
+    const std::string& message)
 {
     if (filePath != "")
     {
         Violation violation(rule,
-            filePath, startLine, startColumn, endLine, endColumn, message);
+            filePath, startLine, startColumn, endLine, endColumn, patternInfo, message);
         _violationSet->addViolation(violation);
     }
 }

@@ -11,6 +11,7 @@ namespace clang
 }
 
 #include "CAPA/ViolationSet.h"
+#include "CAPA/PatternInfo.h"
 
 namespace CAPA
 {
@@ -29,7 +30,8 @@ public:
     clang::TranslationUnitDecl* getTranslationUnitDecl();
 
     void addViolation(std::string filePath, int startLine, int startColumn,
-        int endLine, int endColumn, RuleBase *rule, const std::string& message = "");
+        int endLine, int endColumn, RuleBase *rule, const PatternInfo &patternInfo,
+        const std::string& message = "");
 };
 
 } // end namespace CAPA

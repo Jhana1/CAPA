@@ -4,7 +4,7 @@ ADD_SUBDIRECTORY(util)
 SET (AbstractSource
     AbstractASTMatcherRule.cpp
     AbstractASTRuleBase.cpp
-    AbstractSourceCodeReaderRule.cpp
+    #    AbstractSourceCodeReaderRule.cpp
 )
 
 IF (MINGW)

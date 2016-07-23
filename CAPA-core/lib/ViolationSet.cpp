@@ -1,10 +1,12 @@
 #include "CAPA/ViolationSet.h"
+#include <iostream>
 
 using namespace CAPA;
 
 void ViolationSet::addViolation(const Violation& violation)
 {
     _violations.push_back(violation);
+    std::cout << _violations.size() << "THE SIZE DAMMIT";
 }
 
 int ViolationSet::numberOfViolations() const

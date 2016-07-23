@@ -1,6 +1,6 @@
 #include "CAPA/AbstractASTRuleBase.h"
 #include "CAPA/helper/SuppressHelper.h"
-
+#include "CAPA/PatternInfo.h"
 namespace CAPA
 {
 
@@ -8,7 +8,8 @@ namespace CAPA
 AbstractASTRuleBase::~AbstractASTRuleBase() {}
 
 void AbstractASTRuleBase::addViolation(clang::SourceLocation startLocation,
-    clang::SourceLocation endLocation, RuleBase *rule, const std::string& message)
+    clang::SourceLocation endLocation, RuleBase *rule, const PatternInfo &patternInfo,
+    const std::string& message)
 {
     clang::SourceManager *sourceManager = &_carrier->getSourceManager();
     /* if it is a macro location return the expansion location or the spelling location */
@@ -24,25 +25,26 @@ void AbstractASTRuleBase::addViolation(clang::SourceLocation startLocation,
             sourceManager->getPresumedLineNumber(endFileLoc),
             sourceManager->getPresumedColumnNumber(endFileLoc),
             rule,
+            patternInfo,
             message);
     }
 }
 
 void AbstractASTRuleBase::addViolation(const clang::Decl *decl,
-    RuleBase *rule, const std::string& message)
+    RuleBase *rule, const PatternInfo &patternInfo, const std::string& message)
 {
     if (decl && !shouldSuppress(decl, *_carrier->getASTContext(), rule))
     {
-        addViolation(decl->getLocStart(), decl->getLocEnd(), rule, message);
+        addViolation(decl->getLocStart(), decl->getLocEnd(), rule, patternInfo, message);
     }
 }
 
 void AbstractASTRuleBase::addViolation(const clang::Stmt *stmt,
-    RuleBase *rule, const std::string& message)
+    RuleBase *rule, const PatternInfo &patternInfo, const std::string& message)
 {
     if (stmt && !shouldSuppress(stmt, *_carrier->getASTContext(), rule))
     {
-        addViolation(stmt->getLocStart(), stmt->getLocEnd(), rule, message);
+        addViolation(stmt->getLocStart(), stmt->getLocEnd(), rule, patternInfo, message);
     }
 }
 

@@ -2,7 +2,7 @@
 #define CAPA_ABSTRACTASTRULEBASE_H
 
 #include <clang/AST/AST.h>
-
+#include "CAPA/PatternInfo.h"
 #include "CAPA/RuleBase.h"
 
 namespace CAPA
@@ -19,10 +19,13 @@ class AbstractASTRuleBase : public RuleBase
 {
 protected:
     void addViolation(clang::SourceLocation startLocation,
-        clang::SourceLocation endLocation, RuleBase *rule, const std::string& message = "");
+        clang::SourceLocation endLocation, RuleBase *rule, const PatternInfo &patternInfo,
+        const std::string& message = "");
 
-    void addViolation(const clang::Decl *decl, RuleBase *rule, const std::string& message = "");
-    void addViolation(const clang::Stmt *stmt, RuleBase *rule, const std::string& message = "");
+    void addViolation(const clang::Decl *decl, RuleBase *rule, const PatternInfo &patternInfo,
+            const std::string& message = "");
+    void addViolation(const clang::Stmt *stmt, RuleBase *rule, const PatternInfo &patternInfo,
+            const std::string& message = "");
 
 private:
     bool supportsC() const;

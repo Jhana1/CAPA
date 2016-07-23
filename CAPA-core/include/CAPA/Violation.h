@@ -24,8 +24,8 @@ public:
     Violation(RuleBase* violatedRule, std::string violationFilePath,
               int violationStartLine, int violationStartColumn,
               int violationEndLine, int violationEndColumn, 
-              PatternInfo &patternInfo
-              std::string violationMessage = "");
+              const PatternInfo &violationPatternInfo,
+              const std::string violationMessage = "");
 
     bool operator==(const CAPA::Violation &rhs) const;
 };

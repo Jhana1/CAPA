@@ -30,6 +30,8 @@ def build_command(llvm_root, is_release, module_extras, source_path):
     cmd_build = cmake.builder(source_path).append('CMAKE_EXPORT_COMPILE_COMMANDS', 'ON')
     if is_release:
         cmd_build.release_build()
+    else:
+        cmd_build.append('CMAKE_BUILD_TYPE', 'DEBUG')
     if environment.is_unix() and not args.use_system_compiler:
         cmd_build.use_local_clang_compiler(llvm_root)
     extras = {'LLVM_ROOT': llvm_root}

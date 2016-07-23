@@ -7,6 +7,7 @@ private:
 public:
     PatternInfo(std::string Type, std::string Source);
     PatternInfo(const PatternInfo &C);
-    std::string dumpSource();
+    PatternInfo();
+    std::string dumpSource() const;
 
 };

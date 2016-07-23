@@ -45,10 +45,10 @@ public:
         return areSameVariable(4, mInitVar, mIncVar, mInIndex, mOutIndex);
     }
 
-    void MapDump()
+    std::string MapDump()
     {
         std::cout << "This is a Map" << std::endl;
-        std::cout << node2str(mLoop, *mSM) << std::endl;
+        return node2str(mLoop, *mSM);
     }
 };
 
@@ -96,6 +96,8 @@ public:
             if (currentMap.IsMap())
             {
                 currentMap.MapDump();
+                PatternInfo p("Map", currentMap.MapDump());
+                addViolation(MapLoop, this, p, "A MAP");
             }
             
         }

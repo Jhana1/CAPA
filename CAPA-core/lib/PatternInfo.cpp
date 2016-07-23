@@ -7,10 +7,15 @@ PatternInfo::PatternInfo(std::string Type, std::string Source)
 
 PatternInfo::PatternInfo(const PatternInfo &C)
 {
-    _source = PatternInfo.dumpSource();
+    _source = C.dumpSource();
 }
 
-std::string PatternInfo::dumpSource()
+PatternInfo::PatternInfo()
+{
+    _source = "";
+}
+
+std::string PatternInfo::dumpSource() const
 {
     return _source;
 }

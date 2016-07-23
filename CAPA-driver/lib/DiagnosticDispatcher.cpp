@@ -29,7 +29,8 @@ void DiagnosticDispatcher::HandleDiagnostic(clang::DiagnosticsEngine::Level diag
     clang::SmallString<100> diagnosticMessage;
     diagnosticInfo.FormatDiagnostic(diagnosticMessage);
 
-    Violation violation(nullptr, filename.str(), line, column, 0, 0,
+    PatternInfo p;
+    Violation violation(nullptr, filename.str(), line, column, 0, 0, p,
                         diagnosticMessage.str().str());
 
     ResultCollector *results = ResultCollector::getInstance();

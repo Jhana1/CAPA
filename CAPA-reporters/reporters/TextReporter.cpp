@@ -3,6 +3,7 @@
 #include "CAPA/RuleBase.h"
 #include "CAPA/Version.h"
 #include "CAPA/ViolationSet.h"
+#include <iostream>
 
 using namespace CAPA;
 
@@ -67,14 +68,22 @@ public:
         const RuleBase *rule = violation.rule;
         out << ": " << rule->name();
         out << " [" << rule->category() << "|P" << rule->priority() << "]";
-        out << " " << violation.message;
+        out << " " << violation.message << std::endl;
+        out << violation.patternInfo.dumpSource();
     }
 
     void writeViolations(std::ostream &out, std::vector<Violation> violations)
     {
-        for (const auto& violation : violations)
+        //for (const auto& violation : violations)
+        std::cout << violations.size() << std::endl;
+        std::cout << &(violations[0].patternInfo) << std::endl;
+        std::cout << &(violations[1].patternInfo) << std::endl;
+        std::cout << &(violations[2].patternInfo) << std::endl;
+        for (auto violation = violations.begin();
+                  violation != violations.end();
+                  ++violation)
         {
-            writeViolation(out, violation);
+            writeViolation(out, *violation);
             out << std::endl;
         }
     }
