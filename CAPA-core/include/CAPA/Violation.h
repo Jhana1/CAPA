@@ -2,6 +2,7 @@
 #define CAPA_VIOLATION_H
 
 #include <string>
+#include "CAPA/PatternInfo.h"
 
 namespace CAPA
 {
@@ -18,10 +19,12 @@ public:
     int endLine;
     int endColumn;
     std::string message;
+    PatternInfo patternInfo;
 
     Violation(RuleBase* violatedRule, std::string violationFilePath,
               int violationStartLine, int violationStartColumn,
-              int violationEndLine, int violationEndColumn,
+              int violationEndLine, int violationEndColumn, 
+              PatternInfo &patternInfo
               std::string violationMessage = "");
 
     bool operator==(const CAPA::Violation &rhs) const;
