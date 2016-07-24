@@ -38,8 +38,8 @@ public:
 
     bool IsReduce()
     {
-        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
-                  << " Acc: " << mAcc << std::endl;
+        //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
+        //          << " Acc: " << mAcc << std::endl;
         if (mAccRHS)
         {
             return areSameVariable(2, mAccRHS, mAcc) && 
@@ -51,10 +51,9 @@ public:
         }
     }
 
-    void ReduceDump()
+    std::string sourceDump()
     {
-        std::cout << "This is a reduce" << std::endl;
-        std::cout << node2str(mLoop, *mSM) << std::endl;
+        return node2str(mLoop, *mSM);
     }
 };
 
@@ -84,13 +83,15 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        auto hi = result.Nodes.getNodeAs<ForStmt>("Reduce");
-        if (hi)
+        auto ReduceLoop = result.Nodes.getNodeAs<ForStmt>("Reduce");
+        if (ReduceLoop)
         {
             ReduceInfo r(result);
             if (r.IsReduce())
             {
-                r.ReduceDump();
+                //r.ReduceDump();
+                PatternInfo p("Reduce", r.sourceDump());
+                addViolation(ReduceLoop, this, p, "A Reduction");
             }
         }
     }
