@@ -2,10 +2,10 @@
 #include <string>
 class PatternInfo {
 private:
-    std::string _source;
-    
+    std::string source;
+    std::string pattern;
 public:
-    PatternInfo(std::string Type, std::string Source);
+    PatternInfo(std::string Pattern, std::string Source);
     PatternInfo(const PatternInfo &C);
     PatternInfo();
     std::string dumpSource() const;

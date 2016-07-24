@@ -90,7 +90,8 @@ public:
             // If we have then it has had 2 callbacks, making it almost certainly not a map
             if (mMapStatus.find(currentMap.mLoop) != mMapStatus.end())
             {
-                mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
+                removeViolation(MapLoop, this);
+                //mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
             }
 
             if (currentMap.IsMap())
@@ -99,7 +100,6 @@ public:
                 PatternInfo p("Map", currentMap.MapDump());
                 addViolation(MapLoop, this, p, "A MAP");
             }
-            
         }
     }
 

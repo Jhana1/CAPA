@@ -30,6 +30,34 @@ void AbstractASTRuleBase::addViolation(clang::SourceLocation startLocation,
     }
 }
 
+void AbstractASTRuleBase::removeViolation(clang::SourceLocation startLocation,
+        clang::SourceLocation endLocation, RuleBase *rule)
+{
+    clang::SourceManager *sourceManager = &_carrier->getSourceManager();
+    clang::SourceLocation startFileLoc = sourceManager->getFileLoc(startLocation);
+    clang::SourceLocation endFileLoc = sourceManager->getFileLoc(endLocation);
+    int beginLine = sourceManager->getPresumedLineNumber(startFileLoc);
+    llvm::StringRef filename = sourceManager->getFilename(startFileLoc);
+
+    _carrier->removeViolation(filename.str(),
+            beginLine,
+            sourceManager->getPresumedColumnNumber(startFileLoc),
+            sourceManager->getPresumedLineNumber(endFileLoc),
+            sourceManager->getPresumedColumnNumber(endFileLoc),
+            rule);
+}
+
+
+void AbstractASTRuleBase::removeViolation(const clang::Decl *decl, RuleBase *rule)
+{
+    removeViolation(decl->getLocStart(), decl->getLocEnd(), rule);
+}
+
+void AbstractASTRuleBase::removeViolation(const clang::Stmt *stmt, RuleBase *rule)
+{
+    removeViolation(stmt->getLocStart(), stmt->getLocEnd(), rule);
+}
+
 void AbstractASTRuleBase::addViolation(const clang::Decl *decl,
     RuleBase *rule, const PatternInfo &patternInfo, const std::string& message)
 {

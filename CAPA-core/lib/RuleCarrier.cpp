@@ -1,5 +1,6 @@
 #include "CAPA/RuleCarrier.h"
 #include <clang/AST/AST.h>
+#include "CAPA/PatternInfo.h"
 
 using namespace CAPA;
 
@@ -40,5 +41,17 @@ void RuleCarrier::addViolation(std::string filePath, int startLine, int startCol
         Violation violation(rule,
             filePath, startLine, startColumn, endLine, endColumn, patternInfo, message);
         _violationSet->addViolation(violation);
+    }
+}
+
+void RuleCarrier::removeViolation(std::string filePath, int startLine, int startColumn,
+    int endLine, int endColumn, RuleBase *rule)
+{
+    PatternInfo p;
+    if (filePath != "")
+    {
+        Violation violation(rule,
+            filePath, startLine, startColumn, endLine, endColumn, p);
+        _violationSet->removeViolation(violation);
     }
 }

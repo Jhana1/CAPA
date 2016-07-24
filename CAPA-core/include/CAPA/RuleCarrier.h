@@ -32,6 +32,9 @@ public:
     void addViolation(std::string filePath, int startLine, int startColumn,
         int endLine, int endColumn, RuleBase *rule, const PatternInfo &patternInfo,
         const std::string& message = "");
+
+    void removeViolation(std::string filePath, int startLine, int startColumn,
+        int endLine, int endColumn, RuleBase *rule);
 };
 
 } // end namespace CAPA

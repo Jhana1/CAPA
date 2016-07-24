@@ -28,6 +28,5 @@ bool Violation::operator==(const CAPA::Violation &rhs) const
             && (startLine == rhs.startLine)
             && (startColumn == rhs.startColumn)
             && (endLine == rhs.endLine)
-            && (endColumn == rhs.endColumn)
-            && (message == rhs.message);
+            && (endColumn == rhs.endColumn);
 }

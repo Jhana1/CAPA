@@ -2,20 +2,23 @@
 
 PatternInfo::PatternInfo(std::string Type, std::string Source)
 {
-    _source = Source;
+    pattern = Type;
+    source = Source;
 }
 
 PatternInfo::PatternInfo(const PatternInfo &C)
 {
-    _source = C.dumpSource();
+    pattern = C.pattern;
+    source = C.source;
 }
 
 PatternInfo::PatternInfo()
 {
-    _source = "";
+    pattern = "";
+    source = "";
 }
 
 std::string PatternInfo::dumpSource() const
 {
-    return _source;
+    return source;
 }

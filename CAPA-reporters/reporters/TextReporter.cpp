@@ -49,13 +49,13 @@ public:
 
     void writeFooter(std::ostream &out, std::string version)
     {
-        out << "[CAPA (http://CAPA.org) v" << version << "]";
+        out << "[CAPA v" << version << "]";
     }
 
     void writeSummary(std::ostream &out, Results &results)
     {
         out << "Summary: TotalFiles=" << results.numberOfFiles() << " ";
-        out << "FilesWithViolations=" << results.numberOfFilesWithViolations() << " ";
+        out << "FilesWithImprovements=" << results.numberOfFilesWithViolations() << " ";
         out << "P1=" << results.numberOfViolationsWithPriority(1) << " ";
         out << "P2=" << results.numberOfViolationsWithPriority(2) << " ";
         out << "P3=" << results.numberOfViolationsWithPriority(3) << " ";
@@ -63,11 +63,12 @@ public:
 
     void writeViolation(std::ostream &out, const Violation &violation)
     {
-        out << violation.path << ":" << violation.startLine << ":" << violation.startColumn;
+        out << violation.path << std::endl;
         const RuleBase *rule = violation.rule;
-        out << ": " << rule->name();
-        out << " [" << rule->category() << "|P" << rule->priority() << "]";
-        out << " " << violation.message << std::endl;
+        out << rule->name(); 
+        out << ": Priority: " << rule->priority();
+        out << " Line: " << violation.startLine << " Column: " << violation.startColumn;
+        out << " Info: " << violation.message << std::endl;
         out << violation.patternInfo.dumpSource();
     }
 

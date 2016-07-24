@@ -22,6 +22,12 @@ protected:
         clang::SourceLocation endLocation, RuleBase *rule, const PatternInfo &patternInfo,
         const std::string& message = "");
 
+    void removeViolation(clang::SourceLocation startLocation,
+            clang::SourceLocation endLocation, RuleBase *rule);
+
+    void removeViolation(const clang::Decl *decl, RuleBase *rule);
+    void removeViolation(const clang::Stmt *stmt, RuleBase *rule);
+
     void addViolation(const clang::Decl *decl, RuleBase *rule, const PatternInfo &patternInfo,
             const std::string& message = "");
     void addViolation(const clang::Stmt *stmt, RuleBase *rule, const PatternInfo &patternInfo,
