@@ -1,6 +1,6 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
-#include "CAPA/Util/MyASTUtil.h" 
+#include "CAPA/util/MyASTUtil.h" 
 #include <iostream>
 
 using namespace std;
@@ -22,7 +22,7 @@ public:
     const VarDecl *mAcc;
     const VarDecl *mAccRHS;
 
-    ScanInfo(const MAtchFinder::MatchResult &Result)
+    ScanInfo(const MatchFinder::MatchResult &Result)
     {
         mContext = Result.Context;
         mSM      = &Result.Context->getSourceManager();
@@ -58,6 +58,7 @@ public:
 };            
 
 class ScanRule : public AbstractASTMatcherRule
+{
 public:
     virtual const string name() const override
     {
@@ -80,9 +81,58 @@ public:
 
     virtual void setUpMatcher() override
     {
+        auto ScanMatcher = 
+        forStmt(                                                                                     
+            hasLoopInit(anyOf(                                                                       
+                declStmt(hasSingleDecl(varDecl(hasInitializer(                                       
+                    integerLiteral(anything()))).bind("InitVar"))),                                  
+                binaryOperator(                                                                      
+                    hasOperatorName("="),                                                            
+                    hasLHS(declRefExpr(to(varDecl(hasType(                                           
+                        isInteger())).bind("InitVar"))))))),                                         
+            hasIncrement(unaryOperator(                                                              
+                hasOperatorName("++"),                                                               
+                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),    
+            hasBody(anyOf(hasDescendant(                                                             
+                binaryOperator(
+                    hasOperatorName("="),
+                    hasLHS(arraySubscriptExpr(
+                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
+                        hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
+                            isInteger())).bind("OutIndex"))))))),
+                    hasRHS(anyOf(
+                        // Variable Assigned to itself + some previous of itself
+                        // Or assigned as a monoid concat of 2 elements from a different array
+                        binaryOperator(
+                            hasLHS(hasDescendant(arraySubscriptExpr(
+                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))))),
+                                hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
+                                    isInteger())).bind("InIndex1")))))),
+                            hasRHS(hasDescendant(arraySubscriptExpr(
+                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase2"))))))),
+                                hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
+                                    isInteger())).bind("InIndex2"))))))),
+                        // TODO: Variable assigned to itself + some previous via function application
+                    )))),
+                binaryOperator(anyOf(
+                        hasOperatorName("+="),
+                        hasOperatorName("-="),
+                        hasOperatorName("*="),
+                        hasOperatorName("/="),
+                        hasOperatorName("%="),
+                        hasOperatorName("<<="),
+                        hasOperatorName(">>="),
+                        hasOperatorName("&="),
+                        hasOperatorName("^="),
+                        hasOperatorName("|=")),
+                    hasLHS(arraySubscriptExpr(
+                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
+                        hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
+                            isInteger())).bind("OutIndex"))))))),
+                    hasRHS(
 
     }
-
 };
+
 
 static RuleSet rules(new ScanRule());
