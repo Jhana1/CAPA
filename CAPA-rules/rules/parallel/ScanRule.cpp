@@ -17,38 +17,35 @@ public:
     const BinaryOperator *mAssign;
     const VarDecl *mInitVar;
     const VarDecl *mIncVar;
-    const VarDecl *mInBase;
-    const VarDecl *mInIndex;
-    const VarDecl *mAcc;
-    const VarDecl *mAccRHS;
+    const VarDecl *mInBase1;
+    const VarDecl *mInIndex1;
+    const VarDecl *mInBase2;
+    const VarDecl *mInIndex2;
+    const VarDecl *mOutBase;
+    const VarDecl *mOutIndex;
 
     ScanInfo(const MatchFinder::MatchResult &Result)
     {
-        mContext = Result.Context;
-        mSM      = &Result.Context->getSourceManager();
-        mLoop    = Result.Nodes.getNodeAs<ForStmt>("Scan");
-        mAssign  = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
-        mInitVar = Result.Nodes.getNodeAs<VarDecl>("InitVar");
-        mIncVar  = Result.Nodes.getNodeAs<VarDecl>("IncVar");
-        mInBase  = Result.Nodes.getNodeAs<VarDecl>("InBase");                                        
-        mInIndex = Result.Nodes.getNodeAs<VarDecl>("InIndex");                                       
-        mAcc     = Result.Nodes.getNodeAs<VarDecl>("Acc");                                           
-        mAccRHS  = Result.Nodes.getNodeAs<VarDecl>("AccRHS");                                        
+        mContext  = Result.Context;
+        mSM       = &Result.Context->getSourceManager();
+        mLoop     = Result.Nodes.getNodeAs<ForStmt>("ScanLoop");
+        mAssign   = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
+        mInitVar  = Result.Nodes.getNodeAs<VarDecl>("InitVar");
+        mIncVar   = Result.Nodes.getNodeAs<VarDecl>("IncVar");
+        mInBase1  = Result.Nodes.getNodeAs<VarDecl>("InBase1");                                        
+        mInIndex1 = Result.Nodes.getNodeAs<VarDecl>("InIndex1");
+        mInBase2  = Result.Nodes.getNodeAs<VarDecl>("InBase2");
+        mInIndex2 = Result.Nodes.getNodeAs<VarDecl>("InIndex2");
+        mOutBase  = Result.Nodes.getNodeAs<VarDecl>("OutBase");
+        mOutIndex = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
     }                                                                                                
                                                                                                      
     bool IsScan()                                                                                  
     {                                                                                                
         //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex       
         //          << " Acc: " << mAcc << std::endl;                                                
-        if (mAccRHS)                                                                                 
-        {                                                                                            
-            return areSameVariable(2, mAccRHS, mAcc) &&                                              
-                   areSameVariable(3, mInitVar, mIncVar, mInIndex);                                  
-        }                                                                                            
-        else                                                                                         
-        {                                                                                            
-            return areSameVariable(3, mInitVar, mIncVar, mInIndex);                                  
-        }                                                                                            
+        return areSameVariable(3, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
+               areSameVariable(3, mInitVar, mIncVar, mInIndex2, mOutIndex);                                  
     }                                                                                                
                                                                                                      
     std::string sourceDump()                                                                         
@@ -77,6 +74,12 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
+        auto ScanLoop = result.Nodes.getNodeAs<ForStmt>("ScanLoop");
+        if (ScanLoop)
+        {
+            ScanInfo r(result);
+            std::cout << r.sourceDump() << std::endl;
+        }
     }
 
     virtual void setUpMatcher() override
@@ -93,28 +96,31 @@ public:
             hasIncrement(unaryOperator(                                                              
                 hasOperatorName("++"),                                                               
                 hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),    
-            hasBody(anyOf(hasDescendant(                                                             
+            hasBody(hasDescendant(                                                             
                 binaryOperator(
                     hasOperatorName("="),
                     hasLHS(arraySubscriptExpr(
                         hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
                         hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
                             isInteger())).bind("OutIndex"))))))),
-                    hasRHS(anyOf(
+                    hasRHS(forEachDescendant(// TODO: Make this anyOf and include other TODO's
                         // Variable Assigned to itself + some previous of itself
                         // Or assigned as a monoid concat of 2 elements from a different array
-                        binaryOperator(
-                            hasLHS(hasDescendant(arraySubscriptExpr(
-                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))))),
+                        arraySubscriptExpr(
+                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase"))))),
+                                hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("InIndex")))))
+                            )))).bind("Assign")))).bind("ScanLoop");
+                            /*hasLHS(hasDescendant(arraySubscriptExpr(
+                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),
                                 hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                    isInteger())).bind("InIndex1")))))),
+                                    isInteger())).bind("InIndex1")))))))),
                             hasRHS(hasDescendant(arraySubscriptExpr(
-                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase2"))))))),
+                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase2"))))),
                                 hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                    isInteger())).bind("InIndex2"))))))),
+                                    isInteger())).bind("InIndex2"))))))))*/
                         // TODO: Variable assigned to itself + some previous via function application
-                    )))),
-                binaryOperator(anyOf(
+                /*    ))))),
+                hasDescendant(binaryOperator(anyOf(
                         hasOperatorName("+="),
                         hasOperatorName("-="),
                         hasOperatorName("*="),
@@ -129,8 +135,12 @@ public:
                         hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
                         hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
                             isInteger())).bind("OutIndex"))))))),
-                    hasRHS(
-
+                    hasRHS(hasDescendant(arraySubscriptExpr(
+                            hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),
+                            hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("InIndex1"))))))))))
+                ))).bind("ScanLoop");*/
+        
+        addMatcher(ScanMatcher);
     }
 };
 
