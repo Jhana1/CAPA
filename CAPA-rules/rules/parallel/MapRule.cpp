@@ -40,14 +40,14 @@ public:
     
     bool IsMap()
     {
-        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
-                  << " OutIndex: " << mOutIndex << std::endl;
+//        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
+//                  << " OutIndex: " << mOutIndex << std::endl;
         return areSameVariable(4, mInitVar, mIncVar, mInIndex, mOutIndex);
     }
 
     std::string MapDump()
     {
-        std::cout << "This is a Map" << std::endl;
+//        std::cout << "This is a Map" << std::endl;
         return node2str(mLoop, *mSM);
     }
 };
@@ -81,7 +81,7 @@ public:
         auto Context = Result.Context;
         auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("Map");
         
-        std::cout << MapLoop << std::endl;
+//        std::cout << MapLoop << std::endl;
         // Check if the pointer is null, if it is then we don't have a map.
         if (MapLoop)
         {
@@ -91,6 +91,7 @@ public:
             if (mMapStatus.find(currentMap.mLoop) != mMapStatus.end())
             {
                 removeViolation(MapLoop, this);
+                return;
                 //mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
             }
 
@@ -98,7 +99,7 @@ public:
             {
                 currentMap.MapDump();
                 PatternInfo p("Map", currentMap.MapDump());
-                addViolation(MapLoop, this, p, "A MAP");
+                addViolation(MapLoop, this, p, "A Map");
             }
         }
     }

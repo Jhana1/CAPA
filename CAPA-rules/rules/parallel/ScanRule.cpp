@@ -19,33 +19,31 @@ public:
     const VarDecl *mIncVar;
     const VarDecl *mInBase1;
     const VarDecl *mInIndex1;
-    const VarDecl *mInBase2;
-    const VarDecl *mInIndex2;
+    const VarDecl *mInIndexBO;
     const VarDecl *mOutBase;
     const VarDecl *mOutIndex;
 
     ScanInfo(const MatchFinder::MatchResult &Result)
     {
-        mContext  = Result.Context;
-        mSM       = &Result.Context->getSourceManager();
-        mLoop     = Result.Nodes.getNodeAs<ForStmt>("ScanLoop");
-        mAssign   = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
-        mInitVar  = Result.Nodes.getNodeAs<VarDecl>("InitVar");
-        mIncVar   = Result.Nodes.getNodeAs<VarDecl>("IncVar");
-        mInBase1  = Result.Nodes.getNodeAs<VarDecl>("InBase1");                                        
-        mInIndex1 = Result.Nodes.getNodeAs<VarDecl>("InIndex1");
-        mInBase2  = Result.Nodes.getNodeAs<VarDecl>("InBase2");
-        mInIndex2 = Result.Nodes.getNodeAs<VarDecl>("InIndex2");
-        mOutBase  = Result.Nodes.getNodeAs<VarDecl>("OutBase");
-        mOutIndex = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
+        mContext   = Result.Context;
+        mSM        = &Result.Context->getSourceManager();
+        mLoop      = Result.Nodes.getNodeAs<ForStmt>("ScanLoop");
+        mAssign    = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
+        mInitVar   = Result.Nodes.getNodeAs<VarDecl>("InitVar");
+        mIncVar    = Result.Nodes.getNodeAs<VarDecl>("IncVar");
+        mInBase1   = Result.Nodes.getNodeAs<VarDecl>("InBase");                                        
+        mInIndex1  = Result.Nodes.getNodeAs<VarDecl>("InIndex");
+        mInIndexBO = Result.Nodes.getNodeAs<VarDecl>("InIndexBO");
+        mOutBase   = Result.Nodes.getNodeAs<VarDecl>("OutBase");
+        mOutIndex  = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
     }                                                                                                
                                                                                                      
     bool IsScan()                                                                                  
     {                                                                                                
         //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex       
         //          << " Acc: " << mAcc << std::endl;                                                
-        return areSameVariable(3, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
-               areSameVariable(3, mInitVar, mIncVar, mInIndex2, mOutIndex);                                  
+        return //areSameVariable(4, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
+               areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex);                                  
     }                                                                                                
                                                                                                      
     std::string sourceDump()                                                                         
@@ -78,7 +76,11 @@ public:
         if (ScanLoop)
         {
             ScanInfo r(result);
-            std::cout << r.sourceDump() << std::endl;
+            if (r.IsScan())
+            {
+                PatternInfo p("Scan", r.sourceDump());
+                addViolation(ScanLoop, this, p, "A Scan");
+            }
         }
     }
 
@@ -96,8 +98,8 @@ public:
             hasIncrement(unaryOperator(                                                              
                 hasOperatorName("++"),                                                               
                 hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),    
-            hasBody(hasDescendant(                                                             
-                binaryOperator(
+            hasBody(anyOf(
+                hasDescendant(binaryOperator(
                     hasOperatorName("="),
                     hasLHS(arraySubscriptExpr(
                         hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
@@ -109,10 +111,31 @@ public:
                         arraySubscriptExpr(
                                 hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase"))))),
                                 hasIndex(anyOf(
-                                    hasDescendant(declRefExpr(to(varDecl().bind("InIndex")))),
-                                    hasDescendant(binaryOperator(forEachDescendant(declRefExpr(to(
-                                        varDecl().bind("InIndexBO"))))))))
-                            )))).bind("Assign")))).bind("ScanLoop");
+                                    binaryOperator(forEachDescendant(declRefExpr(to(
+                                        varDecl().bind("InIndexBO"))))),
+                                    hasDescendant(declRefExpr(to(varDecl().bind("InIndex"))))))
+                            )))).bind("Assign")),
+
+               hasDescendant(binaryOperator(anyOf(
+                        hasOperatorName("+="),
+                        hasOperatorName("-="),
+                        hasOperatorName("/="),
+                        hasOperatorName("*="),
+                        hasOperatorName("<<="),
+                        hasOperatorName(">>="),
+                        hasOperatorName("|="),
+                        hasOperatorName("&="),
+                        hasOperatorName("%="),
+                        hasOperatorName("^=")),
+                    hasLHS(arraySubscriptExpr(
+                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
+                        hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("OutIndex"))))))),
+                    hasRHS(forEachDescendant(
+                        arraySubscriptExpr(hasBase(hasDescendant(declRefExpr(to(
+                            varDecl().bind("InBase"))))),
+                        hasIndex(binaryOperator(forEachDescendant(declRefExpr(to(
+                            varDecl().bind("InIndexBO")))))))))).bind("Assign")) 
+                ))).bind("ScanLoop");
                             /*hasLHS(hasDescendant(arraySubscriptExpr(
                                 hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),
                                 hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(

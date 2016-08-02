@@ -9,6 +9,7 @@ using namespace CAPA;
 class testRule : public AbstractASTVisitorRule<testRule>
 {
 public:
+
     virtual const string name() const override
     {
         return "Test";
@@ -366,14 +367,14 @@ public:
     // Visit BinaryOperator
     bool VisitBinaryOperator(BinaryOperator *node)
     {
-            std::cout << "Assignment Operator ";
-            llvm::APSInt evaluatedResult;
-            if (node->getRHS()->isEvaluatable(*_carrier->getASTContext()))
-            {
-                //auto val = evaluatedResult.getExtValue();
-                std::cout << "Foldable";
-            }
-            std::cout << std::endl;
+    //        std::cout << "Assignment Operator ";
+    //        llvm::APSInt evaluatedResult;
+    //        if (node->getRHS()->isEvaluatable(*_carrier->getASTContext()))
+   //         {
+    //            //auto val = evaluatedResult.getExtValue();
+    //            std::cout << "Foldable";
+   //         }
+    //        std::cout << std::endl;
         return true;
     }
      
