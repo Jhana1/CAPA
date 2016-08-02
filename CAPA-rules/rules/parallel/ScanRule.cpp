@@ -108,7 +108,10 @@ public:
                         // Or assigned as a monoid concat of 2 elements from a different array
                         arraySubscriptExpr(
                                 hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase"))))),
-                                hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("InIndex")))))
+                                hasIndex(anyOf(
+                                    hasDescendant(declRefExpr(to(varDecl().bind("InIndex")))),
+                                    hasDescendant(binaryOperator(forEachDescendant(declRefExpr(to(
+                                        varDecl().bind("InIndexBO"))))))))
                             )))).bind("Assign")))).bind("ScanLoop");
                             /*hasLHS(hasDescendant(arraySubscriptExpr(
                                 hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),

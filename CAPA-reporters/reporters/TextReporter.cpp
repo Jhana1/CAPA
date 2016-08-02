@@ -3,7 +3,7 @@
 #include "CAPA/RuleBase.h"
 #include "CAPA/Version.h"
 #include "CAPA/ViolationSet.h"
-
+#include "CAPA/util/Colors.h"
 using namespace CAPA;
 
 class TextReporter : public Reporter
@@ -44,17 +44,17 @@ public:
 
     void writeHeader(std::ostream &out)
     {
-        out << "CAPA Report";
+        out << Color::FG_WHITE << "CAPA Report";
     }
 
     void writeFooter(std::ostream &out, std::string version)
     {
-        out << "[CAPA v" << version << "]";
+        out << Color::FG_WHITE << "[CAPA v" << version << "]";
     }
 
     void writeSummary(std::ostream &out, Results &results)
     {
-        out << "Summary: TotalFiles=" << results.numberOfFiles() << " ";
+        out << Color::FG_WHITE << "Summary: TotalFiles=" << results.numberOfFiles() << " ";
         out << "FilesWithImprovements=" << results.numberOfFilesWithViolations() << " ";
         out << "P1=" << results.numberOfViolationsWithPriority(1) << " ";
         out << "P2=" << results.numberOfViolationsWithPriority(2) << " ";
@@ -63,13 +63,15 @@ public:
 
     void writeViolation(std::ostream &out, const Violation &violation)
     {
-        out << violation.path << std::endl;
+        out << Color::FG_MAGENTA << violation.path      << Color::FG_DEFAULT << ":";
+        out << Color::FG_CYAN    << violation.startLine << Color::FG_DEFAULT << ":";
+        out << Color::FG_CYAN    << violation.startColumn << std::endl;
         const RuleBase *rule = violation.rule;
-        out << rule->name(); 
-        out << ": Priority: " << rule->priority();
-        out << " Line: " << violation.startLine << " Column: " << violation.startColumn;
-        out << " Info: " << violation.message << std::endl;
-        out << violation.patternInfo.dumpSource();
+        out << Color::FG_YELLOW << "Pattern: "    << Color::FG_WHITE    << rule->name();
+        out << Color::FG_YELLOW << " Priority: "  << Color::FG_WHITE    << rule->priority();
+        out << Color::FG_YELLOW << " Info: "      << Color::FG_CYAN     << violation.message;
+        out << Color::FG_DEFAULT << Color::BG_DEFAULT << std::endl;
+        out << violation.patternInfo.dumpSource() << std::endl;
     }
 
     void writeViolations(std::ostream &out, std::vector<Violation> violations)
