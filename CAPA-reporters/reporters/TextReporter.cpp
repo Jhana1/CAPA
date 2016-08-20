@@ -3,6 +3,7 @@
 #include "CAPA/RuleBase.h"
 #include "CAPA/Version.h"
 #include "CAPA/ViolationSet.h"
+#include "CAPA/json.hpp"
 #include "CAPA/util/Colors.h"
 using namespace CAPA;
 
