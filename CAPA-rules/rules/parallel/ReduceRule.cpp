@@ -13,7 +13,7 @@ class ReduceInfo
 public:
     ASTContext           *mContext;
     SourceManager        *mSM;
-    const ForStmt        *mLoop;
+    const Stmt           *mLoop;
     const BinaryOperator *mAssign;
     const VarDecl        *mInitVar;
     const VarDecl        *mIncVar;
@@ -26,7 +26,7 @@ public:
     {
         mContext = Result.Context;
         mSM      = &Result.Context->getSourceManager();
-        mLoop    = Result.Nodes.getNodeAs<ForStmt>("Reduce");
+        mLoop    = Result.Nodes.getNodeAs<Stmt>("Reduce");
         mAssign  = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
         mInitVar = Result.Nodes.getNodeAs<VarDecl>("InitVar");
         mIncVar  = Result.Nodes.getNodeAs<VarDecl>("IncVar");
@@ -83,7 +83,7 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        auto ReduceLoop = result.Nodes.getNodeAs<ForStmt>("Reduce");
+        auto ReduceLoop = result.Nodes.getNodeAs<Stmt>("Reduce");
         if (ReduceLoop)
         {
             ReduceInfo r(result);
@@ -98,19 +98,31 @@ public:
 
     virtual void setUpMatcher() override
     {
-        auto ReduceMatcher =
-        forStmt(
-            hasLoopInit(anyOf(
+        auto VarB = [&](std::string binding)
+        {
+            return declRefExpr(to(varDecl().bind(binding)));
+        };
+
+        auto dVarB = [&](std::string binding)
+        {
+            return hasDescendant(VarB(binding));
+        };
+
+        auto LoopInit =
+            anyOf(
                 declStmt(hasSingleDecl(varDecl(hasInitializer(
                     integerLiteral(anything()))).bind("InitVar"))),
                 binaryOperator(
                     hasOperatorName("="),
-                    hasLHS(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("InitVar"))))))),
-            hasIncrement(unaryOperator(
+                    hasLHS(VarB("InitVar"))));
+
+        auto LoopIncrement = 
+            unaryOperator(
                 hasOperatorName("++"),
-                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),
-            hasBody(anyOf(hasDescendant(
+                hasUnaryOperand(VarB("IncVar")));
+
+        auto LoopBody = 
+            anyOf(hasDescendant(
                 binaryOperator(anyOf(
                         hasOperatorName("+="),
                         hasOperatorName("-="),
@@ -124,24 +136,54 @@ public:
                         hasOperatorName("|=")),
                     hasLHS(declRefExpr(to(varDecl().bind("Acc")))),
                     hasRHS(hasDescendant(arraySubscriptExpr(
-                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase"))))),
-                        hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("InIndex")))))))),
-                        unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))
-                    ).bind("Assign")),
+                        hasBase(dVarB("InBase")),
+                        hasIndex(dVarB("InIndex"))))),
+                    unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))
+                ).bind("Assign")),
                 hasDescendant(binaryOperator(
                     hasOperatorName("="),
                     hasLHS(declRefExpr(to(varDecl().bind("Acc")))),
                     hasRHS(allOf(
-                        hasDescendant(declRefExpr(to(varDecl().bind("AccRHS")))),
+                        dVarB("AccRHS"),
                         hasDescendant(arraySubscriptExpr(
-                            hasIndex(hasDescendant(declRefExpr(to(
-                                varDecl(hasType(isInteger())).bind("InIndex"))))),
-                            hasBase(hasDescendant(declRefExpr(to(
-                                varDecl().bind("InBase"))))))))),
+                            hasIndex(dVarB("InIndex")),
+                            hasBase(dVarB("InBase")))))),
                     unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))
-            ).bind("Assign"))))).bind("Reduce");
+            ).bind("Assign")));
+
+        auto LoopCondition = 
+            anyOf(
+                hasDescendant(unaryOperator(
+                    anyOf(
+                        hasOperatorName("++"),
+                        hasOperatorName("--")
+                    ),
+                    hasUnaryOperand(VarB("IncVar")))),
+                hasDescendant(binaryOperator(
+                    anyOf(
+                        hasOperatorName("+="),
+                        hasOperatorName("-=")
+                    ),
+                    hasLHS(VarB("IncVar")),
+                    hasRHS(expr().bind("Stride"))
+                )));
+     
+        auto ForStmtReduceMatcher =
+            forStmt(
+                hasLoopInit(LoopInit),
+                hasIncrement(LoopIncrement),
+                hasBody(LoopBody)
+            ).bind("Reduce");
         
-        addMatcher(ReduceMatcher);
+        auto WhileStmtReduceMatcher = 
+            whileStmt(
+                hasCondition(LoopCondition),
+                hasBody(LoopBody)
+            ).bind("Reduce");
+                
+
+        addMatcher(ForStmtReduceMatcher);
+        addMatcher(WhileStmtReduceMatcher);
 
     }
 

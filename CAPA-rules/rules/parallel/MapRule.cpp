@@ -15,23 +15,25 @@ class MapInfo
 public:
     ASTContext            *mContext;
     SourceManager         *mSM;
-    const ForStmt         *mLoop;
+    const Stmt            *mLoop;
     const BinaryOperator  *mAssign;
     const VarDecl         *mInitVar;
     const VarDecl         *mIncVar;
+    const Expr            *mStride;
     const VarDecl         *mInBase;
     const VarDecl         *mInIndex;
     const VarDecl         *mOutBase;
     const VarDecl         *mOutIndex;
-    
+
     MapInfo(const MatchFinder::MatchResult &Result)
     {
         mContext     = Result.Context;
         mSM          = &Result.Context->getSourceManager();
-        mLoop        = Result.Nodes.getNodeAs<ForStmt>("Map");
+        mLoop        = Result.Nodes.getNodeAs<Stmt>("Map");
         mAssign      = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
         mInitVar     = Result.Nodes.getNodeAs<VarDecl>("InitVar");
         mIncVar      = Result.Nodes.getNodeAs<VarDecl>("IncVar");
+        mStride      = Result.Nodes.getNodeAs<Expr>("Stride");
         mInBase      = Result.Nodes.getNodeAs<VarDecl>("InBase");
         mInIndex     = Result.Nodes.getNodeAs<VarDecl>("InIndex");
         mOutBase     = Result.Nodes.getNodeAs<VarDecl>("OutBase");
@@ -42,7 +44,28 @@ public:
     {
 //        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
 //                  << " OutIndex: " << mOutIndex << std::endl;
-        return areSameVariable(4, mInitVar, mIncVar, mInIndex, mOutIndex);
+        return areSameVariable(3, mIncVar, mInIndex, mOutIndex);
+    }
+
+    int StrideSize()
+    {
+        std::cout << "Asking Stride Size " << mStride  << std::endl;
+        if (mStride)
+        {
+            llvm::APSInt result;
+            if (mStride->EvaluateAsInt(result, *mContext))
+            {
+                return result.getExtValue();
+            }
+            else 
+            {
+                return 0;    
+            }
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     std::string MapDump()
@@ -58,7 +81,7 @@ class MapRule : public AbstractASTMatcherRule
 {
 
 protected:
-    static std::map<const ForStmt*, MapInfo> mMapStatus;
+    static std::map<const Stmt*, MapInfo> mMapStatus;
 
 public:
     virtual const string name() const override
@@ -79,7 +102,7 @@ public:
     virtual void callback(const MatchFinder::MatchResult &Result) override
     {
         auto Context = Result.Context;
-        auto MapLoop = Result.Nodes.getStmtAs<ForStmt>("Map");
+        auto MapLoop = Result.Nodes.getStmtAs<Stmt>("Map");
         
 //        std::cout << MapLoop << std::endl;
         // Check if the pointer is null, if it is then we don't have a map.
@@ -92,14 +115,19 @@ public:
             {
                 removeViolation(MapLoop, this);
                 return;
-                //mMapStatus.erase(mMapStatus.find(currentMap.mLoop));
             }
 
             if (currentMap.IsMap())
             {
-                currentMap.MapDump();
                 PatternInfo p("Map", currentMap.MapDump());
-                addViolation(MapLoop, this, p, "A Map");
+                auto stride = currentMap.StrideSize();
+                if (stride == 0)
+                    addViolation(MapLoop, this, p, "Strided Map of Unknown Stride Length");
+                else if (stride == 1)
+                    addViolation(MapLoop, this, p, "Non-Strided Map");
+                else
+                    addViolation(MapLoop, this, p, "Strided Map of Stride Length: " + std::to_string(stride));
+
             }
         }
     }
@@ -108,20 +136,25 @@ public:
     {
         // Matches on For Loops with counter initialised in the init, with an array element
         // assignment within the body of the loop
-        
-        auto MapMatcher =
-        forStmt(
-            hasLoopInit(anyOf(
-                declStmt(hasSingleDecl(varDecl(hasInitializer(
-                    integerLiteral(anything()))).bind("InitVar"))),
+       
+        auto LoopInit = 
+            anyOf(
+                hasDescendant(varDecl(hasInitializer(integerLiteral(anything()))).bind("InitVar")),
+                binaryOperator(hasOperatorName("="),hasLHS(declRefExpr(to(varDecl(hasType(
+                    isInteger())).bind("InitVar")))))); 
+
+        auto LoopIncrement = 
+            anyOf(
+                unaryOperator(
+                    anyOf(hasOperatorName("++"), hasOperatorName("--")),
+                    hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar"))))),
                 binaryOperator(
-                    hasOperatorName("="),
-                    hasLHS(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("InitVar"))))))),
-            hasIncrement(unaryOperator(
-                hasOperatorName("++"),
-                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),
-            hasBody(hasDescendant(binaryOperator(
+                    anyOf(hasOperatorName("+="), hasOperatorName("-=")),
+                    hasLHS(declRefExpr(to(varDecl().bind("IncVar")))),
+                    hasRHS(expr().bind("Stride"))));
+
+        auto LoopBody = 
+            hasDescendant(binaryOperator(
                 hasOperatorName("="),
                 hasLHS(arraySubscriptExpr(
                     hasBase(implicitCastExpr(hasSourceExpression(declRefExpr(to(
@@ -133,13 +166,43 @@ public:
                             hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
                                 isInteger())).bind("InIndex")))))))),
                 unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())))))
-                .bind("Assign")))).bind("Map");
+                .bind("Assign"));
+
+        auto LoopCondition = 
+            anyOf(
+                hasDescendant(unaryOperator(
+                    anyOf(
+                        hasOperatorName("++"),
+                        hasOperatorName("--")
+                    ),
+                    hasUnaryOperand(declRefExpr(to(varDecl().bind("IncVar")))))),
+                hasDescendant(binaryOperator(
+                    anyOf(
+                        hasOperatorName("+="),
+                        hasOperatorName("-=")
+                    ),
+                    hasLHS(declRefExpr(to(varDecl().bind("IncVar")))),
+                    hasRHS(expr().bind("Stride"))
+                )));
 
 
-        addMatcher(MapMatcher);
+
+        auto ForMatcher = forStmt(
+                hasLoopInit(LoopInit),
+                hasIncrement(LoopIncrement),
+                hasBody(LoopBody)
+            ).bind("Map");
+            
+        auto WhileMatcher = whileStmt(
+                hasCondition(LoopCondition),
+                hasBody(LoopBody)
+            ).bind("Map");
+
+        addMatcher(ForMatcher);
+        addMatcher(WhileMatcher);
     }
 
 };
 
 static RuleSet rules(new MapRule());
-std::map<const ForStmt*, MapInfo> MapRule::mMapStatus;
+std::map<const Stmt*, MapInfo> MapRule::mMapStatus;

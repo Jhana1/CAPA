@@ -8,6 +8,10 @@ int patterns()
     int *a, *b, *c;
     int i, j, k;
     
+
+    const int jj = 100;
+    
+    
     for (int i = 0; i < j; ++i)
     // map init
     {
@@ -55,6 +59,14 @@ int patterns()
         int j = 3 + 3;
         b[j] = 23;
         a[i] = b[i] + 2;
+    }
+    for (i = 0; i < j; i += jj)
+    {
+        a[i] = b[i];
+    }
+    while (i++ < 10)
+    {
+        a[i] = b[i] + 1;
     }
     return 0;
 }
