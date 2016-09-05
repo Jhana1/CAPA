@@ -7,6 +7,8 @@ using namespace clang;
 using namespace clang::ast_matchers;
 using namespace CAPA;
 
+namespace CAPA {
+
 auto VarBind = [](std::string binding)
 {
     return declRefExpr(to(varDecl().bind(binding)));
@@ -37,7 +39,7 @@ auto LoopIncrement = [](std::string level)
             binaryOperator(anyOf(
                     hasOperatorName("+="),
                     hasOperatorName("-=")),
-                hasLHS(DVarBind("IncVar" + level)),
+                hasLHS(VarBind("IncVar" + level)),
                 hasRHS(expr().bind("Stride" + level))));
 };
 
@@ -117,3 +119,44 @@ auto AllBinaryOperatorBind = [](std::string binding, auto injectLeft, auto injec
             hasLHS(injectLeft),
             hasRHS(injectRight)).bind(binding);
 };
+
+auto ReduceBinaryOperatorBind = [](std::string operatorName, std::string binding, auto injectLeft, auto injectRight)
+{
+    return binaryOperator(anyOf(
+                hasOperatorName("+="),
+                hasOperatorName("-="),
+                hasOperatorName("/="),
+                hasOperatorName("*="),
+                hasOperatorName("<<="),
+                hasOperatorName(">>="),
+                hasOperatorName("|="),
+                hasOperatorName("&="),
+                hasOperatorName("%="),
+                hasOperatorName("^=")),
+            hasLHS(injectLeft),
+            hasRHS(injectRight),
+            unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))).bind(binding);
+};
+
+
+auto ReduceAllBinaryOperatorBind = [](std::string binding, auto injectLeft, auto injectRight)
+{
+    return binaryOperator(anyOf(
+                hasOperatorName("+="),
+                hasOperatorName("-="),
+                hasOperatorName("/="),
+                hasOperatorName("*="),
+                hasOperatorName("<<="),
+                hasOperatorName(">>="),
+                hasOperatorName("|="),
+                hasOperatorName("&="),
+                hasOperatorName("%="),
+                hasOperatorName("^=")),
+            hasLHS(injectLeft),
+            hasRHS(injectRight),
+            unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))).bind(binding); 
+};
+
+
+
+} // End Namespace CAPA

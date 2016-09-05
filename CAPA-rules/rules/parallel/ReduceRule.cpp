@@ -1,6 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
+#include "CAPA/helper/MathcerHelper.h"
 #include <iostream>
 
 using namespace std;
@@ -83,6 +84,7 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
+        std::cout << "Calledback" << std::endl;
         auto ReduceLoop = result.Nodes.getNodeAs<Stmt>("Reduce");
         if (ReduceLoop)
         {
@@ -98,29 +100,20 @@ public:
 
     virtual void setUpMatcher() override
     {
-        auto VarB = [&](std::string binding)
-        {
-            return declRefExpr(to(varDecl().bind(binding)));
-        };
+    
+        auto left = VarBind("Acc");
+        auto right1 = VectorBind("In");
+        auto right2 = hasDescendant(binaryOperator(allOf(hasDescendant(VectorBind("In")),
+                                                         DVarBind("AccRHS"))));
+        
 
-        auto dVarB = [&](std::string binding)
-        {
-            return hasDescendant(VarB(binding));
-        };
+        auto body = anyOf(hasDescendant(ReduceAllBinaryOperatorBind("Assign", left, right1)),
+                          hasDescendant(ReduceBinaryOperatorBind("=", "Assign", left, right2)));
 
-        auto LoopInit =
-            anyOf(
-                declStmt(hasSingleDecl(varDecl(hasInitializer(
-                    integerLiteral(anything()))).bind("InitVar"))),
-                binaryOperator(
-                    hasOperatorName("="),
-                    hasLHS(VarB("InitVar"))));
-
-        auto LoopIncrement = 
-            unaryOperator(
-                hasOperatorName("++"),
-                hasUnaryOperand(VarB("IncVar")));
-
+        auto ForStmtReduceMatcher = ForLoop("Reduce", "", body);
+        auto WhileStmtReduceMatcher = WhileLoop("Reduce", "", body);
+        
+        /*
         auto LoopBody = 
             anyOf(hasDescendant(
                 binaryOperator(anyOf(
@@ -167,19 +160,7 @@ public:
                     hasLHS(VarB("IncVar")),
                     hasRHS(expr().bind("Stride"))
                 )));
-     
-        auto ForStmtReduceMatcher =
-            forStmt(
-                hasLoopInit(LoopInit),
-                hasIncrement(LoopIncrement),
-                hasBody(LoopBody)
-            ).bind("Reduce");
-        
-        auto WhileStmtReduceMatcher = 
-            whileStmt(
-                hasCondition(LoopCondition),
-                hasBody(LoopBody)
-            ).bind("Reduce");
+        */
                 
 
         addMatcher(ForStmtReduceMatcher);

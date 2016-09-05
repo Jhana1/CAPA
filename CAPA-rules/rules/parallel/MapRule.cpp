@@ -1,6 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
+#include "CAPA/helper/MathcerHelper.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -137,66 +138,15 @@ public:
         // Matches on For Loops with counter initialised in the init, with an array element
         // assignment within the body of the loop
        
-        auto LoopInit = 
-            anyOf(
-                hasDescendant(varDecl(hasInitializer(integerLiteral(anything()))).bind("InitVar")),
-                binaryOperator(hasOperatorName("="),hasLHS(declRefExpr(to(varDecl(hasType(
-                    isInteger())).bind("InitVar")))))); 
 
-        auto LoopIncrement = 
-            anyOf(
-                unaryOperator(
-                    anyOf(hasOperatorName("++"), hasOperatorName("--")),
-                    hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar"))))),
-                binaryOperator(
-                    anyOf(hasOperatorName("+="), hasOperatorName("-=")),
-                    hasLHS(declRefExpr(to(varDecl().bind("IncVar")))),
-                    hasRHS(expr().bind("Stride"))));
+        auto left = VectorBind("Out");
+        auto right = hasDescendant(VectorBind("In"));
 
-        auto LoopBody = 
-            hasDescendant(binaryOperator(
-                hasOperatorName("="),
-                hasLHS(arraySubscriptExpr(
-                    hasBase(implicitCastExpr(hasSourceExpression(declRefExpr(to(
-                        varDecl().bind("OutBase")))))),
-                    hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                        isInteger())).bind("OutIndex"))))))),
-                hasRHS(hasDescendant(arraySubscriptExpr(hasBase(implicitCastExpr(
-                        hasSourceExpression(declRefExpr(to(varDecl().bind("InBase")))))),
-                            hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                isInteger())).bind("InIndex")))))))),
-                unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())))))
-                .bind("Assign"));
+        auto body = hasDescendant(BinaryOperatorBind("=", "Assign", left, right)); 
 
-        auto LoopCondition = 
-            anyOf(
-                hasDescendant(unaryOperator(
-                    anyOf(
-                        hasOperatorName("++"),
-                        hasOperatorName("--")
-                    ),
-                    hasUnaryOperand(declRefExpr(to(varDecl().bind("IncVar")))))),
-                hasDescendant(binaryOperator(
-                    anyOf(
-                        hasOperatorName("+="),
-                        hasOperatorName("-=")
-                    ),
-                    hasLHS(declRefExpr(to(varDecl().bind("IncVar")))),
-                    hasRHS(expr().bind("Stride"))
-                )));
+        auto ForMatcher = ForLoop("Map", "", body); 
 
-
-
-        auto ForMatcher = forStmt(
-                hasLoopInit(LoopInit),
-                hasIncrement(LoopIncrement),
-                hasBody(LoopBody)
-            ).bind("Map");
-            
-        auto WhileMatcher = whileStmt(
-                hasCondition(LoopCondition),
-                hasBody(LoopBody)
-            ).bind("Map");
+        auto WhileMatcher = WhileLoop("Map", "", body);
 
         addMatcher(ForMatcher);
         addMatcher(WhileMatcher);
