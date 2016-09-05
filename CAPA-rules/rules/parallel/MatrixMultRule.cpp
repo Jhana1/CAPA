@@ -26,8 +26,7 @@ public:
     {
         mContext = Result.Context;
         mSM      = &Result.Context->getSourceManager();
-        mLoop    = Result.Nodes.getNodeAs<Stmt>("Reduce");
-        mAssign  = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
+        mLoop    = Result.Nodes.getNodeAs<Stmt>("MatrixMult");
         mInitVar = Result.Nodes.getNodeAs<VarDecl>("InitVar");
         mIncVar  = Result.Nodes.getNodeAs<VarDecl>("IncVar");
         mInBase  = Result.Nodes.getNodeAs<VarDecl>("InBase");
@@ -36,19 +35,9 @@ public:
         mAccRHS  = Result.Nodes.getNodeAs<VarDecl>("AccRHS");
     }
 
-    bool IsReduce()
+    bool IsMatrixMult()
     {
-        //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
-        //          << " Acc: " << mAcc << std::endl;
-        if (mAccRHS)
-        {
-            return areSameVariable(2, mAccRHS, mAcc) && 
-                   areSameVariable(3, mInitVar, mIncVar, mInIndex);
-        }
-        else
-        {
-            return areSameVariable(3, mInitVar, mIncVar, mInIndex);
-        }
+        return true;
     }
 
     std::string sourceDump()
@@ -83,17 +72,14 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        std::cout << "CALLED BACK" << std::endl;
-        return;
-        auto ReduceLoop = result.Nodes.getNodeAs<Stmt>("Reduce");
-        if (ReduceLoop)
+        auto OuterLoop = result.Nodes.getNodeAs<Stmt>("MatrixMult");
+        if (OuterLoop)
         {
             MatrixMultInfo r(result);
-            if (r.IsReduce())
+            if (r.IsMatrixMult())
             {
-                //r.ReduceDump();
-                PatternInfo p("Reduce", r.sourceDump());
-                addViolation(ReduceLoop, this, p, "A Reduction");
+                PatternInfo p("Matrix Multiplication", r.sourceDump());
+                addViolation(OuterLoop, this, p, "A Matrix Multiply");
             }
         }
     }
@@ -158,7 +144,7 @@ public:
         auto MatrixMultMatcher = 
             ForLoop("0", hasDescendant(
                 ForLoop("1",hasDescendant(
-                    ForLoop("2", LoopBody)))));
+                    ForLoop("2", LoopBody))))).bind("MatrixMult");
 
         addMatcher(MatrixMultMatcher);
 

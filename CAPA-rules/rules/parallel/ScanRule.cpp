@@ -1,6 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h" 
+#include "CAPA/helper/MathcerHelper.h"
 #include <iostream>
 
 using namespace std;
@@ -72,7 +73,7 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        auto ScanLoop = result.Nodes.getNodeAs<ForStmt>("ScanLoop");
+        auto ScanLoop = result.Nodes.getNodeAs<Stmt>("ScanLoop");
         if (ScanLoop)
         {
             ScanInfo r(result);
@@ -86,86 +87,14 @@ public:
 
     virtual void setUpMatcher() override
     {
-        auto ScanMatcher = 
-        forStmt(                                                                                     
-            hasLoopInit(anyOf(                                                                       
-                declStmt(hasSingleDecl(varDecl(hasInitializer(                                       
-                    integerLiteral(anything()))).bind("InitVar"))),                                  
-                binaryOperator(                                                                      
-                    hasOperatorName("="),                                                            
-                    hasLHS(declRefExpr(to(varDecl(hasType(                                           
-                        isInteger())).bind("InitVar"))))))),                                         
-            hasIncrement(unaryOperator(                                                              
-                hasOperatorName("++"),                                                               
-                hasUnaryOperand(declRefExpr(to(varDecl(hasType(isInteger())).bind("IncVar")))))),    
-            hasBody(anyOf(
-                hasDescendant(binaryOperator(
-                    hasOperatorName("="),
-                    hasLHS(arraySubscriptExpr(
-                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
-                        hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                            isInteger())).bind("OutIndex"))))))),
-                    hasRHS(forEachDescendant(// TODO: Make this anyOf and include other TODO's
-                        // Variable Assigned to itself + some previous of itself
-                        // Or assigned as a monoid concat of 2 elements from a different array
-                        arraySubscriptExpr(
-                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase"))))),
-                                hasIndex(anyOf(
-                                    binaryOperator(forEachDescendant(declRefExpr(to(
-                                        varDecl().bind("InIndexBO"))))),
-                                    hasDescendant(declRefExpr(to(varDecl().bind("InIndex"))))))
-                            )))).bind("Assign")),
 
-               hasDescendant(binaryOperator(anyOf(
-                        hasOperatorName("+="),
-                        hasOperatorName("-="),
-                        hasOperatorName("/="),
-                        hasOperatorName("*="),
-                        hasOperatorName("<<="),
-                        hasOperatorName(">>="),
-                        hasOperatorName("|="),
-                        hasOperatorName("&="),
-                        hasOperatorName("%="),
-                        hasOperatorName("^=")),
-                    hasLHS(arraySubscriptExpr(
-                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
-                        hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("OutIndex"))))))),
-                    hasRHS(forEachDescendant(
-                        arraySubscriptExpr(hasBase(hasDescendant(declRefExpr(to(
-                            varDecl().bind("InBase"))))),
-                        hasIndex(binaryOperator(forEachDescendant(declRefExpr(to(
-                            varDecl().bind("InIndexBO")))))))))).bind("Assign")) 
-                ))).bind("ScanLoop");
-                            /*hasLHS(hasDescendant(arraySubscriptExpr(
-                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),
-                                hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                    isInteger())).bind("InIndex1")))))))),
-                            hasRHS(hasDescendant(arraySubscriptExpr(
-                                hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase2"))))),
-                                hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                                    isInteger())).bind("InIndex2"))))))))*/
-                        // TODO: Variable assigned to itself + some previous via function application
-                /*    ))))),
-                hasDescendant(binaryOperator(anyOf(
-                        hasOperatorName("+="),
-                        hasOperatorName("-="),
-                        hasOperatorName("*="),
-                        hasOperatorName("/="),
-                        hasOperatorName("%="),
-                        hasOperatorName("<<="),
-                        hasOperatorName(">>="),
-                        hasOperatorName("&="),
-                        hasOperatorName("^="),
-                        hasOperatorName("|=")),
-                    hasLHS(arraySubscriptExpr(
-                        hasBase(hasDescendant(declRefExpr(to(varDecl().bind("OutBase"))))),
-                        hasIndex(hasDescendant(declRefExpr(to(varDecl(hasType(
-                            isInteger())).bind("OutIndex"))))))),
-                    hasRHS(hasDescendant(arraySubscriptExpr(
-                            hasBase(hasDescendant(declRefExpr(to(varDecl().bind("InBase1"))))),
-                            hasIndex(hasDescendant(declRefExpr(to(varDecl().bind("InIndex1"))))))))))
-                ))).bind("ScanLoop");*/
-        
+        auto left = VectorBind("Out");
+        auto right = forEachDescendant(VectorScanBind("In"));
+        auto body = anyOf(hasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
+                          hasDescendant(AllBinaryOperatorBind("Assign",  left, right))); 
+
+        auto ScanMatcher = ForLoop("ScanLoop", "", body);
+
         addMatcher(ScanMatcher);
     }
 };
