@@ -1,7 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
-#include "CAPA/helper/MathcerHelper.h"
+#include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
 
 using namespace std;
@@ -100,72 +100,19 @@ public:
 
     virtual void setUpMatcher() override
     {
-    
         auto left = VarBind("Acc");
-        auto right1 = VectorBind("In");
-        auto right2 = hasDescendant(binaryOperator(allOf(hasDescendant(VectorBind("In")),
-                                                         DVarBind("AccRHS"))));
+        auto right1 = hasDescendant(VectorBind("In"));
+        auto right2 = allOf(DVarBind("AccRHS"),
+                            hasDescendant(VectorBind("In")));
         
-
-        auto body = anyOf(hasDescendant(ReduceAllBinaryOperatorBind("Assign", left, right1)),
-                          hasDescendant(ReduceBinaryOperatorBind("=", "Assign", left, right2)));
+        auto body = anyOf(hasDescendant(BinaryOperatorBindReduceAll("Assign", left, right1)),
+                          hasDescendant(BinaryOperatorBindReduce("Assign", left, right2)));
 
         auto ForStmtReduceMatcher = ForLoop("Reduce", "", body);
         auto WhileStmtReduceMatcher = WhileLoop("Reduce", "", body);
         
-        /*
-        auto LoopBody = 
-            anyOf(hasDescendant(
-                binaryOperator(anyOf(
-                        hasOperatorName("+="),
-                        hasOperatorName("-="),
-                        hasOperatorName("*="),
-                        hasOperatorName("/="),
-                        hasOperatorName("%="),
-                        hasOperatorName("<<="),
-                        hasOperatorName(">>="),
-                        hasOperatorName("&="),
-                        hasOperatorName("^="),
-                        hasOperatorName("|=")),
-                    hasLHS(declRefExpr(to(varDecl().bind("Acc")))),
-                    hasRHS(hasDescendant(arraySubscriptExpr(
-                        hasBase(dVarB("InBase")),
-                        hasIndex(dVarB("InIndex"))))),
-                    unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))
-                ).bind("Assign")),
-                hasDescendant(binaryOperator(
-                    hasOperatorName("="),
-                    hasLHS(declRefExpr(to(varDecl().bind("Acc")))),
-                    hasRHS(allOf(
-                        dVarB("AccRHS"),
-                        hasDescendant(arraySubscriptExpr(
-                            hasIndex(dVarB("InIndex")),
-                            hasBase(dVarB("InBase")))))),
-                    unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))
-            ).bind("Assign")));
-
-        auto LoopCondition = 
-            anyOf(
-                hasDescendant(unaryOperator(
-                    anyOf(
-                        hasOperatorName("++"),
-                        hasOperatorName("--")
-                    ),
-                    hasUnaryOperand(VarB("IncVar")))),
-                hasDescendant(binaryOperator(
-                    anyOf(
-                        hasOperatorName("+="),
-                        hasOperatorName("-=")
-                    ),
-                    hasLHS(VarB("IncVar")),
-                    hasRHS(expr().bind("Stride"))
-                )));
-        */
-                
-
         addMatcher(ForStmtReduceMatcher);
         addMatcher(WhileStmtReduceMatcher);
-
     }
 
 };

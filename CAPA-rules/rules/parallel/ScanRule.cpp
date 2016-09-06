@@ -1,7 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h" 
-#include "CAPA/helper/MathcerHelper.h"
+#include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
 
 using namespace std;
@@ -89,9 +89,9 @@ public:
     {
 
         auto left = VectorBind("Out");
-        auto right = forEachDescendant(VectorScanBind("In"));
+        auto right = forEachDescendant(VectorBindScan("In"));
         auto body = anyOf(hasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
-                          hasDescendant(AllBinaryOperatorBind("Assign",  left, right))); 
+                          hasDescendant(BinaryOperatorBindAll("Assign",  left, right))); 
 
         auto ScanMatcher = ForLoop("ScanLoop", "", body);
 

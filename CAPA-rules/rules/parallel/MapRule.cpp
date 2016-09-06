@@ -1,7 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
-#include "CAPA/helper/MathcerHelper.h"
+#include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -50,7 +50,6 @@ public:
 
     int StrideSize()
     {
-        std::cout << "Asking Stride Size " << mStride  << std::endl;
         if (mStride)
         {
             llvm::APSInt result;
@@ -105,7 +104,6 @@ public:
         auto Context = Result.Context;
         auto MapLoop = Result.Nodes.getStmtAs<Stmt>("Map");
         
-//        std::cout << MapLoop << std::endl;
         // Check if the pointer is null, if it is then we don't have a map.
         if (MapLoop)
         {
@@ -137,17 +135,17 @@ public:
     {
         // Matches on For Loops with counter initialised in the init, with an array element
         // assignment within the body of the loop
-       
-
         auto left = VectorBind("Out");
         auto right = hasDescendant(VectorBind("In"));
+        auto unless = hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())));
 
-        auto body = hasDescendant(BinaryOperatorBind("=", "Assign", left, right)); 
+        auto body = hasDescendant(BinaryOperatorBindUnless("=", "Assign", left, right, unless)); 
 
         auto ForMatcher = ForLoop("Map", "", body); 
 
         auto WhileMatcher = WhileLoop("Map", "", body);
 
+        
         addMatcher(ForMatcher);
         addMatcher(WhileMatcher);
     }
