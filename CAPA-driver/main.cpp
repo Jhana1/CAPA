@@ -8,6 +8,7 @@
 #include <clang/Tooling/CommonOptionsParser.h>
 
 #include "CAPA/Analyzer.h"
+#include "CAPA/BenchmarkSet.h"
 #include "CAPA/CompilerInstance.h"
 #include "CAPA/Driver.h"
 #include "CAPA/GenericException.h"
@@ -145,13 +146,12 @@ int prepare()
         printErrorLine(e.what());
         return REPORTER_NOT_FOUND;
     }
-
     return SUCCESS;
 }
 
 static void CAPAVersionPrinter()
 {
-    cout << "CAPA (http://CAPA.org/):\n";
+    cout << "CAPA\n";
     cout << "  CAPA version " << CAPA::Version::identifier() << ".\n";
     cout << "  Built " << __DATE__ << " (" << __TIME__ << ").\n";
 }
@@ -177,6 +177,8 @@ int main(int argc, const char **argv)
 
     CAPA::RulesetBasedAnalyzer analyzer(CAPA::option::rulesetFilter().filteredRules());
     CAPA::Driver driver;
+    CAPA::BenchmarkSet benchmarks("/tmp/benchmark.json");
+
     try
     {
         driver.run(optionsParser.getCompilations(), optionsParser.getSourcePathList(), analyzer);

@@ -1,9 +1,8 @@
 #pragma once
-#include "nlohmann/json.hpp"
+#include <map>
+#include <tuple>
 
-using json = nlohmann::json;
-
-namepsace CAPA {
+namespace CAPA {
 struct Dimensions
 {
     Dimensions(std::size_t v, std::size_t m);
@@ -14,7 +13,7 @@ struct Dimensions
 
 struct BenchmarkSet
 {
-    BenchmarkSet(json bench);
-    std::map<std::string, std::map<std::string, std::vector<double>>> benchmarks;
+    BenchmarkSet(std::string benchmarkLocation);
+    std::map<std::string, std::map<std::string, std::tuple<double, double>>> benchmarks;;
 };
 }
