@@ -1,6 +1,13 @@
+#include <stdlib.h>
+
 int someFunc(...)
 {
    return 3;
+}
+
+int someFunc2(size_t i, int a[])
+{
+    return 3;
 }
 
 int patterns()
