@@ -23,10 +23,17 @@ Violation::Violation(RuleBase* violatedRule, std::string violationFilePath,
 
 bool Violation::operator==(const CAPA::Violation &rhs) const
 {
-    return (rule == rhs.rule)
-            && (path == rhs.path)
+    return (path == rhs.path)
             && (startLine == rhs.startLine)
             && (startColumn == rhs.startColumn)
             && (endLine == rhs.endLine)
             && (endColumn == rhs.endColumn);
+}
+bool Violation::operator>(const CAPA::Violation &rhs) const
+{
+    if (startLine == rhs.startLine)
+    {
+        return rule->priority() > rhs.rule->priority();
+    }
+    return startLine > rhs.startLine;
 }

@@ -16,8 +16,9 @@ private:
 public:
     void addViolation(const Violation& violation);
     void removeViolation(const Violation& violation);
-    int numberOfViolations() const;
-    const std::vector<Violation>& getViolations() const;
+    int numberOfViolations(); 
+    void filterViolations();
+    const std::vector<Violation>& getViolations();
 
     bool operator==(const ViolationSet& rhs) const;
 
