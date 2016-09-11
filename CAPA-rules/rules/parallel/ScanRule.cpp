@@ -63,7 +63,7 @@ public:
 
     virtual int priority() const override
     {
-        return 3;
+        return 2;
     }
 
     virtual const string category() const override
