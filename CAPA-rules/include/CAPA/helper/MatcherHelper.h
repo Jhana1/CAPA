@@ -106,6 +106,20 @@ auto ForLoop = [](std::string binding, std::string level, auto injectBody)
             hasBody(injectBody)).bind(binding);
 };
 
+auto ForLoopUnless = [](std::string binding, auto injectBody, auto injectUnless)
+{
+    return forStmt(
+            hasBody(injectBody),
+            unless(hasBody(injectUnless))).bind(binding);
+};
+
+auto WhileLoopUnless = [](std::string binding, auto injectBody, auto injectUnless)
+{
+    return whileStmt(
+            hasBody(injectBody),
+            unless(hasBody(injectUnless))).bind(binding);
+};
+
 // Operator Binding Combinators
 auto BinaryOperatorBind = [](std::string operatorName, std::string binding, auto injectLeft, auto injectRight)
 {
