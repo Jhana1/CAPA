@@ -14,7 +14,7 @@ class VectorisableRule : public AbstractASTMatcherRule
 public:
     virtual const string name() const override
     {
-        return "Vectorisable";
+        return "Vectorisable region";
     }
 
     virtual int priority() const override

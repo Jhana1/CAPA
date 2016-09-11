@@ -33,4 +33,4 @@ std::string node2str(const T *node, SourceManager &sm)
                 sm, LangOptions(), 0);
     else
         return text;
-    }
+}

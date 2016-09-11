@@ -1,5 +1,6 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
+#include "CAPA/util/MyASTUtil.h"
 #include <iostream>
 using namespace std;
 using namespace clang;
@@ -11,7 +12,7 @@ class VectorFunctionDeclRule : public AbstractASTMatcherRule
 public:
     virtual const string name() const override
     {
-        return "vector function decl";
+        return "Vectorisable Function Declaration";
     }
 
     virtual int priority() const override
@@ -26,7 +27,14 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        std::cout << "CAUGHT A FUNCTION" << std::endl;
+        auto func = result.Nodes.getNodeAs<FunctionDecl>("Function");
+        SourceManager *SM = &result.Context->getSourceManager();
+        if (func)
+        {
+            PatternInfo p("Vectorisable Function Declaration", node2str(func, *SM));
+            addViolation(func, this, p, "Function Declaration");
+        }
+
     }
 
     virtual void setUpMatcher() override
@@ -34,7 +42,7 @@ public:
         auto Matcher = functionDecl(allOf(
                            anyOf(hasAnyParameter(hasType(arrayType())),
                                  hasAnyParameter(hasType(pointerType()))),
-                           hasAnyParameter(hasType(isInteger()))));
+                           hasAnyParameter(hasType(asString("size_t"))))).bind("Function");
         addMatcher(Matcher);
     }
 

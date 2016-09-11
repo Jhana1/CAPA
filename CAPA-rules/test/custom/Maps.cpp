@@ -5,7 +5,7 @@ int someFunc(...)
    return 3;
 }
 
-int someFunc2(size_t i, int a[])
+int someFunc2(int i, int *a)
 {
     return 3;
 }
