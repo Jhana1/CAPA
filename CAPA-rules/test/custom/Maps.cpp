@@ -61,7 +61,7 @@ int patterns()
         a[i] = someFunc(a[i],1,2,3);
     }
     
-    for (i = 0; i < j; ++i)
+    for (i = 0; i < jj; ++i)
     {
         int j = 3 + 3;
         b[j] = 23;

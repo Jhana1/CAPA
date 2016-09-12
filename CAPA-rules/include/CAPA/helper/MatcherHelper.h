@@ -102,6 +102,7 @@ auto ForLoop = [](std::string binding, std::string level, auto injectBody)
 {
     return forStmt(
             hasLoopInit(LoopInit(level)),
+            hasCondition(binaryOperator(hasRHS(expr().bind(binding + "CondRHS")))),
             hasIncrement(LoopIncrement(level)),
             hasBody(injectBody)).bind(binding);
 };

@@ -52,8 +52,8 @@ public:
 
     void writeSummary(std::ostream &out, Results &results)
     {
-        out << Color::FG_WHITE << "Summary: TotalFiles = " << results.numberOfFiles() << " ";
-        out << "Files With Improvements = " << results.numberOfFilesWithViolations() << " ";
+        out << Color::FG_WHITE << "Summary: TotalFiles=" << results.numberOfFiles() << " ";
+        out << "Files With Improvements=" << results.numberOfFilesWithViolations() << " ";
     }
 
     void writeViolation(std::ostream &out, BenchmarkSet &benchmarks, const Violation &violation)
