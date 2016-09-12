@@ -7,41 +7,45 @@
 
 namespace CAPA {
 
-Dimensions::Dimensions(std::size_t v, std::size_t m)
-{
-    Vector = v;
-    Matrix = std::make_tuple(m, m, m);
-}
-
-Dimensions::Dimensions(std::size_t v, std::size_t a, std::size_t b, std::size_t c)
-{
-    Vector = v;
-    Matrix = std::make_tuple(a, b, c);
-}
-
-std::map<std::string, Dimensions> Fixtures = {
-    {"F0", Dimensions(1, 2)},
-    {"F1", Dimensions(4, 4)},
-    {"F2", Dimensions(16, 8)},
-    {"F3", Dimensions(64, 16)},
-    {"F4", Dimensions(256, 32)},
-    {"F5", Dimensions(1024, 64)},
-    {"F6", Dimensions(4096, 128)},
-    {"F7", Dimensions(16384, 256)},
-    {"F8", Dimensions(65536, 512)},
-    {"F9", Dimensions(262144, 1024)},
-    {"F10", Dimensions(1048576, 2048)},
-    {"F11", Dimensions(4194304, 4096)},
-    {"F12", Dimensions(16777216, 8192)}
+std::map<std::string, std::size_t> VectorFixtures = {
+    {"F0", 1},
+    {"F1", 4},
+    {"F2", 16},
+    {"F3", 64},
+    {"F4", 256},
+    {"F5", 1024},
+    {"F6", 4096},
+    {"F7", 16384},
+    {"F8", 65536},
+    {"F9", 262144},
+    {"F10", 1048576},
+    {"F11", 4194304},
+    {"F12", 16777216}
 };
- 
+
+std::map<std::string, std::size_t> MatrixFixtures = {
+    {"F0", 2},
+    {"F1", 4},
+    {"F2", 8},
+    {"F3", 16},
+    {"F4", 32},
+    {"F5", 64},
+    {"F6", 128},
+    {"F7", 256},
+    {"F8", 512},
+    {"F9", 1024},
+    {"F10", 2048},
+    {"F11", 4096},
+    {"F12", 8192}
+};
+
 BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
 {
     std::ifstream file(benchmarkLocation);
 
     if (!file.good())
     {
-
+        // TODO: Fill with generic data
         return;
     }
 
@@ -64,25 +68,42 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
         if (name.compare(0,4,"Host") == 0)
         {
             std::string test = name.substr(4);
-            auto &tup = benchmarks[test][fixture];
-            std::get<0>(tup) = median;
+            
+            if (test.find("Matrix") != std::string::npos)
+            {
+                auto &tup = benchmarks[test][MatrixFixtures[fixture]];
+                std::get<0>(tup) = median;
+            }
+            else
+            {
+                auto &tup = benchmarks[test][VectorFixtures[fixture]];
+                std::get<0>(tup) = median;
+            }
         }
         else
         {
             std::string test = name.substr(6);
             // Check if still using old Onload/Offload specifier
             // and remove if so
-            
             auto pos =  test.find("NoOnload");
             if (pos != std::string::npos) { test.erase(pos); }
             pos = test.find("Onload");
             if (pos != std::string::npos) { test.erase(pos); }
 
-            auto &tup = benchmarks[test][fixture];
-            std::get<1>(tup) = median;
+            // Check if Matrix or Vector Operation
+            if (test.find("Matrix") != std::string::npos) {
+                auto &tup = benchmarks[test][MatrixFixtures[fixture]];
+                std::get<1>(tup) = median;
+            }
+            else
+            {
+                auto &tup = benchmarks[test][MatrixFixtures[fixture]];
+                std::get<1>(tup) = median;
+            }
         }
     }
 
+    // Printing for debugging purposes
     for (auto &it : benchmarks)
     {
         std::cout << it.first << ": " << std::endl;
@@ -91,10 +112,36 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
             std::cout << ip.first << ": " << std::get<0>(ip.second) << " "
                                           << std::get<1>(ip.second) << std::endl;
         }
-    }
+    }   
 }
 
+double BenchmarkSet::Speedup(std::string operation)
+{
+    double host = 0;
+    double device = 0;
+    // No Size given, average out performance over all test cases
+    // not exactly fair, but who cares.
+    for (auto &itr : benchmarks[operation])
+    {
+        host += std::get<0>(itr.second);
+        device += std::get<1>(itr.second);
+    }
+    return host/device;
+}
 
+double BenchmarkSet::Speedup(std::string operation, std::size_t dimension)
+{
+    auto result = benchmarks[operation].lower_bound(dimension);
+    double host   = std::get<0>(result->second);
+    double device = std::get<1>(result->second);
+    return host/device;
+}
+
+std::tuple<double, double> BenchmarkSet::GetResult(std::string operation, std::size_t dimension)
+{
+    auto result = benchmarks[operation].lower_bound(dimension);
+    return result->second;
+}
 
 } // Namespace Capa
 
