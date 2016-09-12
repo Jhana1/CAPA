@@ -34,7 +34,7 @@ public:
 
         if (Loop)
         {
-            PatternInfo p("Vectorisable", node2str(Loop, Result.Context->getSourceManager()));
+            PatternInfo p("Vectorisable", 0,  node2str(Loop, Result.Context->getSourceManager()));
             addViolation(Loop, this, p, "Generally vectorisable region of code");
         }
     }

@@ -25,6 +25,7 @@ public:
     const VarDecl         *mInIndex;
     const VarDecl         *mOutBase;
     const VarDecl         *mOutIndex;
+    const Expr            *mCondRHS;
 
     MapInfo(const MatchFinder::MatchResult &Result)
     {
@@ -39,6 +40,7 @@ public:
         mInIndex     = Result.Nodes.getNodeAs<VarDecl>("InIndex");
         mOutBase     = Result.Nodes.getNodeAs<VarDecl>("OutBase");
         mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
+        mCondRHS     = Result.Nodes.getNodeAs<Expr>("CondRHS");
     }
     
     bool IsMap()
@@ -66,6 +68,19 @@ public:
         {
             return 1;
         }
+    }
+
+    int Elements()
+    {
+        if (mCondRHS)
+        {
+            llvm::APSInt result;
+            if (mCondRHS->EvaluateAsInt(result, *mContext))
+            {
+                return result.getExtValue();
+            }
+        }
+        return 0;
     }
 
     std::string MapDump()
@@ -118,7 +133,7 @@ public:
 
             if (currentMap.IsMap())
             {
-                PatternInfo p("Map", currentMap.MapDump());
+                PatternInfo p("Map", currentMap.Elements(), currentMap.MapDump());
                 auto stride = currentMap.StrideSize();
                 if (stride == 0)
                     addViolation(MapLoop, this, p, "Strided Map of Unknown Stride Length");

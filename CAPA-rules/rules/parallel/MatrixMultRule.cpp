@@ -78,7 +78,7 @@ public:
             MatrixMultInfo r(result);
             if (r.IsMatrixMult())
             {
-                PatternInfo p("Matrix Multiplication", r.sourceDump());
+                PatternInfo p("MatrixMult", 124, r.sourceDump());
                 addViolation(OuterLoop, this, p, "A Matrix Multiply");
             }
         }

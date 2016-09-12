@@ -8,6 +8,7 @@ ADD_LIBRARY(CAPACore
     Violation.cpp
     ViolationSet.cpp
     PatternInfo.cpp
+    BenchmarkSet.cpp
     )
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Win")
