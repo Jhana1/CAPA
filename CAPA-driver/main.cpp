@@ -194,7 +194,7 @@ int main(int argc, const char **argv)
     try
     {
         ostream *out = outStream();
-        reporter()->report(results.get(), *out);
+        reporter()->report(results.get(), benchmarks, *out);
         disposeOutStream(out);
     }
     catch (const exception& e)
@@ -202,6 +202,6 @@ int main(int argc, const char **argv)
         printErrorLine(e.what());
         return ERROR_WHILE_REPORTING;
     }
-
+    
     return SUCCESS;
 }

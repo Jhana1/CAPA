@@ -79,7 +79,7 @@ public:
             ScanInfo r(result);
             if (r.IsScan())
             {
-                PatternInfo p("Scan", r.sourceDump());
+                PatternInfo p("Scan", 1000000, r.sourceDump());
                 addViolation(ScanLoop, this, p, "A Scan");
             }
         }

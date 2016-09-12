@@ -92,7 +92,7 @@ public:
             if (r.IsReduce())
             {
                 //r.ReduceDump();
-                PatternInfo p("Reduce", r.sourceDump());
+                PatternInfo p("Reduce", 0, r.sourceDump());
                 addViolation(ReduceLoop, this, p, "A Reduction");
             }
         }

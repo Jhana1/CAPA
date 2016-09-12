@@ -31,7 +31,7 @@ public:
         SourceManager *SM = &result.Context->getSourceManager();
         if (func)
         {
-            PatternInfo p("Vectorisable Function Declaration", node2str(func, *SM));
+            PatternInfo p("Vectorisable Function Declaration", 0, node2str(func, *SM));
             addViolation(func, this, p, "Function Declaration");
         }
 

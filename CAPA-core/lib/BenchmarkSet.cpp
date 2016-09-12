@@ -7,38 +7,6 @@
 
 namespace CAPA {
 
-std::map<std::string, std::size_t> VectorFixtures = {
-    {"F0", 1},
-    {"F1", 4},
-    {"F2", 16},
-    {"F3", 64},
-    {"F4", 256},
-    {"F5", 1024},
-    {"F6", 4096},
-    {"F7", 16384},
-    {"F8", 65536},
-    {"F9", 262144},
-    {"F10", 1048576},
-    {"F11", 4194304},
-    {"F12", 16777216}
-};
-
-std::map<std::string, std::size_t> MatrixFixtures = {
-    {"F0", 2},
-    {"F1", 4},
-    {"F2", 8},
-    {"F3", 16},
-    {"F4", 32},
-    {"F5", 64},
-    {"F6", 128},
-    {"F7", 256},
-    {"F8", 512},
-    {"F9", 1024},
-    {"F10", 2048},
-    {"F11", 4096},
-    {"F12", 8192}
-};
-
 BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
 {
     std::ifstream file(benchmarkLocation);
@@ -104,6 +72,7 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
     }
 
     // Printing for debugging purposes
+    /*
     for (auto &it : benchmarks)
     {
         std::cout << it.first << ": " << std::endl;
@@ -112,7 +81,8 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
             std::cout << ip.first << ": " << std::get<0>(ip.second) << " "
                                           << std::get<1>(ip.second) << std::endl;
         }
-    }   
+    }*/
+    file.close();
 }
 
 double BenchmarkSet::Speedup(std::string operation)
@@ -131,10 +101,16 @@ double BenchmarkSet::Speedup(std::string operation)
 
 double BenchmarkSet::Speedup(std::string operation, std::size_t dimension)
 {
+    if (!dimension) { return Speedup(operation); }
     auto result = benchmarks[operation].lower_bound(dimension);
     double host   = std::get<0>(result->second);
     double device = std::get<1>(result->second);
     return host/device;
+}
+
+bool BenchmarkSet::Exists(std::string operation)
+{
+    return benchmarks.find(operation) != benchmarks.end();
 }
 
 std::tuple<double, double> BenchmarkSet::GetResult(std::string operation, std::size_t dimension)
@@ -142,6 +118,39 @@ std::tuple<double, double> BenchmarkSet::GetResult(std::string operation, std::s
     auto result = benchmarks[operation].lower_bound(dimension);
     return result->second;
 }
+
+std::map<std::string, std::size_t> BenchmarkSet::VectorFixtures = {
+    {"F0", 1},
+    {"F1", 4},
+    {"F2", 16},
+    {"F3", 64},
+    {"F4", 256},
+    {"F5", 1024},
+    {"F6", 4096},
+    {"F7", 16384},
+    {"F8", 65536},
+    {"F9", 262144},
+    {"F10", 1048576},
+    {"F11", 4194304},
+    {"F12", 16777216}
+};
+
+std::map<std::string, std::size_t> BenchmarkSet::MatrixFixtures = {
+    {"F0", 2},
+    {"F1", 4},
+    {"F2", 8},
+    {"F3", 16},
+    {"F4", 32},
+    {"F5", 64},
+    {"F6", 128},
+    {"F7", 256},
+    {"F8", 512},
+    {"F9", 1024},
+    {"F10", 2048},
+    {"F11", 4096},
+    {"F12", 8192}
+};
+
 
 } // Namespace Capa
 

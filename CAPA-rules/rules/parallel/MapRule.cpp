@@ -118,7 +118,7 @@ public:
 
             if (currentMap.IsMap())
             {
-                PatternInfo p("Map", currentMap.MapDump());
+                PatternInfo p("Map", 0, currentMap.MapDump());
                 auto stride = currentMap.StrideSize();
                 if (stride == 0)
                     addViolation(MapLoop, this, p, "Strided Map of Unknown Stride Length");
