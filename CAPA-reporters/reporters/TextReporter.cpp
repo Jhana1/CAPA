@@ -1,9 +1,11 @@
+#include "CAPA/BenchmarkSet.h"
+#include "CAPA/PatternInfo.h"
 #include "CAPA/Results.h"
 #include "CAPA/Reporter.h"
 #include "CAPA/RuleBase.h"
 #include "CAPA/Version.h"
 #include "CAPA/ViolationSet.h"
-#include "CAPA/json.hpp"
+#include "nlohmann/json.hpp"
 #include "CAPA/util/Colors.h"
 using namespace CAPA;
 
@@ -15,7 +17,7 @@ public:
         return "text";
     }
 
-    virtual void report(Results* results, std::ostream& out) override
+    virtual void report(Results* results, BenchmarkSet &benchmarks,  std::ostream& out) override
     {
         if (results->hasErrors())
         {
@@ -27,17 +29,12 @@ public:
         {
             writeCompilerDiagnostics(out, results->allWarnings(), "Compiler Warnings:");
         }
-        if (results->hasCheckerBugs())
-        {
-            writeCompilerDiagnostics(out,
-                results->allCheckerBugs(), "Clang Static Analyzer Results:");
-        }
         out << std::endl << std::endl;
         writeHeader(out);
         out << std::endl << std::endl;
         writeSummary(out, *results);
         out << std::endl << std::endl;
-        writeViolations(out, results->allViolations());
+        writeViolations(out, benchmarks, results->allViolations());
         out << std::endl;
         writeFooter(out, Version::identifier());
         out << std::endl;
@@ -55,15 +52,13 @@ public:
 
     void writeSummary(std::ostream &out, Results &results)
     {
-        out << Color::FG_WHITE << "Summary: TotalFiles=" << results.numberOfFiles() << " ";
-        out << "FilesWithImprovements=" << results.numberOfFilesWithViolations() << " ";
-        out << "P1=" << results.numberOfViolationsWithPriority(1) << " ";
-        out << "P2=" << results.numberOfViolationsWithPriority(2) << " ";
-        out << "P3=" << results.numberOfViolationsWithPriority(3) << " ";
+        out << Color::FG_WHITE << "Summary: TotalFiles = " << results.numberOfFiles() << " ";
+        out << "Files With Improvements = " << results.numberOfFilesWithViolations() << " ";
     }
 
-    void writeViolation(std::ostream &out, const Violation &violation)
+    void writeViolation(std::ostream &out, BenchmarkSet &benchmarks, const Violation &violation)
     {
+        out.precision(2);
         out << Color::FG_MAGENTA << violation.path      << Color::FG_DEFAULT << ":";
         out << Color::FG_CYAN    << violation.startLine << Color::FG_DEFAULT << ":";
         out << Color::FG_CYAN    << violation.startColumn << std::endl;
@@ -71,15 +66,31 @@ public:
         out << Color::FG_YELLOW << "Pattern: "    << Color::FG_WHITE    << rule->name();
         out << Color::FG_YELLOW << " Priority: "  << Color::FG_WHITE    << rule->priority();
         out << Color::FG_YELLOW << " Info: "      << Color::FG_CYAN     << violation.message;
+
+        if (benchmarks.Exists(violation.patternInfo.pattern))
+        {
+            double speedup = benchmarks.Speedup(violation.patternInfo.pattern, 
+                                                violation.patternInfo.dimension);
+            out << std::endl << Color::FG_YELLOW << "Potential Speedup: ";
+            if (speedup < 1)
+            {
+                out << Color::FG_RED << std::fixed << speedup;
+            }
+            else
+            {
+                out << Color::FG_GREEN << std::fixed << speedup;
+            }
+            out << "X";
+        }
         out << Color::FG_DEFAULT << Color::BG_DEFAULT << std::endl;
         out << violation.patternInfo.dumpSource() << std::endl;
     }
 
-    void writeViolations(std::ostream &out, std::vector<Violation> violations)
+    void writeViolations(std::ostream &out, BenchmarkSet &benchmarks, std::vector<Violation> violations)
     {
         for (const auto& violation : violations)
         {
-            writeViolation(out, violation);
+            writeViolation(out, benchmarks, violation);
             out << std::endl;
         }
     }
