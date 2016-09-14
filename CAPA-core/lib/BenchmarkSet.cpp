@@ -108,6 +108,31 @@ double BenchmarkSet::Speedup(std::string operation, std::size_t dimension)
     return host/device;
 }
 
+std::tuple<double, double> BenchmarkSet::LowerUpper(std::string operation, std::size_t dimension)
+{
+    if (!dimension) 
+    {
+        auto lower = benchmarks[operation].begin();
+        auto upper = benchmarks[operation].end()--;
+
+        double host_lower = std::get<0>(lower->second);
+        double device_lower = std::get<1>(lower->second);
+        double host_upper = std::get<0>(upper->second);
+        double device_upper = std::get<1>(upper->second);
+
+        return std::make_tuple(host_lower/device_lower, host_upper/device_upper);
+    }
+    
+    auto lower = benchmarks[operation].lower_bound(dimension);
+    if (lower == benchmarks[operation].end()) {lower--; lower--;}
+    if (lower != benchmarks[operation].begin()) {lower--;}
+    double host_lower = std::get<0>(lower->second);
+    double device_lower = std::get<1>(lower->second);
+    double host_upper = std::get<0>((++lower)->second);
+    double device_upper = std::get<1>((lower)->second);
+    return std::make_tuple(host_lower/device_lower, host_upper/device_upper);
+}
+
 bool BenchmarkSet::Exists(std::string operation)
 {
     return benchmarks.find(operation) != benchmarks.end();

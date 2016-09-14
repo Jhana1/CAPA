@@ -1,5 +1,3 @@
-#include <stdlib.h>
-
 int someFunc(...)
 {
    return 3;

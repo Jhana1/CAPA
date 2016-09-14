@@ -177,8 +177,7 @@ int main(int argc, const char **argv)
 
     CAPA::RulesetBasedAnalyzer analyzer(CAPA::option::rulesetFilter().filteredRules());
     CAPA::Driver driver;
-    CAPA::BenchmarkSet benchmarks("/tmp/benchmark.json");
-
+    CAPA::BenchmarkSet benchmarks(std::string(std::getenv("HOME")) + "/.benchmark.json");
     try
     {
         driver.run(optionsParser.getCompilations(), optionsParser.getSourcePathList(), analyzer);

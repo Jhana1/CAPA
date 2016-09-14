@@ -40,7 +40,7 @@ public:
         mInIndex     = Result.Nodes.getNodeAs<VarDecl>("InIndex");
         mOutBase     = Result.Nodes.getNodeAs<VarDecl>("OutBase");
         mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
-        mCondRHS     = Result.Nodes.getNodeAs<Expr>("CondRHS");
+        mCondRHS     = Result.Nodes.getNodeAs<Expr>("MapCondRHS");
     }
     
     bool IsMap()

@@ -6,8 +6,9 @@ int f(int j)
 int main()
 {
     int *a, *b, *c;
-    int i, j, k;
+    int i, k;
 
+    const int j = 100000000;
     for (i = 1; i < j; ++i)
     {
         a[i] += a[i-1];

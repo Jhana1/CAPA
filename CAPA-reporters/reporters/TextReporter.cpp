@@ -69,18 +69,26 @@ public:
 
         if (benchmarks.Exists(violation.patternInfo.pattern))
         {
-            double speedup = benchmarks.Speedup(violation.patternInfo.pattern, 
-                                                violation.patternInfo.dimension);
+            std::tuple<double, double> speedup = benchmarks.LowerUpper(violation.patternInfo.pattern, 
+                                                                       violation.patternInfo.dimension);
             out << std::endl << Color::FG_YELLOW << "Potential Speedup: ";
-            if (speedup < 1)
+            if (std::get<0>(speedup) < 1)
             {
-                out << Color::FG_RED << std::fixed << speedup;
+                out << Color::FG_RED << std::fixed << std::get<0>(speedup);
             }
             else
             {
-                out << Color::FG_GREEN << std::fixed << speedup;
+                out << Color::FG_GREEN << std::fixed << std::get<0>(speedup);
             }
-            out << "X";
+            out << " ~ ";
+            if (std::get<1>(speedup) < 1)
+            {
+                out << Color::FG_RED << std::fixed << std::get<1>(speedup);
+            }
+            else
+            {
+                out << Color::FG_GREEN << std::fixed << std::get<1>(speedup);
+            }
         }
         out << Color::FG_DEFAULT << Color::BG_DEFAULT << std::endl;
         out << violation.patternInfo.dumpSource() << std::endl;
