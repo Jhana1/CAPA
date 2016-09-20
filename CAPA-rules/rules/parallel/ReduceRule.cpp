@@ -3,6 +3,8 @@
 #include "CAPA/util/MyASTUtil.h"
 #include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
+#include <sstream>
+
 
 using namespace std;
 using namespace clang;
@@ -22,6 +24,8 @@ public:
     const VarDecl        *mInIndex;
     const VarDecl        *mAcc;
     const VarDecl        *mAccRHS;
+    const Expr           *mCondRHS;
+    const Expr           *mStride;
 
     ReduceInfo(const MatchFinder::MatchResult &Result)
     {
@@ -35,6 +39,8 @@ public:
         mInIndex = Result.Nodes.getNodeAs<VarDecl>("InIndex");
         mAcc     = Result.Nodes.getNodeAs<VarDecl>("Acc");
         mAccRHS  = Result.Nodes.getNodeAs<VarDecl>("AccRHS");
+        mCondRHS = Result.Nodes.getNodeAs<Expr>("ReduceCondRHS");
+        mStride  = Result.Nodes.getNodeAs<Expr>("Stride");
     }
 
     bool IsReduce()
@@ -46,10 +52,31 @@ public:
             return areSameVariable(2, mAccRHS, mAcc) && 
                    areSameVariable(3, mInitVar, mIncVar, mInIndex);
         }
-        else
+        return areSameVariable(3, mInitVar, mIncVar, mInIndex);
+    }
+
+
+    int StrideSize()
+    {
+        if (mStride)
         {
-            return areSameVariable(3, mInitVar, mIncVar, mInIndex);
+            llvm::APSInt result;
+            return (mStride->EvaluateAsInt(result, *mContext)) ? result.getExtValue() :  0;
         }
+        return 1;
+    }
+
+    int Elements()
+    {
+        if (mCondRHS)
+        {
+            llvm::APSInt result;
+            if (mCondRHS->EvaluateAsInt(result, *mContext))
+            {
+                return result.getExtValue();
+            }
+        }
+        return 0;
     }
 
     std::string sourceDump()
@@ -84,7 +111,6 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        std::cout << "Calledback" << std::endl;
         auto ReduceLoop = result.Nodes.getNodeAs<Stmt>("Reduce");
         if (ReduceLoop)
         {
@@ -92,8 +118,22 @@ public:
             if (r.IsReduce())
             {
                 //r.ReduceDump();
-                PatternInfo p("Reduce", 0, r.sourceDump());
-                addViolation(ReduceLoop, this, p, "A Reduction");
+                PatternInfo p("Reduce", r.Elements(), r.sourceDump());
+                std::stringstream extraInfo;
+                int stride = r.StrideSize();
+                int elements = r.Elements();
+
+                if (stride == 0)
+                    extraInfo << "Stride Size: " << "Unknown. ";
+                else
+                    extraInfo << "Stride Size: " << stride << ". ";
+
+                if (elements == 0)
+                    extraInfo << "Number of Elements: " << "Unknown. ";
+                else
+                    extraInfo << "Number of Elements: " << r.Elements() << ". ";
+
+                addViolation(ReduceLoop, this, p, extraInfo.str());
             }
         }
     }

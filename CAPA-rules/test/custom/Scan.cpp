@@ -24,7 +24,7 @@ int main()
         a[i] = a[i] + a[i-1];
     }
 
-    for (i = 0; i < j; ++i)
+    for (i = 0; i < 1; ++i)
     {
         c[i] = f(c[i-1]);
     }

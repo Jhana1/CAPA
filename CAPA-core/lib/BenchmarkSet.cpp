@@ -36,7 +36,6 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
         if (name.compare(0,4,"Host") == 0)
         {
             std::string test = name.substr(4);
-            
             if (test.find("Matrix") != std::string::npos)
             {
                 auto &tup = benchmarks[test][MatrixFixtures[fixture]];
@@ -48,7 +47,7 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
                 std::get<0>(tup) = median;
             }
         }
-        else
+        else if (name.compare(0,6, "Device") == 0)
         {
             std::string test = name.substr(6);
             // Check if still using old Onload/Offload specifier
@@ -65,26 +64,27 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
             }
             else
             {
-                auto &tup = benchmarks[test][MatrixFixtures[fixture]];
+                auto &tup = benchmarks[test][VectorFixtures[fixture]];
                 std::get<1>(tup) = median;
             }
         }
     }
 
     // Printing for debugging purposes
-    /*
+    
     for (auto &it : benchmarks)
     {
         std::cout << it.first << ": " << std::endl;
         for (auto &ip : it.second)
         {
-            std::cout << ip.first << ": " << std::get<0>(ip.second) << " "
+            std::cout << ip.first << ": " << std::get<0>(ip.second) << " ### "
                                           << std::get<1>(ip.second) << std::endl;
         }
-    }*/
+    }
     file.close();
 }
 
+BenchmarkSet::~BenchmarkSet() {}
 double BenchmarkSet::Speedup(std::string operation)
 {
     double host = 0;
@@ -93,6 +93,7 @@ double BenchmarkSet::Speedup(std::string operation)
     // not exactly fair, but who cares.
     for (auto &itr : benchmarks[operation])
     {
+        std::cout << std::get<0>(itr.second) << " " << std::get<1>(itr.second) << std::endl;
         host += std::get<0>(itr.second);
         device += std::get<1>(itr.second);
     }
@@ -113,7 +114,7 @@ std::tuple<double, double> BenchmarkSet::LowerUpper(std::string operation, std::
     if (!dimension) 
     {
         auto lower = benchmarks[operation].begin();
-        auto upper = benchmarks[operation].end()--;
+        auto upper = --benchmarks[operation].end();
 
         double host_lower = std::get<0>(lower->second);
         double device_lower = std::get<1>(lower->second);

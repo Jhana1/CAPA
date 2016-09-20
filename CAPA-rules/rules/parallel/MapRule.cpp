@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <sstream> 
 
 using namespace std;
 using namespace clang;
@@ -55,19 +56,9 @@ public:
         if (mStride)
         {
             llvm::APSInt result;
-            if (mStride->EvaluateAsInt(result, *mContext))
-            {
-                return result.getExtValue();
-            }
-            else 
-            {
-                return 0;    
-            }
+            return (mStride->EvaluateAsInt(result, *mContext)) ? result.getExtValue() : 0;    
         }
-        else
-        {
-            return 1;
-        }
+        return 1;
     }
 
     int Elements()
@@ -134,14 +125,19 @@ public:
             if (currentMap.IsMap())
             {
                 PatternInfo p("Map", currentMap.Elements(), currentMap.MapDump());
+                std::stringstream extraInfo; 
                 auto stride = currentMap.StrideSize();
                 if (stride == 0)
-                    addViolation(MapLoop, this, p, "Strided Map of Unknown Stride Length");
-                else if (stride == 1)
-                    addViolation(MapLoop, this, p, "Non-Strided Map");
+                    extraInfo << "Stride Size: " << "Unknown. ";
                 else
-                    addViolation(MapLoop, this, p, "Strided Map of Stride Length: " + std::to_string(stride));
+                    extraInfo << "Stride Size: " << stride << ". ";
+                
+                if (currentMap.Elements() == 0)
+                    extraInfo << "Number of Elements: " << "Unknown. ";
+                else
+                    extraInfo << "Number of Elements: " << currentMap.Elements() << ". ";
 
+                addViolation(MapLoop, this, p, extraInfo.str());
             }
         }
     }

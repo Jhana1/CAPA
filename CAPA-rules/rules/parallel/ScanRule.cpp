@@ -3,6 +3,7 @@
 #include "CAPA/util/MyASTUtil.h" 
 #include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace clang;
@@ -23,12 +24,14 @@ public:
     const VarDecl *mInIndexBO;
     const VarDecl *mOutBase;
     const VarDecl *mOutIndex;
+    const Expr    *mStride;
+    const Expr    *mCondRHS;
 
     ScanInfo(const MatchFinder::MatchResult &Result)
     {
         mContext   = Result.Context;
         mSM        = &Result.Context->getSourceManager();
-        mLoop      = Result.Nodes.getNodeAs<ForStmt>("ScanLoop");
+        mLoop      = Result.Nodes.getNodeAs<ForStmt>("Scan");
         mAssign    = Result.Nodes.getNodeAs<BinaryOperator>("Assign");
         mInitVar   = Result.Nodes.getNodeAs<VarDecl>("InitVar");
         mIncVar    = Result.Nodes.getNodeAs<VarDecl>("IncVar");
@@ -37,6 +40,8 @@ public:
         mInIndexBO = Result.Nodes.getNodeAs<VarDecl>("InIndexBO");
         mOutBase   = Result.Nodes.getNodeAs<VarDecl>("OutBase");
         mOutIndex  = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
+        mStride    = Result.Nodes.getNodeAs<Expr>("Stride");
+        mCondRHS   = Result.Nodes.getNodeAs<Expr>("ScanCondRHS");
     }                                                                                                
                                                                                                      
     bool IsScan()                                                                                  
@@ -46,7 +51,27 @@ public:
         return //areSameVariable(4, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
                areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex);                                  
     }                                                                                                
-                                                                                                     
+ 
+    int StrideSize()
+    {
+        if (mStride)
+        {
+            llvm::APSInt result;
+            return (mStride->EvaluateAsInt(result, *mContext)) ? result.getExtValue() : 0;
+        }
+        return 1;
+    }
+
+    int Elements()
+    {
+        if (mCondRHS)
+        {
+            llvm::APSInt result;
+            return (mCondRHS->EvaluateAsInt(result, *mContext)) ? result.getExtValue() : 0;
+        }
+        return 0;
+    }
+
     std::string sourceDump()                                                                         
     {                                                                                                
         return node2str(mLoop, *mSM);                                                                
@@ -73,14 +98,28 @@ public:
 
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
-        auto ScanLoop = result.Nodes.getNodeAs<Stmt>("ScanLoop");
+        auto ScanLoop = result.Nodes.getNodeAs<Stmt>("Scan");
         if (ScanLoop)
         {
             ScanInfo r(result);
             if (r.IsScan())
             {
-                PatternInfo p("Scan", 1000000, r.sourceDump());
-                addViolation(ScanLoop, this, p, "A Scan");
+                PatternInfo p("Scan", r.Elements(), r.sourceDump());
+                std::stringstream extraInfo;
+                int stride = r.StrideSize();
+                int elements = r.Elements();
+
+                if (stride == 0)
+                    extraInfo << "Stride Size: " << "Unknown. ";
+                else
+                    extraInfo << "Stride Size: " << stride << ". ";
+
+                if (elements == 0)
+                    extraInfo << "Number of Elements: " << "Unknown. ";
+                else
+                    extraInfo << "Number of Elements: " << elements << ". ";
+
+                addViolation(ScanLoop, this, p, extraInfo.str());
             }
         }
     }
@@ -93,7 +132,7 @@ public:
         auto body = anyOf(hasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
                           hasDescendant(BinaryOperatorBindAll("Assign",  left, right))); 
 
-        auto ScanMatcher = ForLoop("ScanLoop", "", body);
+        auto ScanMatcher = ForLoop("Scan", "", body);
 
         addMatcher(ScanMatcher);
     }
