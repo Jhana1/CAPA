@@ -19,6 +19,11 @@ void ViolationSet::filterViolations()
               );
     _violations.erase(std::unique(_violations.begin(), _violations.end()), _violations.end());
 
+    auto it = std::stable_partition(_violations.begin(), _violations.end(), [](Violation v){ 
+            return v.rule->name() == "Vectorisable Function Declaration";});
+    
+    std::stable_partition(it, _violations.end(), [](Violation v){
+            return v.rule->name() != "Vectorisable region";});
 }
 
 void ViolationSet::removeViolation(const Violation& violation)
