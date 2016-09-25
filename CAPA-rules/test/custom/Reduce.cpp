@@ -1,4 +1,4 @@
-int main()
+int main() 
 {
     int *a, *b, *c;
     int i, j, k;
