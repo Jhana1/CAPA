@@ -27,6 +27,7 @@ public:
     const VarDecl         *mOutBase;
     const VarDecl         *mOutIndex;
     const Expr            *mCondRHS;
+    const FunctionDecl    *mFunction;
 
     MapInfo(const MatchFinder::MatchResult &Result)
     {
@@ -42,13 +43,14 @@ public:
         mOutBase     = Result.Nodes.getNodeAs<VarDecl>("OutBase");
         mOutIndex    = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
         mCondRHS     = Result.Nodes.getNodeAs<Expr>("MapCondRHS");
+        mFunction    = Result.Nodes.getNodeAs<FunctionDecl>("Function");
     }
     
     bool IsMap()
     {
 //        std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex
 //                  << " OutIndex: " << mOutIndex << std::endl;
-        return areSameVariable(3, mIncVar, mInIndex, mOutIndex);
+        return areSameVariable(2, mIncVar, mOutIndex);
     }
 
     int StrideSize()
@@ -114,6 +116,10 @@ public:
         if (MapLoop)
         {
             MapInfo currentMap(Result);
+            // Check if marked return by comments
+            if (markedIgnore(currentMap.mFunction, *currentMap.mSM))
+                return;
+
             // Check if we've had this map before
             // If we have then it has had 2 callbacks, making it almost certainly not a map
             if (mMapStatus.find(currentMap.mLoop) != mMapStatus.end())
@@ -151,10 +157,12 @@ public:
         auto unless = hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())));
 
         auto body = hasDescendant(BinaryOperatorBindUnless("=", "Assign", left, right, unless)); 
+        auto body2 = hasDescendant(BinaryOperatorBindAll("Assign", left, 
+                         NumericLiteralBind("Literal")));
 
-        auto ForMatcher = ForLoop("Map", "", body); 
+        auto ForMatcher = FunctionWrap(ForLoop("Map", "", anyOf(body, body2))); 
 
-        auto WhileMatcher = WhileLoop("Map", "", body);
+        auto WhileMatcher = FunctionWrap(WhileLoop("Map", "", body));
 
         
         addMatcher(ForMatcher);

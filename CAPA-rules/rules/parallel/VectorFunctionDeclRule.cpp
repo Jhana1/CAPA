@@ -2,6 +2,7 @@
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
 #include <iostream>
+#include <sstream>
 using namespace std;
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -31,7 +32,20 @@ public:
         SourceManager *SM = &result.Context->getSourceManager();
         if (func)
         {
-            PatternInfo p("Vectorisable Function Declaration", 0, node2str(func, *SM));
+            if (markedIgnore(func, *SM))
+                return;
+
+            std::ostringstream source;
+            source << func->getReturnType().getAsString() << " ";
+            source << func->getNameInfo().getAsString() << "("; 
+            for (int i = 0; i < func->getNumParams(); ++i) {
+                source << func->parameters()[i]->getType().getAsString();
+                source << " " << func->parameters()[i]->getQualifiedNameAsString();
+                source << ", ";
+            }
+            source.seekp(-2, source.cur);
+            source << ");";
+            PatternInfo p("Vectorisable Function Declaration", 0, source.str());
             addViolation(func, this, p, "Function Declaration");
         }
 

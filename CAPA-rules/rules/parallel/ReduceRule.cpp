@@ -26,6 +26,7 @@ public:
     const VarDecl        *mAccRHS;
     const Expr           *mCondRHS;
     const Expr           *mStride;
+    const FunctionDecl   *mFunction;
 
     ReduceInfo(const MatchFinder::MatchResult &Result)
     {
@@ -41,6 +42,7 @@ public:
         mAccRHS  = Result.Nodes.getNodeAs<VarDecl>("AccRHS");
         mCondRHS = Result.Nodes.getNodeAs<Expr>("ReduceCondRHS");
         mStride  = Result.Nodes.getNodeAs<Expr>("Stride");
+        mFunction = Result.Nodes.getNodeAs<FunctionDecl>("Function");
     }
 
     bool IsReduce()
@@ -115,6 +117,9 @@ public:
         if (ReduceLoop)
         {
             ReduceInfo r(result);
+            if (markedIgnore(r.mFunction, *r.mSM))
+                return;
+
             if (r.IsReduce())
             {
                 //r.ReduceDump();
@@ -148,9 +153,9 @@ public:
         auto body = anyOf(hasDescendant(BinaryOperatorBindReduceAll("Assign", left, right1)),
                           hasDescendant(BinaryOperatorBindReduce("Assign", left, right2)));
 
-        auto ForStmtReduceMatcher = ForLoop("Reduce", "", body);
-        auto WhileStmtReduceMatcher = WhileLoop("Reduce", "", body);
-        
+        auto ForStmtReduceMatcher = FunctionWrap(ForLoop("Reduce", "", body));
+        auto WhileStmtReduceMatcher = FunctionWrap(WhileLoop("Reduce", "", body));
+       
         addMatcher(ForStmtReduceMatcher);
         addMatcher(WhileStmtReduceMatcher);
     }

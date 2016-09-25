@@ -26,6 +26,7 @@ public:
     const VarDecl *mOutIndex;
     const Expr    *mStride;
     const Expr    *mCondRHS;
+    const FunctionDecl *mFunction;
 
     ScanInfo(const MatchFinder::MatchResult &Result)
     {
@@ -42,6 +43,7 @@ public:
         mOutIndex  = Result.Nodes.getNodeAs<VarDecl>("OutIndex");
         mStride    = Result.Nodes.getNodeAs<Expr>("Stride");
         mCondRHS   = Result.Nodes.getNodeAs<Expr>("ScanCondRHS");
+        mFunction  = Result.Nodes.getNodeAs<FunctionDecl>("Function");
     }                                                                                                
                                                                                                      
     bool IsScan()                                                                                  
@@ -49,9 +51,9 @@ public:
         //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex       
         //          << " Acc: " << mAcc << std::endl;                                                
         return //areSameVariable(4, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
-               areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex);                                  
+               true; //areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex);                                  
     }                                                                                                
- 
+
     int StrideSize()
     {
         if (mStride)
@@ -102,6 +104,9 @@ public:
         if (ScanLoop)
         {
             ScanInfo r(result);
+            if (markedIgnore(r.mFunction, *r.mSM))
+                return;
+
             if (r.IsScan())
             {
                 PatternInfo p("Scan", r.Elements(), r.sourceDump());
@@ -132,7 +137,7 @@ public:
         auto body = anyOf(hasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
                           hasDescendant(BinaryOperatorBindAll("Assign",  left, right))); 
 
-        auto ScanMatcher = ForLoop("Scan", "", body);
+        auto ScanMatcher = FunctionWrap(ForLoopNoParentLoop("Scan", "", body));
 
         addMatcher(ScanMatcher);
     }

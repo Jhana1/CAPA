@@ -10,6 +10,14 @@ using namespace CAPA;
 namespace CAPA {
 
 // Variable Binding Combinators
+auto NumericLiteralBind = [](std::string binding)
+{
+    return anyOf(
+            hasDescendant(integerLiteral().bind(binding)),
+            hasDescendant(floatLiteral().bind(binding)),
+            hasDescendant(characterLiteral().bind(binding)));
+};
+
 auto VarBind = [](std::string binding)
 {
     return declRefExpr(to(varDecl().bind(binding)));
@@ -58,8 +66,7 @@ auto MatrixBind = [](std::string binding)
 auto LoopInit = [](std::string level)
 {
     return anyOf(
-        declStmt(hasSingleDecl(varDecl(hasInitializer(
-            integerLiteral(anything()))).bind("InitVar" + level))),
+        declStmt(hasSingleDecl(varDecl().bind("InitVar" + level))),
         binaryOperator(
             hasOperatorName("="),
             hasLHS(VarBind("InitVar" + level))));
@@ -107,9 +114,22 @@ auto ForLoop = [](std::string binding, std::string level, auto injectBody)
             hasBody(injectBody)).bind(binding);
 };
 
+auto ForLoopNoParentLoop = [](std::string binding, std::string level, auto injectBody)
+{
+    return forStmt(
+            hasLoopInit(LoopInit(level)),
+            hasCondition(binaryOperator(hasRHS(expr().bind(binding + "CondRHS")))),
+            hasIncrement(LoopIncrement(level)),
+            hasBody(injectBody),
+            unless(hasAncestor(forStmt()))).bind(binding);
+};
+
+
 auto ForLoopUnless = [](std::string binding, auto injectBody, auto injectUnless)
 {
     return forStmt(
+            hasLoopInit(LoopInit("")),
+            hasCondition(binaryOperator(hasRHS(expr().bind(binding + "CondRHS")))),
             hasBody(injectBody),
             unless(hasBody(injectUnless))).bind(binding);
 };
@@ -185,6 +205,9 @@ auto BinaryOperatorBindReduceAll = [](std::string binding, auto injectLeft, auto
             unless(hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator()))))).bind(binding); 
 };
 
-
+auto FunctionWrap = [](auto injectBody)
+{
+    return functionDecl(forEachDescendant(injectBody)).bind("Function");
+};
 
 } // End Namespace CAPA

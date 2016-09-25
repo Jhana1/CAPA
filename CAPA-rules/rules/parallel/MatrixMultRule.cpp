@@ -1,6 +1,7 @@
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
 #include "CAPA/util/MyASTUtil.h"
+#include "CAPA/helper/MatcherHelper.h"
 #include <iostream>
 
 using namespace std;
@@ -73,6 +74,10 @@ public:
     virtual void callback(const MatchFinder::MatchResult &result) override
     {
         auto OuterLoop = result.Nodes.getNodeAs<Stmt>("MatrixMult");
+        auto Func = result.Nodes.getNodeAs<FunctionDecl>("Function");
+        if (markedIgnore(Func, *result.SourceManager))
+            return;
+
         if (OuterLoop)
         {
             MatrixMultInfo r(result);
@@ -86,50 +91,6 @@ public:
 
     virtual void setUpMatcher() override
     {
-        auto VarB = [&](std::string binding)
-        {
-            return declRefExpr(to(varDecl().bind(binding)));
-        };
-
-        auto dVarB = [&](std::string binding)
-        {
-            return hasDescendant(VarB(binding));
-        };
-        
-        auto LoopInit = [&](std::string level)
-        {
-            return anyOf(
-                declStmt(hasSingleDecl(varDecl(hasInitializer(
-                    integerLiteral(anything()))).bind("InitVar" + level))),
-                binaryOperator(
-                    hasOperatorName("="),
-                    hasLHS(VarB("InitVar" + level))));
-        };
-
-        auto LoopIncrement = [&](std::string level) 
-        {
-            return unaryOperator(
-                hasOperatorName("++"),
-                hasUnaryOperand(VarB("IncVar" + level)));
-        };
-
-        auto ForLoop = [&](std::string bindingLevel, auto injectBody)
-        {
-            return forStmt(
-                    hasLoopInit(LoopInit(bindingLevel)),
-                    hasIncrement(LoopIncrement(bindingLevel)),
-                    hasBody(injectBody));
-        };
-
-        auto MatrixBind = [&](std::string binding)
-        {
-            return arraySubscriptExpr(
-                    hasBase(hasDescendant(arraySubscriptExpr(
-                        hasBase(dVarB(binding + "Base")),
-                        hasIndex(dVarB(binding + "Row"))))),
-                    hasIndex(dVarB(binding + "Column")));
-        };
-
         auto LoopBody = 
             hasDescendant(
                 binaryOperator(
@@ -142,9 +103,10 @@ public:
             )));
 
         auto MatrixMultMatcher = 
-            ForLoop("0", hasDescendant(
-                ForLoop("1",hasDescendant(
-                    ForLoop("2", LoopBody))))).bind("MatrixMult");
+            FunctionWrap(
+                ForLoop("MatrixMult", "0", hasDescendant(
+                    ForLoop("", "1",hasDescendant(
+                        ForLoop("", "2", LoopBody))))));
 
         addMatcher(MatrixMultMatcher);
 

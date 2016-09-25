@@ -31,9 +31,11 @@ public:
     {
         auto Context = Result.Context;
         auto Loop = Result.Nodes.getStmtAs<Stmt>("Loop");
-
+        auto Function = Result.Nodes.getNodeAs<FunctionDecl>("Function");
         if (Loop)
         {
+            if (markedIgnore(Function, Context->getSourceManager()))
+                return;
             PatternInfo p("Vectorisable", 0,  node2str(Loop, Result.Context->getSourceManager()));
             addViolation(Loop, this, p, "Generally vectorisable region of code");
         }
@@ -61,8 +63,8 @@ public:
 
         auto body = anything();
 
-        auto ForMatcher = ForLoopUnless("Loop", body, unless);
-        auto WhileMatcher = WhileLoopUnless("Loop", body, unless);
+        auto ForMatcher = FunctionWrap(ForLoopUnless("Loop", body, unless));
+        auto WhileMatcher = FunctionWrap(WhileLoopUnless("Loop", body, unless));
 
         addMatcher(ForMatcher);
         addMatcher(WhileMatcher);
