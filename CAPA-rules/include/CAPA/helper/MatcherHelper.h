@@ -43,6 +43,13 @@ auto VectorBindUnless = [](std::string binding, auto injectUnless)
             unless(injectUnless));
 };
 
+auto VectorBindIndexOperator = [](std::string binding)
+{
+    return arraySubscriptExpr(
+            hasBase(DVarBind(binding + "Base")),
+            hasIndex(hasDescendant(binaryOperator())));
+};
+
 auto VectorBindScan = [](std::string binding)
 {
     return arraySubscriptExpr(
@@ -208,6 +215,11 @@ auto BinaryOperatorBindReduceAll = [](std::string binding, auto injectLeft, auto
 auto FunctionWrap = [](auto injectBody)
 {
     return functionDecl(forEachDescendant(injectBody)).bind("Function");
+};
+
+auto HasDescendant = [](auto injectBody){
+    return anyOf(hasDescendant(injectBody),
+                 injectBody);
 };
 
 } // End Namespace CAPA

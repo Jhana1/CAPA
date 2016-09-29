@@ -71,7 +71,7 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
     }
 
     // Printing for debugging purposes
-    
+    /*
     for (auto &it : benchmarks)
     {
         std::cout << it.first << ": " << std::endl;
@@ -81,10 +81,28 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
                                           << std::get<1>(ip.second) << std::endl;
         }
     }
-    file.close();
+    */
 }
 
-BenchmarkSet::~BenchmarkSet() {}
+BenchmarkSet::BenchmarkSet(const BenchmarkSet &rhs) 
+{
+    benchmarks = rhs.benchmarks;
+}
+
+BenchmarkSet BenchmarkSet::operator= (const BenchmarkSet &rhs)
+{
+    if (this != &rhs)
+    {
+        benchmarks = rhs.benchmarks;
+    }
+    return *this;
+}
+BenchmarkSet::~BenchmarkSet() {
+    benchmarks.clear();
+    VectorFixtures.clear();
+    MatrixFixtures.clear();
+}
+
 double BenchmarkSet::Speedup(std::string operation)
 {
     double host = 0;

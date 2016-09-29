@@ -92,20 +92,20 @@ public:
     virtual void setUpMatcher() override
     {
         auto LoopBody = 
-            hasDescendant(
+            HasDescendant(
                 binaryOperator(
                     hasOperatorName("+="),
                     hasLHS(MatrixBind("Out")),
                     hasRHS(binaryOperator(
                         hasOperatorName("*"),
-                        hasLHS(hasDescendant(MatrixBind("Left"))),
-                        hasRHS(hasDescendant(MatrixBind("Right"))))
+                        hasLHS(HasDescendant(MatrixBind("Left"))),
+                        hasRHS(HasDescendant(MatrixBind("Right"))))
             )));
 
         auto MatrixMultMatcher = 
             FunctionWrap(
-                ForLoop("MatrixMult", "0", hasDescendant(
-                    ForLoop("", "1",hasDescendant(
+                ForLoop("MatrixMult", "0", HasDescendant(
+                    ForLoop("", "1",HasDescendant(
                         ForLoop("", "2", LoopBody))))));
 
         addMatcher(MatrixMultMatcher);

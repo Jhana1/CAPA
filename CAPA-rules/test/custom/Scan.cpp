@@ -3,7 +3,6 @@ int f(int j)
     return j * 2;
 }
 
-/// CAPA:IGNORE
 int main() // More Comments
 {
     int *a, *b, *c;

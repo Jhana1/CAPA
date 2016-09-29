@@ -7,6 +7,8 @@ namespace CAPA {
 struct BenchmarkSet
 {
     BenchmarkSet(std::string benchmarkLocation);
+    BenchmarkSet(const BenchmarkSet &rhs);
+    BenchmarkSet operator= (const BenchmarkSet &rhs);
     ~BenchmarkSet();
     bool Exists(std::string operation);
     double Speedup(std::string operation, std::size_t dimension);

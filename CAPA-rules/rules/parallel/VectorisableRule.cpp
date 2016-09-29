@@ -44,9 +44,9 @@ public:
     virtual void setUpMatcher() override
     {
         auto unless = anyOf(
-                        hasDescendant(ifStmt(anything())),
-                        hasDescendant(switchStmt(anything())),
-                        hasDescendant(gotoStmt(anything())),
+                        HasDescendant(ifStmt(anything())),
+                        HasDescendant(switchStmt(anything())),
+                        HasDescendant(gotoStmt(anything())),
                         hasAncestor(forStmt(anyOf(
                             hasAncestor(forStmt(anything())),
                             hasAncestor(whileStmt()),

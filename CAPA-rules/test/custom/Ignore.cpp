@@ -1,4 +1,5 @@
 typedef unsigned long long size_t;
+///CAPA:IGNORE
 int main()
 {
     const int r = 10;
@@ -15,9 +16,13 @@ int main()
     }    
 }
 
-void mmult(float **A, float **B, float **C, size_t dim) {
+/**CAPA:IGNORE*/
+void mmult(float **A, float **B, float **C, size_t dim)
+{
     for (int i = 0; i < dim; ++i)
         for (int j = 0; j < dim; ++i)
             for (int k = 0; k < dim; ++i)
                 C[i][j] += A[i][k] * B[k][j];
 }
+
+

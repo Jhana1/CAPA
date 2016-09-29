@@ -146,12 +146,12 @@ public:
     virtual void setUpMatcher() override
     {
         auto left = VarBind("Acc");
-        auto right1 = hasDescendant(VectorBind("In"));
+        auto right1 = HasDescendant(VectorBind("In"));
         auto right2 = allOf(DVarBind("AccRHS"),
-                            hasDescendant(VectorBind("In")));
+                            HasDescendant(VectorBind("In")));
         
-        auto body = anyOf(hasDescendant(BinaryOperatorBindReduceAll("Assign", left, right1)),
-                          hasDescendant(BinaryOperatorBindReduce("Assign", left, right2)));
+        auto body = anyOf(HasDescendant(BinaryOperatorBindReduceAll("Assign", left, right1)),
+                          HasDescendant(BinaryOperatorBindReduce("Assign", left, right2)));
 
         auto ForStmtReduceMatcher = FunctionWrap(ForLoop("Reduce", "", body));
         auto WhileStmtReduceMatcher = FunctionWrap(WhileLoop("Reduce", "", body));

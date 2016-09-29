@@ -50,8 +50,9 @@ public:
     {                                                                                                
         //std::cout << "Init: " << mInitVar << " Inc: " << mIncVar << " InIndex: " << mInIndex       
         //          << " Acc: " << mAcc << std::endl;                                                
-        return //areSameVariable(4, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
-               true; //areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex);                                  
+        return (areSameVariable(4, mInitVar, mIncVar, mInIndex1, mOutIndex) ||
+               areSameVariable(4, mInitVar, mIncVar, mInIndexBO, mOutIndex)) &&
+               mInIndexBO;                                  
     }                                                                                                
 
     int StrideSize()
@@ -134,8 +135,8 @@ public:
 
         auto left = VectorBind("Out");
         auto right = forEachDescendant(VectorBindScan("In"));
-        auto body = anyOf(hasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
-                          hasDescendant(BinaryOperatorBindAll("Assign",  left, right))); 
+        auto body = anyOf(HasDescendant(BinaryOperatorBind("=", "Assign", left, right)),
+                          HasDescendant(BinaryOperatorBindAll("Assign",  left, right))); 
 
         auto ScanMatcher = FunctionWrap(ForLoopNoParentLoop("Scan", "", body));
 

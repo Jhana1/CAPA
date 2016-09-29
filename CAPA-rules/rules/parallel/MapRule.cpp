@@ -153,11 +153,11 @@ public:
         // Matches on For Loops with counter initialised in the init, with an array element
         // assignment within the body of the loop
         auto left = VectorBind("Out");
-        auto right = hasDescendant(VectorBind("In"));
-        auto unless = hasDescendant(arraySubscriptExpr(hasDescendant(binaryOperator())));
+        auto right = HasDescendant(VectorBind("In"));
+        auto unless = HasDescendant(arraySubscriptExpr(HasDescendant(binaryOperator())));
 
-        auto body = hasDescendant(BinaryOperatorBindUnless("=", "Assign", left, right, unless)); 
-        auto body2 = hasDescendant(BinaryOperatorBindAll("Assign", left, 
+        auto body = HasDescendant(BinaryOperatorBindUnless("=", "Assign", left, right, unless)); 
+        auto body2 = HasDescendant(BinaryOperatorBindAll("Assign", left, 
                          NumericLiteralBind("Literal")));
 
         auto ForMatcher = FunctionWrap(ForLoop("Map", "", anyOf(body, body2))); 

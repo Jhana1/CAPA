@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-/// CAPA:IGNORE
+
 void random_fill(float *starting_vec, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
         starting_vec[i] = (float) rand(); 
 }
 
-/// CAPA:IGNORE
 void reshape2mat(float *in_vec, float *out_vec[], size_t dim)
 {
     for (size_t i = 0; i < dim; ++i)
@@ -75,7 +74,7 @@ int main()
     cum_sum[0] = starting_vec[0]/k;
     for (size_t i = 1; i < ELEMS; i++)
     {
-        cum_sum[i] = starting_vec[i]/ELEMS + cum_sum[ELEMS-1];
+        cum_sum[i] = starting_vec[i]/ELEMS + cum_sum[i-1];
     }
 
     // Prepare for and perform Matrix Mult
