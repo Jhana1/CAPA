@@ -1,0 +1,40 @@
+
+
+[97mCAPA Report
+
+[97mSummary: TotalFiles=1 Files With Improvements=1 
+
+[35m/home/james/Projects/CAPA/case/CodeUnderTest.cpp[39m:[36m26[39m:[36m1
+[33mPattern: [97mVectorisable Function Declaration[33m Priority: [97m3[33m Info: [36mFunction Declaration[39m[49m
+void mmult(float ** A, float ** B, float ** C, size_t dim);
+
+[35m/home/james/Projects/CAPA/case/CodeUnderTest.cpp[39m:[36m8[39m:[36m5
+[33mPattern: [97mMap[33m Priority: [97m3[33m Info: [36mStride Size: 1. Number of Elements: 1000000. 
+[33mPotential Speedup: [32m158.03 ~ [32m140.51[39m[49m
+for (size_t i = 0; i < ELEMS; ++i){
+        starting_vec[i] /= 2;
+        starting_vec[i] += 4;
+    }
+
+[35m/home/james/Projects/CAPA/case/CodeUnderTest.cpp[39m:[36m15[39m:[36m5
+[33mPattern: [97mReduce[33m Priority: [97m2[33m Info: [36mStride Size: 1. Number of Elements: 1000000. 
+[33mPotential Speedup: [32m30.30 ~ [32m34.33[39m[49m
+for (size_t i = 0; i < ELEMS; ++i)
+        k += starting_vec[i]/ELEMS
+
+[35m/home/james/Projects/CAPA/case/CodeUnderTest.cpp[39m:[36m21[39m:[36m5
+[33mPattern: [97mScan[33m Priority: [97m2[33m Info: [36mStride Size: 1. Number of Elements: 1000000. 
+[33mPotential Speedup: [32m19.72 ~ [32m30.11[39m[49m
+for (size_t i = 1; i < ELEMS; i++)
+        cum_sum[i] = starting_vec[i]/ELEMS + cum_sum[i-1]
+
+[35m/home/james/Projects/CAPA/case/CodeUnderTest.cpp[39m:[36m27[39m:[36m5
+[33mPattern: [97mMatrix Multiplication[33m Priority: [97m1[33m Info: [36mA Matrix Multiply
+[33mPotential Speedup: [32m16.72 ~ [32m229.00[39m[49m
+for (size_t i = 0; i < dim; ++i)
+        for (size_t j = 0; j < dim; ++j)
+            for (size_t k = 0; k < dim; ++k)
+                C[i][j] += A[i][k] * B[k][j]
+
+
+[97m[CAPA v0.10.2]
