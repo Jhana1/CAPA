@@ -110,7 +110,8 @@ public:
 
             if (r.IsScan())
             {
-                PatternInfo p("Scan", r.Elements(), r.sourceDump());
+                PatternInfo p("Scan", r.Elements(), r.sourceDump(), priority());
+                if (r.sourceDump() == "") { return; } // No Valid Source
                 std::stringstream extraInfo;
                 int stride = r.StrideSize();
                 int elements = r.Elements();
