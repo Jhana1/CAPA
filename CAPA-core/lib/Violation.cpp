@@ -33,7 +33,7 @@ bool Violation::operator>(const CAPA::Violation &rhs) const
 {
     if (startLine == rhs.startLine)
     {
-        return rule->priority() > rhs.rule->priority();
+        return patternInfo.priority > rhs.patternInfo.priority;
     }
     return startLine > rhs.startLine;
 }

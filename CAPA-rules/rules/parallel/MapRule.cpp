@@ -130,7 +130,8 @@ public:
 
             if (currentMap.IsMap())
             {
-                PatternInfo p("Map", currentMap.Elements(), currentMap.MapDump());
+                PatternInfo p("Map", currentMap.Elements(), currentMap.MapDump(), priority());
+                if (currentMap.MapDump() == "") { return; } // No readable source
                 std::stringstream extraInfo; 
                 auto stride = currentMap.StrideSize();
                 if (stride == 0)

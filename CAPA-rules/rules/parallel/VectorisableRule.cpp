@@ -36,7 +36,8 @@ public:
         {
             if (markedIgnore(Function, Context->getSourceManager()))
                 return;
-            PatternInfo p("Vectorisable", 0,  node2str(Loop, Result.Context->getSourceManager()));
+            PatternInfo p("Vectorisable", 0,  node2str(Loop, Result.Context->getSourceManager()), priority());
+            if (p.dumpSource() == "") { return; } // No Valid Source
             addViolation(Loop, this, p, "Generally vectorisable region of code");
         }
     }
