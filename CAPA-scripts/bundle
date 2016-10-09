@@ -72,11 +72,7 @@ def install_clang_headers(llvm_root):
     path.cp_r(clang_headers_src_path, clang_headers_dst_path)
 
 def install_json_compilation_database():
-    json_cd_name = 'CAPA-json-compilation-database'
-    json_cd_src_path = os.path.join(path.source.json_compilation_database_dir, json_cd_name)
-    json_cd_dst_path = os.path.join(bundle_bin_dir, json_cd_name)
-    if os.path.isfile(json_cd_src_path):
-        path.cp(json_cd_src_path, json_cd_dst_path)
+    pass
 
 def install_xcodebuild():
     if environment.is_darwin():
