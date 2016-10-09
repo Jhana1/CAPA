@@ -33,7 +33,6 @@ if args.reset:
 if args.setup:
     current_dir = os.getcwd()
     path.cd(path.root_dir)
-    process.call('git clone ' + path.url.json_compilation_database)
     if environment.is_darwin():
         process.call('git clone ' + path.url.xcodebuild)
     path.cd(current_dir)
