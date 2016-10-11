@@ -28,7 +28,7 @@ public:
               const std::string violationMessage = "");
 
     bool operator==(const CAPA::Violation &rhs) const;
-    bool operator>(const CAPA::Violation &rhs) const;
+    bool operator<(const CAPA::Violation &rhs) const;
 };
 
 } // end namespace CAPA
