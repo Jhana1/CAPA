@@ -9,5 +9,5 @@ It looks for potential speedups including:
 * Reduce Operations - Highly Efficient N->1 transformations
 * Scan (Prefix Sum) - N->N transformations 
 * Matrix Multiplication - Quadratic complexity with superior GPU implementations
-* Graph Traversals - Significant speedups in common depth-first traversalst
-* ...
+* Vectorisable Function Declarations - Functions which appear to operate over vectors
+* Generally Vectorisable Regions of Code - A catch all for when specific cases aren't met
