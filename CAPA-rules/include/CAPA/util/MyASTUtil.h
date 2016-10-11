@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <cstdarg>
 #include "CAPA/AbstractASTMatcherRule.h"
 #include "CAPA/RuleSet.h"
@@ -26,8 +27,14 @@ bool areSameVariable(int n, ...)
 template <typename T>
 std::string node2str(const T *node, SourceManager &sm)
 {
-    string text = Lexer::getSourceText(CharSourceRange::getTokenRange(node->getSourceRange()),
-            sm, LangOptions(), 0);
+    bool invalid;
+    StringRef rawText = Lexer::getSourceText(CharSourceRange::getTokenRange(node->getSourceRange()),
+            sm, LangOptions(), &invalid);
+    
+    std::string text = rawText.str();
+
+    if (invalid) { return ""; }
+
     if (text.at(text.size()-1) == ',')
         return Lexer::getSourceText(CharSourceRange::getCharRange(node->getSourceRange()),
                 sm, LangOptions(), 0);

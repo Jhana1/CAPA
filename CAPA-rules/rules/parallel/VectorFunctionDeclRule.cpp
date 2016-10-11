@@ -45,7 +45,7 @@ public:
             }
             source.seekp(-2, source.cur);
             source << ");";
-            PatternInfo p("Vectorisable Function Declaration", 0, source.str());
+            PatternInfo p("Vectorisable Function Declaration", 0, source.str(), priority());
             addViolation(func, this, p, "Function Declaration");
         }
 

@@ -83,7 +83,8 @@ public:
             MatrixMultInfo r(result);
             if (r.IsMatrixMult())
             {
-                PatternInfo p("MatrixMult", 124, r.sourceDump());
+                PatternInfo p("MatrixMult", 124, r.sourceDump(), priority());
+                if(r.sourceDump() == "") { return; } // No Valid Source
                 addViolation(OuterLoop, this, p, "A Matrix Multiply");
             }
         }

@@ -29,11 +29,11 @@ bool Violation::operator==(const CAPA::Violation &rhs) const
             && (endLine == rhs.endLine)
             && (endColumn == rhs.endColumn);
 }
-bool Violation::operator>(const CAPA::Violation &rhs) const
+bool Violation::operator<(const CAPA::Violation &rhs) const
 {
     if (startLine == rhs.startLine)
     {
-        return rule->priority() > rhs.rule->priority();
+        return patternInfo.priority < rhs.patternInfo.priority;
     }
-    return startLine > rhs.startLine;
+    return startLine < rhs.startLine;
 }
