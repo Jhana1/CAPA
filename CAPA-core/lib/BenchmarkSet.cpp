@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <tuple>
 #include <string>
+#include <cmath>
 #include "nlohmann/json.hpp"
 #include "CAPA/BenchmarkSet.h"
 
@@ -13,7 +15,52 @@ BenchmarkSet::BenchmarkSet(std::string benchmarkLocation)
 
     if (!file.good())
     {
-        // TODO: Fill with generic data
+        // Name : Elements : (Host, Device);
+        const std::size_t cores = 1024;
+        const std::size_t cache = 256;
+        const std::size_t tile = 16;
+
+        auto memory = [&](std::size_t elems){
+            double cost = 10;
+            double bus = 256;
+            return cost * bus/elems;
+        };
+
+        auto mapPerformance = [&](std::size_t elems){
+            double host = elems * 1.0;
+            double device = ceil((elems * 1.0)/cores) + memory(elems);
+            return std::tuple<double, double>(host, device);
+        };
+
+        auto reducePerformance = [&](std::size_t elems){
+            double host = elems * 1.0;
+            double device = elems/cores + log2(elems) + memory(elems);
+            return std::tuple<double, double>(host, device);
+        };
+
+        auto scanPerformance = [&](std::size_t elems){
+            double host = elems * 1.0;
+            double device = elems/cores + log2(elems) + memory(elems);
+            return std::tuple<double, double>(host, device);
+        };
+
+        auto matrixMultPerformance = [&](std::size_t elems){
+            double host = elems * elems * elems;
+            double device = (elems * elems * elems)/(cache * sqrt(tile)) + memory(elems);
+            return std::tuple<double, double>(host, device);
+        };
+
+        for (const auto &f : VectorFixtures)
+        {
+            benchmarks["Map"][f.second] = mapPerformance(f.second);
+            benchmarks["Reduce"][f.second] = reducePerformance(f.second);
+            benchmarks["Scan"][f.second] = scanPerformance(f.second);
+        }
+        for (const auto &f : MatrixFixtures)
+        {
+            benchmarks["Matrix"][f.second] = matrixMultPerformance(f.second);
+        }
+
         return;
     }
 
